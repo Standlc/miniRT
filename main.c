@@ -292,7 +292,7 @@ int	main()
 
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
-	rt.opt.max_depth = 1;
+	// rt.opt.max_depth = 1;
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.gamma = 1.f;
 
