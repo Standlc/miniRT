@@ -1,6 +1,6 @@
 NAME		=	miniRT
 
-NAME-L		=	miniRT
+NAME_L		=	miniRT_L
 
 SRCS		=	main.c						utils/vector.c	\
 				camera/libx.c				utils/colors.c	\
@@ -19,9 +19,9 @@ CC			=	cc
 CFLAGS		=	-Wall -Wextra #-Werror
 
 #LINUX
-INCLUDES-L	=	-Imlx -Ilibft
-MINILIBX-L	=	mlx
-XFLAGS-L	=	-lmlx -lXext -lX11
+INCLUDES_L	=	-Imlx -Ilibft
+MINILIBX_L	=	mlx
+XFLAGS_L	=	-lmlx -lXext -lX11
 
 #MACOS
 INCLUDES	=	-Iminilibx_macos
@@ -34,13 +34,13 @@ RM			=	rm -f
 
 all : libs $(NAME)
 
-linux : libs-l ${NAME-L}
+linux : libs-l ${NAME_L}
+
+${NAME_L} : ${OBJS}
+	${CC} ${OBJS} -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
 $(NAME) : miniRT.h $(OBJS)
 		$(CC) $(OBJS) -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
-
-${NAME-L} : ${OBJS}
-	${CC} ${OBJS} -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME-L}
 
 %.o : %.c Makefile
 		$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -49,17 +49,17 @@ libs:
 		@$(MAKE) -C $(MINILIBX)
 
 libs-l:
-		@$(MAKE) -C $(MINILIBX-L)
+		@$(MAKE) -C $(MINILIBX_L)
 
 clean:
 		@$(RM) $(OBJS)
 		@$(MAKE) clean -C $(MINILIBX)
-		@$(MAKE) clean -C $(MINILIBX-L)
+		@$(MAKE) clean -C $(MINILIBX_L)
 
 fclean:	clean
 		@$(RM) $(NAME)
 		@$(MAKE) clean -C $(MINILIBX)
-		@$(MAKE) clean -C $(MINILIBX-L)
+		@$(MAKE) clean -C $(MINILIBX_L)
 
 re:		fclean all
 
