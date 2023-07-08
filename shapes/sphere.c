@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "../miniRT.h"
 
 int solve_quadratic(Quadratic_fun f, double *x1, double *x2)
 {
@@ -22,29 +22,37 @@ int solve_quadratic(Quadratic_fun f, double *x1, double *x2)
 	return (1);
 }
 
-int	intersect_sphere(Ray *ray, t_material *obj, double *intersection_t)
+int	intersect_sphere(Ray *ray, void *shape, double *t)
 {
 	Quadratic_fun   f;
 	double          intersect1;
 	double          intersect2;
 	t_sphere		*sphere;
 
-    sphere = (t_sphere *)(obj->shape);
-	Vector  L = minus(ray->origin, sphere->center);
+    sphere = (t_sphere *)shape;
+	t_vec  L = sub(ray->origin, sphere->center);
 	f.a = dot(ray->dir, ray->dir);
 	f.b = 2 * dot(ray->dir, L);
 	f.c = dot(L, L) - (sphere->radius * sphere->radius);
 	if (!solve_quadratic(f, &intersect1, &intersect2))
 		return (0);
-	*intersection_t = get_closest_intersection(intersect1, intersect2);
-	return (*intersection_t > 0);
+	*t = get_closest_intersection(intersect1, intersect2);
+	return (*t > 0);
 }
 
-Vector	sphere_normal(t_material *obj, Vector *ray_dir, Vector *hit_point)
+t_vec	sample_sphere(void *shape)
 {
-	Vector	normal;
+	t_sphere	*sphere;
 
-	normal = normalize(minus(*hit_point, ((t_sphere *)(obj->shape))->center));
+	sphere = (t_sphere *)shape;
+	return (add(scale(random_dir(), sphere->radius), sphere->center));
+}
+
+t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
+{
+	t_vec	normal;
+
+	normal = normalize(sub(*hit_point, ((t_sphere *)shape)->center));
 	if (dot(normal, *ray_dir) > 0)
 		return (scale(normal, -1));
 	return (normal);

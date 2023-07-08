@@ -1,10 +1,10 @@
 NAME		=	miniRT
 
-SRCS		=	main.c						vector.c \
-				libx.c						colors.c \
-				utils.c						loader.c \
-				sphere.c					plane.c  \
-				scenes.c					
+SRCS		=	main.c						utils/vector.c	\
+				camera/libx.c				utils/colors.c	\
+				utils/utils.c				utils/loader.c	\
+				shapes/sphere.c				shapes/plane.c		\
+				scenes.c					shapes/rectangle.c	\
 
 OBJS		=	$(SRCS:.c=.o)
 

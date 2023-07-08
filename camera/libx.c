@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "../miniRT.h"
 
 // void    move_light(int key, t_rt *rt)
 // {
@@ -62,7 +62,11 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 	(void)y;
 	if (button == 1)
 	{
+		rt->opt.max_depth = MAX_DEPTH;
+		rt->opt.rpp = RPP;
 		rt->mouse.is_down = 0;
+		rt->rendering_frame = 1;
+		clear_pixel_buff(rt->pixel_buff);
 	}
 	return (0);
 } //MOUSE UP
@@ -86,31 +90,20 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 {
 	if (rt->mouse.is_down)
 	{
-		rt->mouse.dir.x = rt->mouse.origin.x - x;
-		rt->mouse.dir.y = rt->mouse.origin.y - y;
+		int	mouse_dir_x;
+		int	mouse_dir_y;
 
-		float	radius_len = vector_len(minus(rt->cam.pos, rt->cam.look_at));
+		mouse_dir_x = rt->mouse.origin.x - x;
+		mouse_dir_y = rt->mouse.origin.y - y;
+		if (mouse_dir_x == 0 && mouse_dir_y == 0)
+			return (0);
+		float	radius_len = vec_len(sub(rt->cam.pos, rt->cam.look_at));
 
-// Vector	up = scale(rt->cam.space.y, rt->mouse.dir.y / 30.f);
-// Vector	up_point = vect_op(rt->cam.pos, '-', up);
-// Vector	radius_y_dir = normalize(vect_op(up_point, '-', rt->cam.look_at));
-// Vector	new_y_p = get_line_point((Ray){rt->cam.look_at, radius_y_dir}, radius_len);
-// Vector	new_y_dir = vect_op(new_y_p, '-', rt->cam.pos);
-
-// Vector	x_dir = scale(rt->cam.space.x, rt->mouse.dir.x / 30.f);
-// Vector	x_point = vect_op(rt->cam.pos, '+', x_dir);
-// Vector	radius_x_dir = normalize(vect_op(x_point, '-', rt->cam.look_at));
-// Vector	new_x_p = get_line_point((Ray){rt->cam.look_at, radius_x_dir}, radius_len);
-// Vector	new_x_dir = vect_op(new_x_p, '-', rt->cam.pos);
-
-// Vector	new_pos_dir = vect_op(new_x_dir, '+', new_y_dir);
-// rt->cam.pos = vect_op(rt->cam.pos, '+', new_pos_dir);
-
-		Vector	y_dir = scale(rt->cam.space.y, rt->mouse.dir.y / 40.f * -1);
-		Vector	x_dir = scale(rt->cam.space.x, rt->mouse.dir.x / 40.f);
-		Vector	new_cam_pos = add(rt->cam.pos, add(y_dir, x_dir));
-		Vector	lookat_to_cam_pos = normalize(minus(new_cam_pos, rt->cam.look_at));
-		lookat_to_cam_pos = get_line_point((Ray){rt->cam.look_at, lookat_to_cam_pos}, radius_len);
+		t_vec	x_dir = scale(rt->cam.space.x, mouse_dir_x / 40.f);
+		t_vec	y_dir = scale(rt->cam.space.y, mouse_dir_y / 40.f * -1);
+		t_vec	new_cam_pos = add(rt->cam.pos, add(y_dir, x_dir));
+		t_vec	lookat_to_cam_pos = normalize(sub(new_cam_pos, rt->cam.look_at));
+		lookat_to_cam_pos = get_ray_point((Ray){rt->cam.look_at, lookat_to_cam_pos}, radius_len);
 		rt->cam.pos = lookat_to_cam_pos;
 
 		set_cam(rt);
@@ -122,19 +115,19 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 	return (0);
 }
 
-// Vector	up = scale(rt->cam.space.y, rt->mouse.dir.y / 30.f);
-// Vector	up_point = vect_op(rt->cam.pos, '-', up);
-// Vector	radius_y_dir = normalize(vect_op(up_point, '-', rt->cam.look_at));
-// Vector	new_y_p = get_line_point((Ray){rt->cam.look_at, radius_y_dir}, radius_len);
-// Vector	new_y_dir = vect_op(new_y_p, '-', rt->cam.pos);
+// t_vec	up = scale(rt->cam.space.y, rt->mouse.dir.y / 30.f);
+// t_vec	up_point = vect_op(rt->cam.pos, '-', up);
+// t_vec	radius_y_dir = normalize(vect_op(up_point, '-', rt->cam.look_at));
+// t_vec	new_y_p = get_ray_point((Ray){rt->cam.look_at, radius_y_dir}, radius_len);
+// t_vec	new_y_dir = vect_op(new_y_p, '-', rt->cam.pos);
 
-// Vector	x_dir = scale(rt->cam.space.x, rt->mouse.dir.x / 30.f);
-// Vector	x_point = vect_op(rt->cam.pos, '+', x_dir);
-// Vector	radius_x_dir = normalize(vect_op(x_point, '-', rt->cam.look_at));
-// Vector	new_x_p = get_line_point((Ray){rt->cam.look_at, radius_x_dir}, radius_len);
-// Vector	new_x_dir = vect_op(new_x_p, '-', rt->cam.pos);
+// t_vec	x_dir = scale(rt->cam.space.x, rt->mouse.dir.x / 30.f);
+// t_vec	x_point = vect_op(rt->cam.pos, '+', x_dir);
+// t_vec	radius_x_dir = normalize(vect_op(x_point, '-', rt->cam.look_at));
+// t_vec	new_x_p = get_ray_point((Ray){rt->cam.look_at, radius_x_dir}, radius_len);
+// t_vec	new_x_dir = vect_op(new_x_p, '-', rt->cam.pos);
 
-// Vector	new_pos_dir = vect_op(new_x_dir, '+', new_y_dir);
+// t_vec	new_pos_dir = vect_op(new_x_dir, '+', new_y_dir);
 // rt->cam.pos = vect_op(rt->cam.pos, '+', new_x_dir);
 
 int handle_mouse(int event, int x, int y, t_rt *rt)
@@ -143,37 +136,19 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		return (0);
 	if (event == 1)
 	{
-		float	horizontal = fabs((float)x / WIDTH * 2 - 1);
-		float	vertical = fabs(1 - (float)y / HEIGHT * 2);
+		float	horizontal = (float)x / WIDTH * 2 - 1;
+		float	vertical = 1 - (float)y / HEIGHT * 2;
 		float	len_to_center = sqrt(horizontal * horizontal + vertical * vertical);
 
-		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 40 + 3));
+		rt->opt.max_depth = 1;
+		rt->opt.rpp = 1;
 		rt->mouse.is_down = 1;
 		rt->mouse.origin = (t_point){x, y};
+		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 40 + 3));
 		return (0);
 	}
 	else if (event == 4)
 	{
-		// float	radius_len = vector_len(vect_op(rt->cam.pos, '-', rt->cam.look_at));
-
-		// float	alpha = ((-1 * M_PI) / 180);
-		// Vector	w_dir = rt->cam.space.z;
-		// Vector	w_dir_p;
-
-		// w_dir_p.x = w_dir.x;
-		// w_dir_p.y = w_dir.y * cos(alpha) - w_dir.z * sin(alpha);
-		// w_dir_p.z = w_dir.y * sin(alpha) + w_dir.z * cos(alpha);
-
-		// w_dir_p = normalize(w_dir_p);
-		// w_dir_p = scale(w_dir_p, radius_len);
-		// print_vector(w_dir_p);
-		// Vector new_cam_pos = vect_op(vect_op(rt->cam.look_at, '-', w_dir_p), '+', rt->cam.pos);
-		// rt->cam.pos = new_cam_pos;
-
-		// set_cam(rt);
-		// clear_pixel_buff(rt->pixel_buff);
-		// rt->rendering_frame = 1;
-
 		float	horizontal = (float)x / WIDTH * 2 - 1;
 		float	vertical = (float)y / HEIGHT * - 2 + 1;
 
@@ -191,14 +166,14 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		float	horizontal = (float)x / WIDTH * 2 - 1;
 		float	vertical = (float)y / HEIGHT * - 2 + 1;
 
-		rt->cam.pos = minus(rt->cam.pos, scale(rt->cam.space.y, vertical));
-		rt->cam.look_at = minus(rt->cam.look_at, scale(rt->cam.space.y, vertical));
+		rt->cam.pos = sub(rt->cam.pos, scale(rt->cam.space.y, vertical));
+		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.space.y, vertical));
 
-		rt->cam.pos = minus(rt->cam.pos, scale(rt->cam.space.x, horizontal));
-		rt->cam.look_at = minus(rt->cam.look_at, scale(rt->cam.space.x, horizontal));
+		rt->cam.pos = sub(rt->cam.pos, scale(rt->cam.space.x, horizontal));
+		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.space.x, horizontal));
 
-		rt->cam.pos = minus(rt->cam.pos, rt->cam.space.z);
-		rt->cam.look_at = minus(rt->cam.look_at, rt->cam.space.z);
+		rt->cam.pos = sub(rt->cam.pos, rt->cam.space.z);
+		rt->cam.look_at = sub(rt->cam.look_at, rt->cam.space.z);
 	} // SCROLL DOWN
 	clear_pixel_buff(rt->pixel_buff);
 	set_cam(rt);

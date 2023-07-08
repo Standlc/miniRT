@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "../miniRT.h"
 
 // blendedValue=(1−𝑡)⋅startValue+𝑡⋅endValue
 
@@ -50,20 +50,20 @@ int rgb_to_int(t_rgb rgb)
 
 t_rgb	color_mult(t_rgb color_1, t_rgb color_2)
 {
-	// color_1.r *= color_2.r;
-	// color_1.g *= color_2.g;
-	// color_1.b *= color_2.b;
-	// return (color_1);
-	return ((t_rgb){color_1.r * color_2.r, color_1.g * color_2.g, color_1.b * color_2.b});
+	color_1.r *= color_2.r;
+	color_1.g *= color_2.g;
+	color_1.b *= color_2.b;
+	return (color_1);
+	// return ((t_rgb){color_1.r * color_2.r, color_1.g * color_2.g, color_1.b * color_2.b});
 }
 
 t_rgb	color_add(t_rgb color_1, t_rgb color_2)
 {
-	// color_1.r += color_2.r;
-	// color_1.g += color_2.g;
-	// color_1.b += color_2.b;
-	// return (color_1);
-	return ((t_rgb){color_1.r + color_2.r, color_1.g + color_2.g, color_1.b + color_2.b});
+	color_1.r += color_2.r;
+	color_1.g += color_2.g;
+	color_1.b += color_2.b;
+	return (color_1);
+	// return ((t_rgb){color_1.r + color_2.r, color_1.g + color_2.g, color_1.b + color_2.b});
 }
 
 t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
@@ -77,16 +77,15 @@ t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
 t_rgb	ambient_light(Ray *ray)
 {
 	return (lerp_color((t_rgb){1.f, 1.f, 1.f}, 
-					// (t_rgb){.7f, .8f, 1.f}, 
-					(t_rgb){.8f, .8f, 1.f}, 
-					ray->dir.y * 0.5 + 0.5));
+						(t_rgb){.8f, .8f, 1.f}, 
+						ray->dir.y * 0.5 + 0.5));
 }
 
 t_rgb	color_fade(t_rgb color, float fade)
 {
-	// color.r *= fade;
-	// color.g *= fade;
-	// color.b *= fade;
-	// return (color);
-	return ((t_rgb){color.r * fade, color.g * fade, color.b * fade});
+	color.r *= fade;
+	color.g *= fade;
+	color.b *= fade;
+	return (color);
+	// return ((t_rgb){color.r * fade, color.g * fade, color.b * fade});
 }

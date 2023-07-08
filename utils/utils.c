@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "../miniRT.h"
 
 double	relu(double n)
 {
@@ -24,4 +24,9 @@ float	normal_randf()
 	float	theta = 2 * M_PI * randf();
     float	rho = sqrt(-2 * log(randf()));
     return (rho * cos(theta));
+}
+
+t_vec	random_dir()
+{
+	return (normalize((t_vec){normal_randf(), normal_randf(), normal_randf()}));
 }

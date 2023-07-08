@@ -9,8 +9,10 @@
 #include <time.h>
 #include "mlx.h"
 
-#define WIDTH       1000
+#define WIDTH       850
 #define HEIGHT      500
+#define RPP			500
+#define MAX_DEPTH	8
 #define ON_DESTROY  17
 #define MIRROR      1
 #define SOLID       2
@@ -29,30 +31,30 @@ typedef struct s_point {
 	double  y;
 } t_point;
 
-typedef struct s_rgb
+typedef struct	s_rgb
 {
 	float	r;
 	float	g;
 	float	b;
-} t_rgb;
+}				t_rgb;
 
-typedef struct Vector
+typedef struct	s_vec
 {
 	double x;
 	double y;
 	double z;
-} Vector;
+}				t_vec;
 
 typedef struct	s_space
 {
-	Vector	x;
-	Vector	y;
-	Vector	z;
+	t_vec	x;
+	t_vec	y;
+	t_vec	z;
 }				t_space;
 
 typedef struct  s_cam {
-	Vector  pos;
-	Vector	look_at;
+	t_vec	pos;
+	t_vec	look_at;
 	float	field_view;
 	float   aspect_ratio;
 	int     screen_width;
@@ -63,8 +65,8 @@ typedef struct  s_cam {
 
 typedef struct	Ray
 {
-	Vector origin;
-	Vector dir;
+	t_vec origin;
+	t_vec dir;
 }				Ray;
 
 typedef struct	Quadratic_fun
@@ -76,39 +78,47 @@ typedef struct	Quadratic_fun
 
 typedef struct	s_material
 {
-	int     type;
 	t_rgb	color;
 	float   smoothness;
 	float	specular_prob;
-	float	light_entensity;
-	int		(*intersect)(Ray *, struct s_material *, double *);
-	Vector	(*normal)(struct s_material *, Vector *, Vector *);
+	float	light_intensity;
+	int		(*intersect)(Ray *, void *, double *);
+	t_vec	(*normal)(void *, t_vec *, t_vec *);
+	t_vec	(*light_sample)(void *);
 	void	*shape;
 }				t_material;
 
 typedef struct	s_plane
 {
-	Vector	normal;
-	Vector	point;
+	t_vec	point;
+	t_vec	normal;
 }				t_plane;
 
 typedef struct	s_tri
 {
 	t_plane	plane;
-	Vector	a;
-	Vector	b;
-	Vector	c;
+	t_vec	a;
+	t_vec	b;
+	t_vec	c;
 }				t_tri;
+
+typedef struct	s_rect
+{
+	t_vec	side_a;
+	t_vec	side_b;
+	t_vec	center;
+	t_vec	normal;
+}				t_rect;
 
 typedef struct	s_sphere
 {
-	Vector		center;
-	float		radius;
+	t_vec	center;
+	float	radius;
 }				t_sphere;
 
 typedef struct	s_delta_light
 {
-	Vector  pos;
+	t_vec	pos;
 	t_rgb	color;
 	float	intensity;
 }				t_delta_light;
@@ -116,15 +126,15 @@ typedef struct	s_delta_light
 typedef struct	s_mouse
 {
 	t_point	origin;
-	t_point	dir;
 	int		is_down;
 }				t_mouse;
 
 typedef struct	s_ray_options
 {
 	int		max_depth;
-	int		rays_per_pixel;
+	int		rpp;
 	int		n_shadow_rays;
+	float	ambient;
 	float	cam_ray_fuzz;
 	float	gamma;
 }				t_ray_options;
@@ -176,7 +186,9 @@ enum {
 // SCENES
 void    balls_1(t_rt *rt);
 void    tomato(t_rt *rt);
-void	print_vector(Vector v);
+void    kernel(t_rt *rt);
+void	print_vector(t_vec v);
+
 
 int		render(t_rt *data);
 double  min(double a, double b);
@@ -187,17 +199,18 @@ void	clear_pixel_buff(t_rgb pixel_buff[HEIGHT][WIDTH]);
 double  get_closest_intersection(double t1, double t2);
 
 
-Vector	normalize(Vector v);
-double  vector_len(Vector v);
-Vector	scale(Vector v, double coef);
-double	dot(Vector v1, Vector v2);
-Vector	vect_op(Vector v1, char operation, Vector v2);
-Vector  get_reflection(Vector *v, Vector *normal);
-Vector	cross_product(Vector v1, Vector v2);
-Vector  get_line_point(Ray ray, double d);
-Vector	add(Vector v1, Vector v2);
-Vector	minus(Vector v1, Vector v2);
-Vector	mult(Vector v1, Vector v2);
+t_vec	normalize(t_vec v);
+double  vec_len(t_vec v);
+t_vec	scale(t_vec v, double coef);
+double	dot(t_vec v1, t_vec v2);
+t_vec	vect_op(t_vec v1, char operation, t_vec v2);
+t_vec	get_reflection(t_vec *v, t_vec *normal);
+t_vec	cross_product(t_vec v1, t_vec v2);
+t_vec	get_ray_point(Ray ray, double d);
+t_vec	add(t_vec v1, t_vec v2);
+t_vec	sub(t_vec v1, t_vec v2);
+t_vec	mult(t_vec v1, t_vec v2);
+t_vec	project(t_vec projected, t_vec reference);
 
 
 t_rgb	hex_to_rgb(int hex);
@@ -221,16 +234,24 @@ float	randf();
 float	normal_randf();
 double  min(double a, double b);
 double	relu(double n);
+t_vec	random_dir();
 
 
 // SPHERE
-Vector	sphere_normal(t_material *obj, Vector *ray_dir, Vector *hit_point);
-int		intersect_sphere(Ray *ray, t_material *obj, double *intersection_t);
+t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
+int		intersect_sphere(Ray *ray, void *shape, double *t);
+t_vec	sample_sphere(void *shape);
 
 
 // PLANE
-int		intersect_plane(Ray *ray, t_material *obj, double *t);
-Vector	plane_normal(t_material *obj, Vector *ray_dir, Vector *hit_point);
+int		intersect_plane(Ray *ray, void *shape, double *t);
+t_vec	plane_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
+
+
+// RECTANGLE
+int		intersect_rect(Ray *ray, void *shape, double *t);
+t_vec	rect_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
+t_vec	sample_rect(void *shape);
 
 
 #endif

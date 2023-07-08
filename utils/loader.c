@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "../miniRT.h"
 
 # define LOADING_SYMBOLS	"\\|/-"
 
