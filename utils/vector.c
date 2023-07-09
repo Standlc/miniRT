@@ -1,4 +1,4 @@
-#include "../miniRT.h"
+#include "minirt.h"
 
 t_vec	project(t_vec projected, t_vec ref)
 {

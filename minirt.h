@@ -8,6 +8,8 @@
 #include <string.h>
 #include <time.h>
 #include "mlx.h"
+#include "libft.h"
+#include "get_next_line.h"
 
 #define WIDTH       850
 #define HEIGHT      500
@@ -183,6 +185,15 @@ enum {
 	ESC = 53,
 };
 
+enum {
+	AMBIENT = 1,
+	CAMERA = 2,
+	LIGHT = 3,
+	SPHERE = 4,
+	PLAN = 5,
+	CYLINDRER = 6,
+};
+
 // SCENES
 void    balls_1(t_rt *rt);
 void    tomato(t_rt *rt);
@@ -253,5 +264,32 @@ int		intersect_rect(Ray *ray, void *shape, double *t);
 t_vec	rect_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 t_vec	sample_rect(void *shape);
 
+//PARSING
+
+int check_camera(char **row);
+int check_ambuant(char **row);
+
+int check_light(char **row);
+int check_sphere(char **row);
+int check_plan(char **row);
+int check_cylinder(char **row);
+
+int	atoi_rgb(char *str);
+int	rgb_information(char *str);
+int	range_zero_one(char *str);
+
+void	error_malloc();
+void	error_information();
+
+int		check_argument(int argc, char **argv);
+
+char	*ft_strjoin_free(char *s1, char *s2);
+char	check_last_char(char *str);
+char    *get_string(int fd);
+char	**get_content(int fd);
+
+void	check_rows(char **rows);
+void	print_row(char **rows);
+void	free_split(char **split);
 
 #endif

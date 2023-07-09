@@ -1,1 +1,1 @@
-#include "miniRT.h"
+#include "minirt.h"

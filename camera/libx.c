@@ -1,4 +1,4 @@
-#include "../miniRT.h"
+#include "minirt.h"
 
 // void    move_light(int key, t_rt *rt)
 // {

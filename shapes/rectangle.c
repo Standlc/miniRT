@@ -1,4 +1,4 @@
-#include "../miniRT.h"
+#include "minirt.h"
 
 t_vec	rect_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
 {

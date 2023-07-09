@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "minirt.h"
 
 void balls_1(t_rt *rt)
 {

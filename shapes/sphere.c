@@ -1,4 +1,4 @@
-#include "../miniRT.h"
+#include "minirt.h"
 
 int solve_quadratic(Quadratic_fun f, double *x1, double *x2)
 {

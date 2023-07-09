@@ -1,4 +1,4 @@
-#include "../miniRT.h"
+#include "minirt.h"
 
 // blendedValue=(1−𝑡)⋅startValue+𝑡⋅endValue
 
