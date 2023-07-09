@@ -278,52 +278,52 @@ void	gather_lights(t_rt *rt)
 	}
 }
 
-// int	main()
-// {
-// 	t_rt      rt;
-// 	rt.cam.screen_width = WIDTH;
-// 	rt.cam.screen_height = HEIGHT;
-// 	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
+int	main()
+{
+	t_rt      rt;
+	rt.cam.screen_width = WIDTH;
+	rt.cam.screen_height = HEIGHT;
+	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
 
-// 	// tomato(&rt);
-// 	balls_1(&rt);
-// 	// kernel(&rt);
-// 	gather_lights(&rt);
+	// tomato(&rt);
+	balls_1(&rt);
+	// kernel(&rt);
+	gather_lights(&rt);
 
-// 	rt.opt.rpp = RPP;
-// 	rt.opt.max_depth = MAX_DEPTH;
-// 	// rt.opt.max_depth = 1;
-// 	rt.opt.cam_ray_fuzz = 1.f;
-// 	rt.opt.gamma = 1.f;
+	rt.opt.rpp = RPP;
+	rt.opt.max_depth = MAX_DEPTH;
+	// rt.opt.max_depth = 1;
+	rt.opt.cam_ray_fuzz = 1.f;
+	rt.opt.gamma = 1.f;
 
-// 	rt.mlx = mlx_init();
-// 	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
-// 	rt.img.p = mlx_new_image(rt.mlx, WIDTH, HEIGHT);
-// 	rt.img.img_addr = mlx_get_data_addr(rt.img.p, &rt.img.bpp,
-// 			&rt.img.line_length, &rt.img.endian);
-// 	rt.space.x = (t_vec){1, 0, 0};
-// 	rt.space.y = (t_vec){0, 1, 0};
-// 	rt.space.z = (t_vec){0, 0, -1};
+	rt.mlx = mlx_init();
+	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
+	rt.img.p = mlx_new_image(rt.mlx, WIDTH, HEIGHT);
+	rt.img.img_addr = mlx_get_data_addr(rt.img.p, &rt.img.bpp,
+			&rt.img.line_length, &rt.img.endian);
+	rt.space.x = (t_vec){1, 0, 0};
+	rt.space.y = (t_vec){0, 1, 0};
+	rt.space.z = (t_vec){0, 0, -1};
 
-// 	clear_pixel_buff(rt.pixel_buff);
-// 	rt.mouse.is_down = 0;
-// 	rt.rendering_frame = 1;
-// 	rt.cam.field_view = 40;
-// 	rt.cam.pos = (t_vec){0, 2, 0};
-// 	rt.cam.look_at = (t_vec){0, 0, -15};
-// 	set_cam(&rt);
+	clear_pixel_buff(rt.pixel_buff);
+	rt.mouse.is_down = 0;
+	rt.rendering_frame = 1;
+	rt.cam.field_view = 40;
+	rt.cam.pos = (t_vec){0, 2, 0};
+	rt.cam.look_at = (t_vec){0, 0, -15};
+	set_cam(&rt);
 
-// 	mlx_hook(rt.win, 2, 0, handle_key, &rt);
-// 	mlx_hook(rt.win, ON_DESTROY, ON_DESTROY, close_program, &rt);
-// 	mlx_hook(rt.win, 5, 0, handle_mouse_up, &rt);
-// 	mlx_hook(rt.win, 6, 0, handle_mouse_move, &rt);
-// 	mlx_mouse_hook(rt.win, handle_mouse, &rt);
+	mlx_hook(rt.win, 2, 0, handle_key, &rt);
+	mlx_hook(rt.win, ON_DESTROY, ON_DESTROY, close_program, &rt);
+	mlx_hook(rt.win, 5, 0, handle_mouse_up, &rt);
+	mlx_hook(rt.win, 6, 0, handle_mouse_move, &rt);
+	mlx_mouse_hook(rt.win, handle_mouse, &rt);
 
-// 	mlx_loop_hook(rt.mlx, render, &rt);
+	mlx_loop_hook(rt.mlx, render, &rt);
 
-// 	mlx_loop(rt.mlx);
-// 	return (0);
-// }
+	mlx_loop(rt.mlx);
+	return (0);
+}
 
 
 
