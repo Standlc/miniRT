@@ -63,9 +63,9 @@ Ray	make_cam_ray(t_rt *rt, int x, int y)
 	return (cam_ray);
 }
 
-t_vec	cosine_hemisphere_dir(t_vec *normal)
+t_vec	cosine_hemisphere_dir(t_vec *normal_dir)
 {
-	return (normalize(add(random_dir(), *normal)));
+	return (normalize(add(random_dir(), *normal_dir)));
 }
 
 t_vec	lerp(t_vec v1, t_vec v2, float t)
@@ -95,126 +95,42 @@ int	intersect_objects(t_rt *rt, Ray *ray, t_material *obj_hit, double *t)
 	return (*t > 0 && *t != INFINITY);
 }
 
-Ray	fuzzy_shadow_ray(t_material *obj, t_vec *light_sample_point, t_vec *hit_point, double *d_to_l)
-{
-	Ray		shadow_ray;
-
-	*light_sample_point = obj->light_sample(obj->shape);
-	shadow_ray.origin = *hit_point;
-	shadow_ray.dir = sub(*light_sample_point, *hit_point);
-	*d_to_l = vec_len(shadow_ray.dir);
-	shadow_ray.dir = normalize(shadow_ray.dir);
-	return (shadow_ray);
-}
-
-int cast_shadow_ray(t_rt *rt, t_material *light, Ray *shadow_ray, double distance_to_light)
-{
-	double  t_distance;
-	int     i;
-
-	i = 0;
-	while (i < rt->nb_objects)
-	{
-		if (
-			// HAS TO INTERSECT OBJ OTHER THAN THE LIGHT
-			light != rt->objects + i && 
-			rt->objects[i].intersect(shadow_ray, rt->objects[i].shape, &t_distance) && 
-			t_distance < distance_to_light)
-				return (0);
-		i++;
-	}
-	return (1);
-}
-
-t_rgb	direct_light_sampling(t_rt *rt, t_vec *hit_point, t_vec *normal)
-{
-	Ray			shadow_ray;
-	double		distance_to_light;
-	t_material	*random_light;
-	float		normal_shadow_dot;
-	t_vec		light_sample_point;
-	float		final_light_intensity;
-
-	random_light = rt->lights[(int)roundf(randf() * (rt->nb_lights - 1))];
-	shadow_ray = fuzzy_shadow_ray(random_light, &light_sample_point, hit_point, &distance_to_light);
-	normal_shadow_dot = dot(*normal, shadow_ray.dir);
-
-	if (normal_shadow_dot <= 0 || !cast_shadow_ray(rt, random_light, &shadow_ray, distance_to_light))
-		return ((t_rgb){0.f, 0.f, 0.f});
-
-	final_light_intensity = 1
-							/ distance_to_light
-							* random_light->light_intensity * 2
-							* normal_shadow_dot
-							* rt->nb_lights;
-
-	if (rt->opt.ambient)
-		final_light_intensity *= 1 - rt->opt.ambient;
-	return (color_fade(random_light->color, final_light_intensity));
-}
-
-
 t_rgb	cast_ray(t_rt *rt, Ray *ray, int is_specular_ray, int depth)
 {
 	double		t_distance;
 	t_material	obj_hit;
-	t_rgb		direct_light;
-	t_rgb		light;
+	t_rgb		direct_lighting;
+	t_rgb		color;
+	Ray			normal;
 
-	// if (depth > rt->opt.max_depth + is_specular_ray)
-	// 	return ((t_rgb){.0f, .0f, .0f});
+	if (depth > rt->opt.max_depth + is_specular_ray)
+		return ((t_rgb){0.f, 0.f, 0.f});
 
-	light = (t_rgb){.0f, .0f, .0f};
+	color = (t_rgb){0.f, 0.f, 0.f};
 	if (intersect_objects(rt, ray, &obj_hit, &t_distance))
 	{
 		// return (obj_hit.color);
 		if (obj_hit.light_intensity)
 			return (color_fade(obj_hit.color, obj_hit.light_intensity));
 
-		t_vec	hit_point = get_ray_point(*ray, t_distance);
-		t_vec	normal = obj_hit.normal(obj_hit.shape, &(ray->dir), &hit_point);
-
+		normal.origin = get_ray_point(*ray, t_distance);
+		normal.dir = obj_hit.normal(obj_hit.shape, &(ray->dir), &normal.origin);
+ 
 		if (obj_hit.smoothness && randf() <= obj_hit.specular_prob)
-		{
-			if (depth < rt->opt.max_depth + 1)
-			{
-				Ray		random_ray;
+			return (specular_lighting(rt, ray, &normal, obj_hit.smoothness, depth));
 
-				t_vec	reflection_vec = get_reflection(&(ray->dir), &normal);
-				random_ray.origin = hit_point;
-				if (obj_hit.smoothness == 1.f)
-					random_ray.dir = reflection_vec;
-				else
-					random_ray.dir = lerp(cosine_hemisphere_dir(&normal), reflection_vec, obj_hit.smoothness);
-				t_rgb	specular = cast_ray(rt, &random_ray, 1, depth + 1);
-				return (color_fade(specular, 0.95f));
-			}
-			else
-				return (light);
-		}
-
-		if (depth < rt->opt.max_depth)
-		{
-			Ray		random_ray;
-			random_ray.dir = cosine_hemisphere_dir(&normal);
-			random_ray.origin = hit_point;
-			light = cast_ray(rt, &random_ray, 0, depth + 1);
-			if (!is_specular_ray)
-				light = color_fade(light, 0.8f);
-		}
-
+		color = indirect_lighting(rt, &normal, is_specular_ray, depth);
 		if (rt->nb_lights)
 		{
-			direct_light = direct_light_sampling(rt, &hit_point, &normal);
-			light = color_add(light, direct_light);
+			direct_lighting = direct_light_sampling(rt, &normal);
+			color = color_add(color, direct_lighting);
 		}
-
-		return (color_mult(light, obj_hit.color));
+		return (color_mult(color, obj_hit.color));
 	}
 
 	if (rt->opt.ambient)
 		return (ambient_light(ray));
-	return (light);
+	return (color);
 }
 
 int	render(t_rt *rt)
@@ -228,6 +144,7 @@ int	render(t_rt *rt)
 		return (0);
 	// if (rt->rendering_frame > 10)
 	// 	close_program(rt);
+	memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 	y = 0;
 	while (y < rt->cam.screen_height)
 	{
@@ -236,14 +153,19 @@ int	render(t_rt *rt)
 		{
 			cam_ray = make_cam_ray(rt, x, y);
 			pixel_color = cast_ray(rt, &cam_ray, 0, 1);
+
+			if (rt->opt.pixel_rendered_interval > 1)
+				pixel_color = color_fade(pixel_color, rt->opt.pixel_rendered_interval);
+
 			rt->pixel_buff[y][x] = color_add(rt->pixel_buff[y][x], pixel_color);
 			put_pixel(rt, x, y, color_fade(rt->pixel_buff[y][x], 1.f / rt->rendering_frame));
-			x++;
+			x += rt->opt.pixel_rendered_interval;
 		}
 		y++;
 	}
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img.p, 0, 0);
-	loading_bar(rt->opt.rpp, rt->rendering_frame);
+	if (rt->opt.pixel_rendered_interval == 1)
+		loading_bar(rt->opt.rpp, rt->rendering_frame);
 	rt->rendering_frame += 1;
 	return (0);
 }
@@ -290,11 +212,13 @@ int	main()
 	// kernel(&rt);
 	gather_lights(&rt);
 
+	// rt.opt.gamma = 1.f;
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
 	// rt.opt.max_depth = 1;
 	rt.opt.cam_ray_fuzz = 1.f;
-	rt.opt.gamma = 1.f;
+	rt.opt.pixel_rendered_interval = 1;
+	// start_optimization(&rt);
 
 	rt.mlx = mlx_init();
 	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
@@ -308,7 +232,7 @@ int	main()
 	clear_pixel_buff(rt.pixel_buff);
 	rt.mouse.is_down = 0;
 	rt.rendering_frame = 1;
-	rt.cam.field_view = 40;
+	rt.cam.field_view = 60;
 	rt.cam.pos = (t_vec){0, 2, 0};
 	rt.cam.look_at = (t_vec){0, 0, -15};
 	set_cam(&rt);
@@ -318,6 +242,8 @@ int	main()
 	mlx_hook(rt.win, 5, 0, handle_mouse_up, &rt);
 	mlx_hook(rt.win, 6, 0, handle_mouse_move, &rt);
 	mlx_mouse_hook(rt.win, handle_mouse, &rt);
+
+	// mlx_hook();
 
 	mlx_loop_hook(rt.mlx, render, &rt);
 

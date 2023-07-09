@@ -86,7 +86,7 @@ typedef struct	s_material
 	float	light_intensity;
 	int		(*intersect)(Ray *, void *, double *);
 	t_vec	(*normal)(void *, t_vec *, t_vec *);
-	t_vec	(*light_sample)(void *);
+	t_vec	(*light_sample)(void *, Ray *);
 	void	*shape;
 }				t_material;
 
@@ -139,6 +139,7 @@ typedef struct	s_ray_options
 	float	ambient;
 	float	cam_ray_fuzz;
 	float	gamma;
+	int		pixel_rendered_interval;
 }				t_ray_options;
 
 typedef struct	s_rt {
@@ -208,7 +209,15 @@ void	set_cam(t_rt *data);
 void	loader(int frequency);
 void	clear_pixel_buff(t_rgb pixel_buff[HEIGHT][WIDTH]);
 double  get_closest_intersection(double t1, double t2);
+t_vec	cosine_hemisphere_dir(t_vec *normal_dir);
+t_vec	lerp(t_vec v1, t_vec v2, float t);
 
+
+// SHADING
+t_rgb	cast_ray(t_rt *rt, Ray *ray, int is_specular_ray, int depth);
+t_rgb	indirect_lighting(t_rt *rt, Ray *normal, int is_specular_ray, int depth);
+t_rgb	specular_lighting(t_rt *rt, Ray *ray, Ray *normal, float obj_smoothness, int depth);
+t_rgb	direct_light_sampling(t_rt *rt, Ray *normal);
 
 t_vec	normalize(t_vec v);
 double  vec_len(t_vec v);
@@ -239,6 +248,7 @@ int		handle_mouse_up(int button, int x, int y, t_rt *rt);
 int		handle_mouse(int event, int x, int y, t_rt *rt);
 int		close_program(t_rt *data);
 void	put_pixel(t_rt *data, int x, int y, t_rgb color);
+void	start_optimization(t_rt *rt);
 
 
 float	randf();
@@ -251,7 +261,7 @@ t_vec	random_dir();
 // SPHERE
 t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 int		intersect_sphere(Ray *ray, void *shape, double *t);
-t_vec	sample_sphere(void *shape);
+t_vec	sample_sphere(void *shape, Ray *normal);
 
 
 // PLANE
@@ -262,7 +272,7 @@ t_vec	plane_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 // RECTANGLE
 int		intersect_rect(Ray *ray, void *shape, double *t);
 t_vec	rect_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
-t_vec	sample_rect(void *shape);
+t_vec	sample_rect(void *shape, Ray *normal);
 
 //PARSING
 

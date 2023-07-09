@@ -77,7 +77,8 @@ t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
 t_rgb	ambient_light(Ray *ray)
 {
 	return (lerp_color((t_rgb){1.f, 1.f, 1.f}, 
-						(t_rgb){.8f, .8f, 1.f}, 
+						// (t_rgb){1.f, 1.f, 1.f}, 
+						(t_rgb){.8f, .8f, 1.f},
 						ray->dir.y * 0.5 + 0.5));
 }
 

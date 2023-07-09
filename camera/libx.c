@@ -21,6 +21,20 @@
 // 	// }
 // }
 
+void	stop_optimization(t_rt *rt)
+{
+	// rt->opt.rpp = RPP;
+	rt->opt.max_depth = MAX_DEPTH;
+	rt->opt.pixel_rendered_interval = 1;
+}
+
+void	start_optimization(t_rt *rt)
+{
+	// rt->opt.rpp = 1;
+	rt->opt.max_depth = 1;
+	rt->opt.pixel_rendered_interval = 3;
+}
+
 int	handle_key(int key, t_rt *rt)
 {
 	// printf("%d\n", key);
@@ -62,8 +76,7 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 	(void)y;
 	if (button == 1)
 	{
-		rt->opt.max_depth = MAX_DEPTH;
-		rt->opt.rpp = RPP;
+		stop_optimization(rt);
 		rt->mouse.is_down = 0;
 		rt->rendering_frame = 1;
 		clear_pixel_buff(rt->pixel_buff);
@@ -88,17 +101,18 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 
 int handle_mouse_move(int x, int y, t_rt *rt)
 {
+	int	mouse_dir_x;
+	int	mouse_dir_y;
+	float	radius_len;
+
 	if (rt->mouse.is_down)
 	{
-		int	mouse_dir_x;
-		int	mouse_dir_y;
-
 		mouse_dir_x = rt->mouse.origin.x - x;
 		mouse_dir_y = rt->mouse.origin.y - y;
 		if (mouse_dir_x == 0 && mouse_dir_y == 0)
 			return (0);
-		float	radius_len = vec_len(sub(rt->cam.pos, rt->cam.look_at));
 
+		radius_len = vec_len(sub(rt->cam.pos, rt->cam.look_at));
 		t_vec	x_dir = scale(rt->cam.space.x, mouse_dir_x / 40.f);
 		t_vec	y_dir = scale(rt->cam.space.y, mouse_dir_y / 40.f * -1);
 		t_vec	new_cam_pos = add(rt->cam.pos, add(y_dir, x_dir));
@@ -115,21 +129,6 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 	return (0);
 }
 
-// t_vec	up = scale(rt->cam.space.y, rt->mouse.dir.y / 30.f);
-// t_vec	up_point = vect_op(rt->cam.pos, '-', up);
-// t_vec	radius_y_dir = normalize(vect_op(up_point, '-', rt->cam.look_at));
-// t_vec	new_y_p = get_ray_point((Ray){rt->cam.look_at, radius_y_dir}, radius_len);
-// t_vec	new_y_dir = vect_op(new_y_p, '-', rt->cam.pos);
-
-// t_vec	x_dir = scale(rt->cam.space.x, rt->mouse.dir.x / 30.f);
-// t_vec	x_point = vect_op(rt->cam.pos, '+', x_dir);
-// t_vec	radius_x_dir = normalize(vect_op(x_point, '-', rt->cam.look_at));
-// t_vec	new_x_p = get_ray_point((Ray){rt->cam.look_at, radius_x_dir}, radius_len);
-// t_vec	new_x_dir = vect_op(new_x_p, '-', rt->cam.pos);
-
-// t_vec	new_pos_dir = vect_op(new_x_dir, '+', new_y_dir);
-// rt->cam.pos = vect_op(rt->cam.pos, '+', new_x_dir);
-
 int handle_mouse(int event, int x, int y, t_rt *rt)
 {
 	if (event != 1 && event != 4 && event != 5)
@@ -140,8 +139,7 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		float	vertical = 1 - (float)y / HEIGHT * 2;
 		float	len_to_center = sqrt(horizontal * horizontal + vertical * vertical);
 
-		rt->opt.max_depth = 1;
-		rt->opt.rpp = 1;
+		start_optimization(rt);
 		rt->mouse.is_down = 1;
 		rt->mouse.origin = (t_point){x, y};
 		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 40 + 3));
@@ -150,7 +148,7 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 	else if (event == 4)
 	{
 		float	horizontal = (float)x / WIDTH * 2 - 1;
-		float	vertical = (float)y / HEIGHT * - 2 + 1;
+		float	vertical = 1 - (float)y / HEIGHT * 2;
 
 		rt->cam.pos = add(rt->cam.pos, scale(rt->cam.space.y, vertical));
 		rt->cam.look_at = add(rt->cam.look_at, scale(rt->cam.space.y, vertical));
@@ -164,7 +162,7 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 	else if (event == 5)
 	{
 		float	horizontal = (float)x / WIDTH * 2 - 1;
-		float	vertical = (float)y / HEIGHT * - 2 + 1;
+		float	vertical = 1 - (float)y / HEIGHT * 2;
 
 		rt->cam.pos = sub(rt->cam.pos, scale(rt->cam.space.y, vertical));
 		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.space.y, vertical));

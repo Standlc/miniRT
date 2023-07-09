@@ -8,15 +8,17 @@ void balls_1(t_rt *rt)
 	sphere1_shape.radius = 1.5f;
 	rt->objects[0].color = hex_to_rgb(0xffad92);
 	// rt->objects[0].color = hex_to_rgb(0xFFFFFF);
-	rt->objects[0].smoothness = 1.f;
-	rt->objects[0].specular_prob = spec;
+	rt->objects[0].smoothness = .6f;
+	rt->objects[0].specular_prob = .5f;
 	rt->objects[0].light_intensity = 0.f;
 	rt->objects[0].shape = (void *)&sphere1_shape;
 	rt->objects[0].intersect = intersect_sphere;
 	rt->objects[0].normal = sphere_normal;
+	rt->objects[0].light_sample = sample_sphere;
 
 	static t_sphere light1_shape;
 	light1_shape.center = (t_vec){-5, 5, -5};
+	// light1_shape.center = (t_vec){0, 0, 0};
 	light1_shape.radius = 1.f;
 	rt->objects[1].shape = (void *)&light1_shape;
 	rt->objects[1].color = hex_to_rgb(0xFFFFFF);
@@ -30,7 +32,7 @@ void balls_1(t_rt *rt)
 	light2_shape.radius = 1.f;
 	rt->objects[5].shape = (void *)&light2_shape;
 	rt->objects[5].color = hex_to_rgb(0xFFFFFF);
-	rt->objects[5].light_intensity = 3.f;
+	rt->objects[5].light_intensity = 0.f;
 	rt->objects[5].intersect = intersect_sphere;
 	rt->objects[5].light_sample = sample_sphere;
 	rt->objects[5].normal = sphere_normal;
@@ -88,8 +90,9 @@ void balls_1(t_rt *rt)
 	plane1_shape.normal = normalize((t_vec){0, 1, 0});
 	plane1_shape.point = (t_vec){0, 0, 0};
 	rt->objects[3].color = hex_to_rgb(0xFFFFFF);
+	// rt->objects[3].color = (t_rgb){0.05, 0.05, 0.05};
 	rt->objects[3].smoothness = 1.f;
-	rt->objects[3].specular_prob = spec;
+	rt->objects[3].specular_prob = 0.5f;
 	rt->objects[3].light_intensity = 0.f;
 	rt->objects[3].shape = (void *)&plane1_shape;
 	rt->objects[3].intersect = intersect_plane;
@@ -211,8 +214,8 @@ void kernel(t_rt *rt)
 	static t_plane plane4_shape;
 	plane4_shape.normal = normalize((t_vec){0, 0, 1});
 	plane4_shape.point = (t_vec){0, 0, -25};
-	// rt->objects[4].color = hex_to_rgb(0xFFFFFF);
-	rt->objects[4].color = hex_to_rgb(0);
+	rt->objects[4].color = hex_to_rgb(0xFFFFFF);
+	// rt->objects[4].color = hex_to_rgb(0);
 	rt->objects[4].smoothness = 1.f;
 	rt->objects[4].specular_prob = 0.3f;
 	rt->objects[4].light_intensity = 0.f;
@@ -237,8 +240,8 @@ void kernel(t_rt *rt)
 	plane5_shape.point = (t_vec){0, 5, 0};
 	rt->objects[5].smoothness = 1.f;
 	rt->objects[5].specular_prob = 0.3f;
-	// rt->objects[5].color = (t_rgb){1, 1, 1};
-	rt->objects[5].color = hex_to_rgb(0);
+	rt->objects[5].color = (t_rgb){1, 1, 1};
+	// rt->objects[5].color = hex_to_rgb(0);
 	rt->objects[5].light_intensity = 0.f;
 	rt->objects[5].shape = (void *)&plane5_shape;
 	rt->objects[5].intersect = intersect_plane;
@@ -249,8 +252,8 @@ void kernel(t_rt *rt)
 	plane2_shape.point = (t_vec){0, -2, 0};
 	rt->objects[6].smoothness = 1.f;
 	rt->objects[6].specular_prob = 0.3f;
-	// rt->objects[6].color = (t_rgb){1, 1, 1};
-	rt->objects[6].color = hex_to_rgb(0);
+	rt->objects[6].color = (t_rgb){1, 1, 1};
+	// rt->objects[6].color = hex_to_rgb(0);
 	rt->objects[6].light_intensity = 0.f;
 	rt->objects[6].shape = (void *)&plane2_shape;
 	rt->objects[6].intersect = intersect_plane;

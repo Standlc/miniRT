@@ -36,11 +36,12 @@ int	intersect_rect(Ray *ray, void *shape, double *t)
 	return (projected_len < vec_len(rect->side_b) / 2);
 }
 
-t_vec	sample_rect(void *shape)
+t_vec	sample_rect(void *shape, Ray *normal)
 {
 	t_rect	*rect;
 	t_vec	random_dir;
 
+	(void)normal;
 	rect = (t_rect *)shape;
 	random_dir = add(scale(rect->side_a, randf() - 0.5), scale(rect->side_b, randf() - 0.5));
 	// return (rect->center);

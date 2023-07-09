@@ -40,12 +40,16 @@ int	intersect_sphere(Ray *ray, void *shape, double *t)
 	return (*t > 0);
 }
 
-t_vec	sample_sphere(void *shape)
+t_vec	sample_sphere(void *shape, Ray *normal)
 {
 	t_sphere	*sphere;
+	t_vec		sample_dir;
 
 	sphere = (t_sphere *)shape;
-	return (add(scale(random_dir(), sphere->radius), sphere->center));
+	sample_dir = scale(random_dir(), sphere->radius);
+	if (dot(sample_dir, normal->dir) < 0)
+		sample_dir = scale(sample_dir, -1);
+	return (add(sample_dir, sphere->center));
 }
 
 t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)

@@ -11,6 +11,7 @@ SRCS		=	main.c						utils/vector.c	\
 				parsing/error_message.c	parsing/get_content.c	\
 				parsing/type/check_syntaxe.c	parsing/type/type_unique.c	\
 				parsing/type/type.c		parsing/fonction_utils.c	\
+				shading/shading.c			shading/direct_light_sampling.c \
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -46,7 +47,7 @@ ${NAME_L} : ${OBJS}
 	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
 $(NAME) : minirt.h $(OBJS)
-		$(CC) $(OBJS) -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
+		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
 
 %.o : %.c Makefile
 		$(CC) $(CFLAGS) $(INCLUDES) $(INCLUDES_L) -c $< -o $@
