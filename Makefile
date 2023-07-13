@@ -6,6 +6,9 @@ SRCS		=	main.c						utils/vector.c	\
 				camera/libx.c				utils/colors.c	\
 				utils/utils.c				utils/loader.c	\
 				shapes/sphere.c				shapes/plane.c		\
+				shapes/cylinder.c 			shapes/circle.c \
+				shapes/cone.c \
+				utils/coordinate_system.c \
 				scenes.c					shapes/rectangle.c	\
 				parsing/main.c			parsing/check_input.c	\
 				parsing/error_message.c	parsing/get_content.c	\

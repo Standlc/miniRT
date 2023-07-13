@@ -87,7 +87,7 @@ t_vec	cross_product(t_vec v1, t_vec v2)
 	return (normalize(res));
 }
 
-t_vec  get_ray_point(Ray ray, double d)
+t_vec  get_ray_point(t_ray ray, double d)
 {
 	ray.dir.x = ray.dir.x * d + ray.origin.x;
 	ray.dir.y = ray.dir.y * d + ray.origin.y;

@@ -11,7 +11,7 @@ t_vec	rect_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
 	return (normal);
 }
 
-int	intersect_rect(Ray *ray, void *shape, double *t)
+int	intersect_rect(t_ray *ray, void *shape, double *t)
 {
 	t_rect	*rect;
 	t_vec	center_to_intersection;
@@ -36,7 +36,7 @@ int	intersect_rect(Ray *ray, void *shape, double *t)
 	return (projected_len < vec_len(rect->side_b) / 2);
 }
 
-t_vec	sample_rect(void *shape, Ray *normal)
+t_vec	sample_rect(void *shape, t_ray *normal)
 {
 	t_rect	*rect;
 	t_vec	random_dir;

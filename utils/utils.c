@@ -14,6 +14,13 @@ double  min(double a, double b)
 	return (a);
 }
 
+double  max(double a, double b)
+{
+	if (a < b)
+		return (b);
+	return (a);
+}
+
 float	randf()
 {
 	return ((float)rand() / RAND_MAX);
@@ -21,8 +28,11 @@ float	randf()
 
 float	normal_randf()
 {
-	float	theta = 2 * M_PI * randf();
-    float	rho = sqrt(-2 * log(randf()));
+	float	theta;
+	float	rho;
+
+	theta = 2 * M_PI * randf();
+	rho = sqrt(-2 * log(randf()));
     return (rho * cos(theta));
 }
 

@@ -49,6 +49,7 @@ int	close_program(t_rt *rt)
 	mlx_destroy_image(rt->mlx, rt->img.p);
 	// mlx_destroy_display(rt->mlx);
 	free(rt->mlx);
+	free(rt->pixel_buff);
 	exit (0);
 }
 
@@ -101,8 +102,8 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 
 int handle_mouse_move(int x, int y, t_rt *rt)
 {
-	int	mouse_dir_x;
-	int	mouse_dir_y;
+	int		mouse_dir_x;
+	int		mouse_dir_y;
 	float	radius_len;
 
 	if (rt->mouse.is_down)
@@ -114,10 +115,10 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 
 		radius_len = vec_len(sub(rt->cam.pos, rt->cam.look_at));
 		t_vec	x_dir = scale(rt->cam.space.x, mouse_dir_x / 40.f);
-		t_vec	y_dir = scale(rt->cam.space.y, mouse_dir_y / 40.f * -1);
+		t_vec	y_dir = scale(rt->space.y, mouse_dir_y / 40.f * -1);
 		t_vec	new_cam_pos = add(rt->cam.pos, add(y_dir, x_dir));
 		t_vec	lookat_to_cam_pos = normalize(sub(new_cam_pos, rt->cam.look_at));
-		lookat_to_cam_pos = get_ray_point((Ray){rt->cam.look_at, lookat_to_cam_pos}, radius_len);
+		lookat_to_cam_pos = get_ray_point((t_ray){rt->cam.look_at, lookat_to_cam_pos}, radius_len);
 		rt->cam.pos = lookat_to_cam_pos;
 
 		set_cam(rt);
@@ -142,7 +143,7 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		start_optimization(rt);
 		rt->mouse.is_down = 1;
 		rt->mouse.origin = (t_point){x, y};
-		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 40 + 3));
+		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 30 + 2));
 		return (0);
 	}
 	else if (event == 4)

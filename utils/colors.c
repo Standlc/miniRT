@@ -74,12 +74,23 @@ t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
 	return (c1);
 }
 
-t_rgb	ambient_light(Ray *ray)
+t_rgb	color_sub(t_rgb color, float sub)
 {
-	return (lerp_color((t_rgb){1.f, 1.f, 1.f}, 
-						// (t_rgb){1.f, 1.f, 1.f}, 
-						(t_rgb){.8f, .8f, 1.f},
-						ray->dir.y * 0.5 + 0.5));
+	color.r = max(color.r - sub, 0.0);
+	color.g = max(color.g - sub, 0.0);
+	color.b = max(color.b - sub, 0.0);
+	return (color);
+}
+
+t_rgb	ambient_light(t_rgb color, t_ray *ray, float intensity)
+{
+	return (
+		lerp_color(
+				lerp_color(color_sub(color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
+				lerp_color(color_sub(color, 1 - intensity), color, intensity),
+				ray->dir.y * 0.5 + 0.5
+			)
+		);
 }
 
 t_rgb	color_fade(t_rgb color, float fade)

@@ -1,7 +1,5 @@
 #include "minirt.h"
 
-int	close_program(t_rt *rt);
-
 void	print_vector(t_vec v)
 {
 	printf("[%f, %f, %f],\n", v.x, v.y, v.z);
@@ -10,7 +8,7 @@ void	print_vector(t_vec v)
 double  get_closest_intersection(double t1, double t2)
 {
 	if (t1 <= ZERO && t2 <= ZERO)
-		return (-1);
+		return (-1.0);
 	if (t1 <= ZERO)
 		return (t2);
 	if (t2 <= ZERO)
@@ -18,28 +16,14 @@ double  get_closest_intersection(double t1, double t2)
 	return (min(t1, t2));
 }
 
-t_rgb	clamp(t_rgb c, float max)
-{
-	if (c.r > max)
-		c.r = max;
-	if (c.g > max)
-		c.g = max;
-	if (c.b > max)
-		c.b = max;
-	return (c);
-}
-
-int	is_clamped(t_rgb c)
-{
-	return (c.r > 1.f || c.g > 1.f || c.b > 1.f);
-}
-
 t_vec	to_world_coordinates(t_cam *cam, double x, double y)
 {
 	t_vec	world_pixel;
+	float	tan_cam_view_field;
 
-	x = (2 * (x + 0.5) / WIDTH - 1) * tan(cam->field_view / 2 * M_PI / 180) / cam->aspect_ratio;
-	y = (1 - 2 * (y + 0.5) / HEIGHT) * tan(cam->field_view / 2 * M_PI / 180);
+	tan_cam_view_field = tan(cam->field_view / 2 * M_PI / 180);
+	x = (2 * (x + 0.5) / WIDTH - 1) * tan_cam_view_field;
+	y = (1 - 2 * (y + 0.5) / HEIGHT) * tan_cam_view_field * cam->aspect_ratio;
 
 	world_pixel.x = x * cam->space.x.x + y * cam->space.y.x + cam->space.z.x + cam->pos.x;
 	world_pixel.y = x * cam->space.x.y + y * cam->space.y.y + cam->space.z.y + cam->pos.y;
@@ -47,9 +31,9 @@ t_vec	to_world_coordinates(t_cam *cam, double x, double y)
 	return (world_pixel);
 }
 
-Ray	make_cam_ray(t_rt *rt, int x, int y)
+t_ray	make_cam_ray(t_rt *rt, int x, int y)
 {
-	Ray		cam_ray;
+	t_ray	cam_ray;
 	t_vec	world_pixel;
 	float	anti_aliasing_x;
 	float	anti_aliasing_y;
@@ -76,7 +60,7 @@ t_vec	lerp(t_vec v1, t_vec v2, float t)
 	return (v1);
 }
 
-int	intersect_objects(t_rt *rt, Ray *ray, t_material *obj_hit, double *t)
+int	intersect_objects(t_rt *rt, t_ray *ray, t_material *obj_hit, double *t)
 {
 	double	distance;
 	int		i;
@@ -92,59 +76,65 @@ int	intersect_objects(t_rt *rt, Ray *ray, t_material *obj_hit, double *t)
 		}
 		i++;
 	}
-	return (*t > 0 && *t != INFINITY);
+	return (*t != INFINITY);
 }
 
-t_rgb	cast_ray(t_rt *rt, Ray *ray, int is_specular_ray, int depth)
+t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 {
 	double		t_distance;
 	t_material	obj_hit;
 	t_rgb		direct_lighting;
 	t_rgb		color;
-	Ray			normal;
+	t_ray		normal;
 
-	if (depth > rt->opt.max_depth + is_specular_ray)
+	if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
 		return ((t_rgb){0.f, 0.f, 0.f});
 
 	color = (t_rgb){0.f, 0.f, 0.f};
 	if (intersect_objects(rt, ray, &obj_hit, &t_distance))
 	{
-		// return (obj_hit.color);
-		if (obj_hit.light_intensity)
+		// return (color_fade(obj_hit.color, 10 / pow(t_distance, 2)));
+		if (obj_hit.light_intensity && rt->opt.ambient < 1.0)
 			return (color_fade(obj_hit.color, obj_hit.light_intensity));
 
 		normal.origin = get_ray_point(*ray, t_distance);
 		normal.dir = obj_hit.normal(obj_hit.shape, &(ray->dir), &normal.origin);
- 
+
 		if (obj_hit.smoothness && randf() <= obj_hit.specular_prob)
 			return (specular_lighting(rt, ray, &normal, obj_hit.smoothness, depth));
 
-		color = indirect_lighting(rt, &normal, is_specular_ray, depth);
-		if (rt->nb_lights)
+		color = indirect_lighting(rt, &normal, depth);
+		if (rt->nb_lights && rt->opt.ambient < 1.0)
 		{
-			direct_lighting = direct_light_sampling(rt, &normal);
+			direct_lighting = direct_light_sampling(rt, ray, &normal, !is_specular_ray && depth > 1);
 			color = color_add(color, direct_lighting);
 		}
+
+		if (obj_hit.procedural_texturing != NULL)
+			obj_hit.color = color_fade(obj_hit.color, obj_hit.procedural_texturing(obj_hit.shape, &normal));
 		return (color_mult(color, obj_hit.color));
 	}
 
 	if (rt->opt.ambient)
-		return (ambient_light(ray));
+		return (ambient_light(rt->opt.ambient_light, ray, rt->opt.ambient));
 	return (color);
 }
 
 int	render(t_rt *rt)
 {
-	Ray		cam_ray;
+	t_ray	cam_ray;
+	t_rgb	pixel_color;
 	int		y;
 	int		x;
-	t_rgb	pixel_color;
 
-	if (rt->rendering_frame > rt->opt.rpp)
-		return (0);
+	// if (rt->rendering_frame > rt->opt.rpp)
+	// 	return (0);
 	// if (rt->rendering_frame > 10)
+	// {
 	// 	close_program(rt);
-	memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
+	// 	// return (0);
+	// }
+	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 	y = 0;
 	while (y < rt->cam.screen_height)
 	{
@@ -157,8 +147,8 @@ int	render(t_rt *rt)
 			if (rt->opt.pixel_rendered_interval > 1)
 				pixel_color = color_fade(pixel_color, rt->opt.pixel_rendered_interval);
 
-			rt->pixel_buff[y][x] = color_add(rt->pixel_buff[y][x], pixel_color);
-			put_pixel(rt, x, y, color_fade(rt->pixel_buff[y][x], 1.f / rt->rendering_frame));
+			rt->pixel_buff[y * WIDTH + x] = color_add(rt->pixel_buff[y * WIDTH + x], pixel_color);
+			put_pixel(rt, x, y, color_fade(rt->pixel_buff[y * WIDTH + x], 1.f / rt->rendering_frame));
 			x += rt->opt.pixel_rendered_interval;
 		}
 		y++;
@@ -173,12 +163,11 @@ int	render(t_rt *rt)
 void	set_cam(t_rt *rt)
 {
 	rt->cam.space.z = normalize(sub(rt->cam.look_at, rt->cam.pos));
-	rt->cam.space.x = cross_product(rt->space.y, rt->cam.space.z);
-	rt->cam.space.y = cross_product(rt->cam.space.z, rt->cam.space.x);
-	rt->cam.space.x = scale(rt->cam.space.x, -1);
+	rt->cam.space.x = cross_product(rt->cam.space.z, rt->space.y);
+	rt->cam.space.y = cross_product(rt->cam.space.x, rt->cam.space.z);
 }
 
-void	clear_pixel_buff(t_rgb pixel_buff[HEIGHT][WIDTH])
+void	clear_pixel_buff(t_rgb *pixel_buff)
 {	
 	memset(pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 }
@@ -200,25 +189,28 @@ void	gather_lights(t_rt *rt)
 	}
 }
 
+void	other_shapes(t_rt *rt);
+
 int	main()
 {
-	t_rt      rt;
+	t_rt	rt;
 	rt.cam.screen_width = WIDTH;
 	rt.cam.screen_height = HEIGHT;
 	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
 
 	// tomato(&rt);
-	balls_1(&rt);
+	// balls_1(&rt);
 	// kernel(&rt);
+	other_shapes(&rt);
 	gather_lights(&rt);
 
 	// rt.opt.gamma = 1.f;
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
-	// rt.opt.max_depth = 1;
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.pixel_rendered_interval = 1;
 	// start_optimization(&rt);
+	rt.opt.ambient_light = (t_rgb){0.8, 0.2, .8};
 
 	rt.mlx = mlx_init();
 	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
@@ -229,31 +221,30 @@ int	main()
 	rt.space.y = (t_vec){0, 1, 0};
 	rt.space.z = (t_vec){0, 0, -1};
 
-	clear_pixel_buff(rt.pixel_buff);
 	rt.mouse.is_down = 0;
 	rt.rendering_frame = 1;
-	rt.cam.field_view = 60;
-	rt.cam.pos = (t_vec){0, 2, 0};
-	rt.cam.look_at = (t_vec){0, 0, -15};
+	rt.cam.field_view = 90;
 	set_cam(&rt);
 
+	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
+	clear_pixel_buff(rt.pixel_buff);
+
 	mlx_hook(rt.win, 2, 0, handle_key, &rt);
-	mlx_hook(rt.win, ON_DESTROY, ON_DESTROY, close_program, &rt);
+	mlx_hook(rt.win, ON_DESTROY, 0, close_program, &rt);
 	mlx_hook(rt.win, 5, 0, handle_mouse_up, &rt);
 	mlx_hook(rt.win, 6, 0, handle_mouse_move, &rt);
 	mlx_mouse_hook(rt.win, handle_mouse, &rt);
 
-	// mlx_hook();
-
 	mlx_loop_hook(rt.mlx, render, &rt);
 
 	mlx_loop(rt.mlx);
+	close_program(&rt);
 	return (0);
 }
 
 
 
-// t_rgb	cast_ray(t_rt *rt, Ray *ray, t_material **light_hit, int depth)
+// t_rgb	cast_ray(t_rt *rt, t_ray *ray, t_material **light_hit, int depth)
 // {
 // 	double		t_distance;
 // 	t_material	obj_hit;
@@ -275,7 +266,7 @@ int	main()
 
 // 		t_vec	hit_point = get_ray_point(*ray, t_distance);
 // 		t_vec	normal = obj_hit.normal(obj_hit.shape, &(ray->dir), &hit_point);
-// 		Ray		random_ray = cosine_hemisphere_ray(&normal, &hit_point);
+// 		t_ray		random_ray = cosine_hemisphere_ray(&normal, &hit_point);
 
 // 		if (obj_hit.smoothness * (randf() < obj_hit.specular_prob))
 // 		{
@@ -307,7 +298,7 @@ int	main()
 		// if (obj_hit.specular_prob)
 		// {
 		// 	t_vec	reflection_vec = get_reflection(&(ray->dir), &normal);
-		// 	Ray		reflection_ray;
+		// 	t_ray		reflection_ray;
 		// 	reflection_ray.dir = lerp(random_ray.dir, reflection_vec, obj_hit.smoothness);
 		// 	reflection_ray.origin = hit_point;
 		// 	light = color_fade(cast_ray(rt, &reflection_ray, 1, depth + 1), 0.95f * obj_hit.specular_prob);
@@ -390,7 +381,7 @@ int	main()
 // 	return (vector);
 // }
 
-// double  cast_reflection_ray(t_rt *rt, Ray *reflection_ray, sphere **intersected_sphere)
+// double  cast_reflection_ray(t_rt *rt, t_ray *reflection_ray, sphere **intersected_sphere)
 // {
 // 	double  temp_distance;
 // 	double  t_distance;
@@ -410,9 +401,9 @@ int	main()
 // 	return (t_distance);
 // }
 
-// Ray	make_shadow_ray(t_rt *rt, t_spot *light, t_vec hit_point, double *distance)
+// t_ray	make_shadow_ray(t_rt *rt, t_spot *light, t_vec hit_point, double *distance)
 // {
-// 	Ray		shadow_ray;
+// 	t_ray		shadow_ray;
 // 	t_vec	rand_f;
 
 // 	rand_f.x = randf() * rt->opt.shadow_ray_offset - rt->opt.shadow_ray_offset / 2;
@@ -426,10 +417,10 @@ int	main()
 // }
 
 
-// t_rgb	cast_ray(t_rt *rt, Ray ray, int depth)
+// t_rgb	cast_ray(t_rt *rt, t_ray ray, int depth)
 // {
 // 	double	t_distance;
-// 	Ray		shadow_ray;
+// 	t_ray		shadow_ray;
 // 	t_sphere	obj_hit;
 // 	t_rgb	final_color = {0.0f, 0.0f, 0.0f};
 // 	t_rgb	direct_color = {0.0f, 0.0f, 0.0f};
@@ -470,7 +461,7 @@ int	main()
 // 			// final_color = color_add(final_color, accum_direct_specular);
 
 // 			// cast_shadow_ray(rt, &(rt->lights[k]), &shadow_ray, hit_point);
-// 			Ray		random_ray = cosine_hemisphere_ray(&obj_hit, &normal, reflection_vec, hit_point);
+// 			t_ray		random_ray = cosine_hemisphere_ray(&obj_hit, &normal, reflection_vec, hit_point);
 // 			// float	reflection_intensity = relu(dot(reflection_vec, random_ray.dir));
 // 			// float	diffuse_intensity = relu(dot(normal, shadow_ray.dir));
 // 			// diffuse_intensity = 1;
@@ -486,7 +477,7 @@ int	main()
 
 // int	render(t_rt *rt)
 // {
-// 	Ray		cam_ray;
+// 	t_ray		cam_ray;
 // 	t_rgb	pixel_color;
 // 	int		i;
 // 	int		j;
@@ -541,7 +532,7 @@ int	main()
 // {
 // 	int	indirect_color = 0;
 // 	int	max_depth = 0;
-// 	Ray	indirect_ray;
+// 	t_ray	indirect_ray;
 // 	indirect_ray.origin = hit_point;
 // 	while (max_depth < 128)
 // 	{
@@ -566,7 +557,7 @@ int	main()
 // {
 // 	t_vec  normal = add(*hit_point, intersected_sphere->center, '-');
 // 	normal = normalize(normal);
-// 	Ray     reflection_ray;
+// 	t_ray     reflection_ray;
 // 	sphere  *reflection_intersected_sphere;
 
 // 	if (!i)
