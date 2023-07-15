@@ -9,13 +9,12 @@ int check_ambuant(char **row)
 	{
 		if (i == 1)
 			if (!range_zero_one(row[1]))
-				return (error_information("A"), 0);
+				return (error_information("A\n"), 0);
 		if (i == 2)
 			if (!rgb_information(row[2]))
-				return (error_information("A"), 0);
+				return (error_information("A\n"), 0);
         if (i == 3)
-            return (error_information("A"), 0);
-        
+            return (error_information("A\n"), 0);
 		i++;
 	}
 	return (1);
@@ -29,16 +28,16 @@ int check_camera(char **row)
 	while (row[i])
 	{
 		if (i == 1)
-			if (!range_zero_one(row[1]))
-				return (error_information("C"), 0);
+			if (!vector_coordinates(row[1]))
+				return (error_information("C\n"), 0);
 		if (i == 2)
-			if (!rgb_information(row[2]))
-				return (error_information("C"), 0);
-        if (i == 2)
-			if (!rgb_information(row[2]))
-				return (error_information("C"), 0);
+			if (!vector_normal_information(row[2]))
+				return (error_information("C\n"), 0);
+        if (i == 3)
+			if (!fov_information(row[3]))
+				return (error_information("C\n"), 0);
         if (i == 4)
-            return (error_information("C"), 0);
+            return (error_information("C\n"), 0);
 		i++;
 	}
 	return (1);

@@ -93,6 +93,7 @@ t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 	color = (t_rgb){0.f, 0.f, 0.f};
 	if (intersect_objects(rt, ray, &obj_hit, &t_distance))
 	{
+		//printf("%f %f %f\n", obj_hit.color.r,  obj_hit.color.g, obj_hit.color.b);
 		// return (color_fade(obj_hit.color, 10 / pow(t_distance, 2)));
 		if (obj_hit.light_intensity && rt->opt.ambient < 1.0)
 			return (color_fade(obj_hit.color, obj_hit.light_intensity));
@@ -191,27 +192,28 @@ void	gather_lights(t_rt *rt)
 
 void	other_shapes(t_rt *rt);
 
-int	main()
+int	main(int argc, char **argv)
 {
 	t_rt	rt;
 	rt.cam.screen_width = WIDTH;
 	rt.cam.screen_height = HEIGHT;
 	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
 
-	// tomato(&rt);
+	//tomato(&rt);
 	// balls_1(&rt);
 	// kernel(&rt);
-	other_shapes(&rt);
-	gather_lights(&rt);
+	//other_shapes(&rt);
+	//gather_lights(&rt);
 
-	// rt.opt.gamma = 1.f;
+	rt.opt.gamma = 1.f;
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.pixel_rendered_interval = 1;
 	// start_optimization(&rt);
-	rt.opt.ambient_light = (t_rgb){0.8, 0.2, .8};
+	//rt.opt.ambient_light = (t_rgb){0.8, 0.2, .8};
 
+	parsing(argc, argv, &rt);
 	rt.mlx = mlx_init();
 	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
 	rt.img.p = mlx_new_image(rt.mlx, WIDTH, HEIGHT);
@@ -223,9 +225,10 @@ int	main()
 
 	rt.mouse.is_down = 0;
 	rt.rendering_frame = 1;
-	rt.cam.field_view = 90;
+	//rt.cam.field_view = 90;
 	set_cam(&rt);
 
+	
 	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
 	clear_pixel_buff(rt.pixel_buff);
 
@@ -234,7 +237,7 @@ int	main()
 	mlx_hook(rt.win, 5, 0, handle_mouse_up, &rt);
 	mlx_hook(rt.win, 6, 0, handle_mouse_move, &rt);
 	mlx_mouse_hook(rt.win, handle_mouse, &rt);
-
+	
 	mlx_loop_hook(rt.mlx, render, &rt);
 
 	mlx_loop(rt.mlx);

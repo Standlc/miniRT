@@ -7,10 +7,16 @@ SRCS		=	../main.c						../utils/vector.c	\
 				../utils/utils.c				../utils/loader.c	\
 				../shapes/sphere.c				../shapes/plane.c		\
 				../scenes.c					../shapes/rectangle.c	\
-				../parsing/main.c			../parsing/check_input.c	\
-				../parsing/error_message.c	../parsing/get_content.c	\
-				../parsing/type/check_syntaxe.c	../parsing/type/type_unique.c	\
-				../parsing/type/type.c		../parsing/fonction_utils.c	\
+				../parsing/main.c			../parsing/input/check_input.c	\
+				../parsing/utils/error_message.c	../parsing/input/get_content.c	\
+				../parsing/type/type_unique.c	\
+				../parsing/type/type.c		../parsing/utils/fonction_utils.c	\
+				../shading/shading.c			../shading/direct_light_sampling.c \
+				../parsing/type/check_syntax/vector.c ../parsing/type/check_syntax/rgb.c \
+				../parsing/type/check_syntax/range.c ../parsing/type/check_syntax/other.c \
+				../parsing/fill_rt/fill_rt.c	../parsing/fill_rt/materials/fill_data.c\
+				../parsing/fill_rt/materials/fill_materials.c	../parsing/fill_rt/get_number/conversion.c\
+				../parsing/fill_rt/get_number/get_value.c
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -38,7 +44,7 @@ MATH_LIB	=	-lm
 
 RM			=	rm -f
 
-all : libs $(NAME)
+all : libs-l ${NAME_L}
 
 linux : libs-l ${NAME_L}
 

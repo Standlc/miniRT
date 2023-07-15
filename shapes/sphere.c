@@ -1,20 +1,19 @@
 #include "minirt.h"
 
-int	create_sphere(t_material *obj, float radius, t_vec center, int procedural_texturing)
+int	create_sphere(t_material *obj, t_info *info)
 {
 	t_sphere	*sphere;
 
 	sphere = malloc(sizeof(t_sphere));
 	if (!sphere)
 		return (1);
-
-	sphere->center = center;
-	sphere->radius = radius;
+	sphere->center = info->center;
+	sphere->radius = info->radius;
 	obj->shape = (void *)sphere;
 	obj->intersect = intersect_sphere;
 	obj->normal = sphere_normal;
 	obj->light_sample = sample_sphere;
-	if (procedural_texturing)
+	if (info->procedural_texturing)
 		obj->procedural_texturing = sphere_pattern;
 	else
 		obj->procedural_texturing = NULL;

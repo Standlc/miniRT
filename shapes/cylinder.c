@@ -10,30 +10,30 @@ float	cylinder_pattern(void *shape, t_ray *normal)
 	return (roundf(pattern));
 }
 
-int	create_cylinder(t_material *object, float radius, float height, t_vec center, t_vec dir, int procedural_texturing)
+int	create_cylinder(t_material *object, t_info *info)
 {
 	t_cylinder	*cylinder;
 
 	cylinder = malloc(sizeof(t_cylinder));
 	if (!cylinder)
 		return (1);
-	cylinder->center = center;
-	cylinder->radius = radius;
-	cylinder->height = height;
-	cylinder->dir = normalize(dir);
+	cylinder->center = info->center;
+	cylinder->radius = info->radius;
+	cylinder->height = info->height;
+	cylinder->dir = normalize(info->dir);
 
 	cylinder->covers[0].radius = cylinder->radius;
 	cylinder->covers[0].plane.normal = cylinder->dir;
-	cylinder->covers[0].plane.point = add(center, scale(cylinder->dir, height / 2));
+	cylinder->covers[0].plane.point = add(info->center, scale(cylinder->dir, info->height / 2));
 
 	cylinder->covers[1].radius = cylinder->radius;
 	cylinder->covers[1].plane.normal = scale(cylinder->dir, -1);
-	cylinder->covers[1].plane.point = add(center, scale(cylinder->dir, height / -2));
+	cylinder->covers[1].plane.point = add(info->center, scale(cylinder->dir, info->height / -2));
 
 	object->shape = (void *)cylinder;
 	object->intersect = intersect_cylinder;
 	object->normal = cylinder_normal;
-	if (procedural_texturing)
+	if (info->procedural_texturing)
 		object->procedural_texturing = sphere_pattern;
 	else
 		object->procedural_texturing = NULL;

@@ -10,11 +10,17 @@ SRCS		=	main.c						utils/vector.c	\
 				shapes/cone.c \
 				utils/coordinate_system.c \
 				scenes.c					shapes/rectangle.c	\
-				parsing/main.c			parsing/check_input.c	\
-				parsing/error_message.c	parsing/get_content.c	\
-				parsing/type/check_syntaxe.c	parsing/type/type_unique.c	\
-				parsing/type/type.c		parsing/fonction_utils.c	\
 				shading/shading.c			shading/direct_light_sampling.c \
+				parsing/parsing.c	\
+				parsing/utils/error_message.c	parsing/utils/fonction_utils.c \
+				parsing/input/get_content.c		parsing/input/check_input.c\
+				parsing/type/type_unique.c		parsing/type/type.c	\
+				parsing/type/check_syntax/other.c parsing/type/check_syntax/range.c \
+				parsing/type/check_syntax/rgb.c \
+				parsing/type/check_syntax/vector.c \
+				parsing/fill_rt/fill_rt.c \
+				parsing/fill_rt/materials/fill_data.c	parsing/fill_rt/materials/fill_materials.c \
+				parsing/fill_rt/get_number/conversion.c parsing/fill_rt/get_number/get_value.c\
 
 OBJS		=	$(SRCS:.c=.o)
 

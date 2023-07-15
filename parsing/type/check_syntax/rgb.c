@@ -17,7 +17,6 @@ int	atoi_rgb(char *str)
 	return (resultat);
 }
 
-
 int	rgb_information(char *str)
 {
 	int	i;
@@ -42,28 +41,6 @@ int	rgb_information(char *str)
 			(i++, coma++);
 	}
 	if (coma != 2)
-		return (0);
-	return (1);
-}
-
-int	range_zero_one(char *str)
-{
-	int	i;
-
-	i = 2;
-	if (str[0] != '0' && str[0] != '1')
-		return (0);
-	if (str[0] == '1')
-	{
-		if (!ft_strncmp(str, "1.0", 4))
-			return (1);
-		return (0);
-	}
-	if (str[1] != '.')
-		return (0);
-	while (str[i] >= '0' && str[i] <= '9')
-		i++;
-	if (str[i])
 		return (0);
 	return (1);
 }

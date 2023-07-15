@@ -1,26 +1,26 @@
 #include "minirt.h"
 
-int	create_cone(t_material *object, float radius, float height, t_vec center, t_vec dir, int procedural_texturing)
+int	create_cone(t_material *object, t_info *info)
 {
 	t_cone	*cone;
 
 	cone = malloc(sizeof(t_cone));
 	if (!cone)
 		return (1);
-	cone->center = center;
-	cone->radius = radius;
-	cone->height = height;
-	cone->dir = normalize(dir);
-	cone->top = add(center, scale(cone->dir, height));
+	cone->center = info->center;
+	cone->radius = info->radius;
+	cone->height = info->height;
+	cone->dir = normalize(info->dir);
+	cone->top = add(info->center, scale(cone->dir, info->height));
 
-	cone->bottom.radius = radius;
+	cone->bottom.radius = info->radius;
 	cone->bottom.plane.normal = scale(cone->dir, -1);
-	cone->bottom.plane.point = center;
+	cone->bottom.plane.point = info->center;
 
 	object->shape = (void *)cone;
 	object->intersect = intersect_cone;
 	object->normal = cone_normal;
-	if (procedural_texturing)
+	if (info->procedural_texturing)
 		object->procedural_texturing = sphere_pattern;
 	else
 		object->procedural_texturing = NULL;

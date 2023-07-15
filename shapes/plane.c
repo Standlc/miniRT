@@ -1,21 +1,21 @@
 #include "minirt.h"
 
-int	create_plane(t_material *obj, t_vec center, t_vec dir, int procedural_texturing)
+int	create_plane(t_material *obj, t_info *info)
 {
 	t_plane	*plane;
 
 	plane = malloc(sizeof(t_plane));
 	if (!plane)
 		return (1);
-	plane->point = center;
-	plane->normal = normalize(dir);
+	plane->point = info->center;
+	plane->normal = normalize(info->dir);
 
 	plane->system = create_system(plane->normal);
 
 	obj->shape = (void *)plane;
 	obj->intersect = intersect_plane;
 	obj->normal = plane_normal;
-	if (procedural_texturing)
+	if (info->procedural_texturing)
 		obj->procedural_texturing = plane_pattern;
 	else
 		obj->procedural_texturing = NULL;

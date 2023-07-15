@@ -8,29 +8,29 @@ void	other_shapes(t_rt *rt)
 	rt->objects[0].smoothness = 1.f;
 	rt->objects[0].specular_prob = spec;
 	rt->objects[0].light_intensity = 0.f;
-	create_cylinder(rt->objects + 0, 3.f, 5.f, (t_vec){5, 5, -5}, (t_vec){1, 1, -1}, 0);
+	//create_cylinder(rt->objects + 0, 3.f, 5.f, (t_vec){5, 5, -5}, (t_vec){1, 1, -1}, 0);
 
 	rt->objects[1].color = hex_to_rgb(0xFFFFFF);
 	rt->objects[1].light_intensity = 4.f;
-	create_sphere(rt->objects + 1, 1.f, (t_vec){0, 15, 2}, 0);
+	//create_sphere(rt->objects + 1, 1.f, (t_vec){0, 15, 2}, 0);
 
 	rt->objects[2].color = hex_to_rgb(0XFFF0F0);
 	rt->objects[2].smoothness = 1.f;
 	rt->objects[2].specular_prob = .0;
 	rt->objects[2].light_intensity = 0.f;
-	create_plane(rt->objects + 2, (t_vec){0, 0, 0}, (t_vec){0, 1, 0}, 1);
+	//create_plane(rt->objects + 2, (t_vec){0, 0, 0}, (t_vec){0, 1, 0}, 1);
 
 	rt->objects[3].color = hex_to_rgb(0x00FF00);
 	rt->objects[3].smoothness = 1.f;
 	rt->objects[3].specular_prob = spec;
 	rt->objects[3].light_intensity = 0.f;
-	create_cone(rt->objects + 3, 7.f, 10.f, (t_vec){-5, 3, -7}, (t_vec){-1, 3, -1}, 0);
+	// create_cone(rt->objects + 3, 7.f, 10.f, (t_vec){-5, 3, -7}, (t_vec){-1, 3, -1}, 0);
 
 	rt->objects[4].color = hex_to_rgb(0X0090F0);
 	rt->objects[4].smoothness = 1.f;
 	rt->objects[4].specular_prob = spec;
 	rt->objects[4].light_intensity = 0.f;
-	create_sphere(rt->objects + 4, 1.5f, (t_vec){-3, 2, 0}, 1);
+	// create_sphere(rt->objects + 4, 1.5f, (t_vec){-3, 2, 0}, 1);
 
 	rt->opt.ambient = .1;
 	rt->nb_objects = 5;
@@ -206,7 +206,7 @@ void kernel(t_rt *rt)
 	rt->objects[0].smoothness = 1.f;
 	rt->objects[0].specular_prob = 0.5f;
 	rt->objects[0].light_intensity = 0.f;
-	create_cylinder(rt->objects + 0, 2.f, 1.f, (t_vec){0, 0, -10}, (t_vec){1, 1, 1}, 0);
+	// create_cylinder(rt->objects + 0, 2.f, 1.f, (t_vec){0, 0, -10}, (t_vec){1, 1, 1}, 0);
 
 	// LITE
 	static t_rect rect1_shape;

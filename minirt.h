@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 #include "mlx.h"
 #include "libft.h"
 #include "get_next_line.h"
@@ -89,7 +90,6 @@ typedef struct	s_material
 	t_vec	(*normal)(void *, t_vec *, t_vec *);
 	t_vec	(*light_sample)(void *, t_ray *);
 	float	(*procedural_texturing)(void *shape, t_ray *normal);
-	// float	(*light_distribution)(t_vec *hit_point, t_vec *shadow_dir);
 }				t_material;
 
 typedef struct	s_plane
@@ -178,9 +178,9 @@ typedef struct	s_rt {
 	int				map_height;
 	int				map_width;
 	t_cam			cam;
-	t_material		objects[20];
+	t_material		*objects;
 	int         	nb_objects;
-	t_material		*lights[10];
+	t_material		**lights;
 	int         	nb_lights;
 	t_rgb			*pixel_buff;
 	t_ray_options	opt;
@@ -188,6 +188,27 @@ typedef struct	s_rt {
 	t_mouse			mouse;
 	t_space			space;
 }				t_rt;
+
+typedef struct	s_info
+{
+	t_rgb	color;
+	float   smoothness;
+	float	specular_prob;
+	float	light_intensity;
+	t_vec	center;
+	t_vec	dir;
+	double	radius;
+	double	height;
+	int		procedural_texturing;
+	int		bump_map;
+}				t_info;
+
+typedef struct	s_parsing
+{
+	int	fd;
+	int	number_of_materials;
+	int	number_of_lights;
+}	t_parsing;
 
 enum {
 	//LINUX KEYS
@@ -221,7 +242,8 @@ enum {
 	LIGHT = 3,
 	SPHERE = 4,
 	PLAN = 5,
-	CYLINDRER = 6,
+	CYLINDER = 6,
+	CONE = 7,
 };
 
 // SCENES
@@ -298,7 +320,7 @@ t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 int		intersect_sphere(t_ray *ray, void *shape, double *t);
 t_vec	sample_sphere(void *shape, t_ray *normal);
 int		solve_quadratic(t_quadratic f, double *x1, double *x2);
-int		create_sphere(t_material *obj, float radius, t_vec center, int procedural_texturing);
+int		create_sphere(t_material *obj, t_info *info);
 float	sphere_pattern(void *shape, t_ray *normal);
 
 
@@ -306,7 +328,7 @@ float	sphere_pattern(void *shape, t_ray *normal);
 int		intersect_plane(t_ray *ray, void *shape, double *t);
 t_vec	plane_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 float	plane_pattern(void *shape, t_ray *normal);
-int		create_plane(t_material *obj, t_vec center, t_vec dir, int procedural_texturing);
+int		create_plane(t_material *obj, t_info *info);
 
 
 // RECTANGLE
@@ -319,13 +341,13 @@ t_vec	sample_rect(void *shape, t_ray *normal);
 int		intersect_cylinder(t_ray *ray, void *shape, double *t);
 t_vec	cylinder_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
 int		intersect_cirlce(t_ray *ray, void *shape, double *t);
-int		create_cylinder(t_material *object, float radius, float height, t_vec center, t_vec dir, int procedural_texturing);
+int		create_cylinder(t_material *object, t_info *info);
 
 
 // CONE
 int		intersect_cone(t_ray *ray, void *shape, double *t);
 t_vec	cone_normal(void *shape, t_vec *ray_dir, t_vec *hit_point);
-int		create_cone(t_material *object, float radius, float height, t_vec center, t_vec dir, int procedural_texturing);
+int		create_cone(t_material *object, t_info *info);
 
 
 //PARSING
@@ -337,13 +359,26 @@ int check_light(char **row);
 int check_sphere(char **row);
 int check_plan(char **row);
 int check_cylinder(char **row);
+int check_cone(char **row);
 
 int	atoi_rgb(char *str);
 int	rgb_information(char *str);
+
 int	range_zero_one(char *str);
+int	fov_information(char *str);
+
+int check_double(char *str);
+int check_for_1(char *str);
+
+int good_chars_vector(char *str);
+int good_coordinate(char *str);
+int vector_coordinates(char *str);
+int good_coordinate_normal(char *str);
+int vector_normal_information(char *str);
 
 void	error_malloc();
-void	error_information();
+void	error_information(char *str);
+void	error_essential();
 
 int		check_argument(int argc, char **argv);
 
@@ -352,8 +387,35 @@ char	check_last_char(char *str);
 char    *get_string(int fd);
 char	**get_content(int fd);
 
-void	check_rows(char **rows);
+int		result_type_syntaxe(char **row, t_parsing *parsing);
+int		check_type(char *str, t_parsing *parsing);
+int	check_essential(char **rows);
+void	check_rows(char **rows, t_parsing *parsing);
+
+//FILL
+
+double	conversion_double(char *str);
+int		conversion_int(char *str);
+
+void	get_value_vec(char *str, t_vec *vec);
+void    get_value_rgb(char *str, t_rgb *rgb);
+
+void    fill_ambient(char **row, t_rt *rt);
+void    fill_camera(char **row, t_rt *rt);
+
+void    fill_light(char **row, t_info *object);
+void    fill_sphere(char **row, t_info *object);
+void    fill_plan(char **row, t_info *object);
+void    fill_cylinder_cone(char **row, t_info *object);
+
+int		create_objects(int material, t_material *object, t_info *info);
+int		fill_objects(char **row, t_rt *rt, t_info *info);
+void	fill_rt(char **rows, t_rt *rt, t_parsing parsing);
+
+//MAIN
+
 void	print_row(char **rows);
 void	free_split(char **split);
+void	parsing(int argc, char **argv, t_rt *rt);
 
 #endif
