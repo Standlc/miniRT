@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-t_ray	sample_shadow_ray(t_material *light, t_ray *normal, double *d_to_l)
+t_ray	sample_shadow_ray(t_material *light, t_ray *normal, double *light_distance)
 {
     t_vec   light_sample_point;
 	t_ray	shadow_ray;
@@ -8,59 +8,59 @@ t_ray	sample_shadow_ray(t_material *light, t_ray *normal, double *d_to_l)
 	shadow_ray.origin = normal->origin;
 	light_sample_point = light->light_sample(light->shape, normal);
 	shadow_ray.dir = sub(light_sample_point, normal->origin);
-	*d_to_l = vec_len(shadow_ray.dir);
+	*light_distance = vec_len(shadow_ray.dir);
 	shadow_ray.dir = normalize(shadow_ray.dir);
 	return (shadow_ray);
 }
 
-int cast_shadow_ray(t_rt *rt, t_material *light, t_ray *shadow_ray, double distance_to_light)
+int cast_shadow_ray(t_rt *rt, t_material *light, t_ray *shadow_ray, double light_distance)
 {
-	double  t_distance;
+	double  t;
 	int     i;
 
 	i = 0;
 	while (i < rt->nb_objects)
 	{
-		if (light != rt->objects + i && 
-			rt->objects[i].intersect(shadow_ray, rt->objects[i].shape, &t_distance) && 
-			t_distance < distance_to_light)
-				return (0);
+		if (light != (rt->objects + i)
+			&& rt->objects[i].intersect(shadow_ray, rt->objects[i].shape, &t, NULL)
+			&& t < light_distance)
+			return (0);	
 		i++;
 	}
 	return (1);
 }
 
-t_rgb	direct_light_sampling(t_rt *rt, t_ray *ray, t_ray *normal, int indirect_decay)
+float	dls_intensity(t_rt *rt, t_dls *dls, t_ray *ray, t_ray *normal)
 {
-	t_ray		shadow_ray;
-	double		distance_to_light;
-	t_material	*random_light;
-	float		normal_shadow_dot;
-	float		final_light_intensity;
-	float		distance_from_ray_origin;
+	float	distance_from_ray_origin;
+	float	intensity;
 
-	random_light = rt->lights[(int)roundf(randf() * (rt->nb_lights - 1))];
-	shadow_ray = sample_shadow_ray(random_light, normal, &distance_to_light);
-	normal_shadow_dot = dot(normal->dir, shadow_ray.dir);
-
-	if (normal_shadow_dot <= 0 || !cast_shadow_ray(rt, random_light, &shadow_ray, distance_to_light))
-		return ((t_rgb){0.f, 0.f, 0.f});
-
-	final_light_intensity = 1
-							/ distance_to_light
-							* random_light->light_intensity * 2
-							* normal_shadow_dot
-							* rt->nb_lights;
-
-	final_light_intensity = min(final_light_intensity, random_light->light_intensity);
-
-	if (rt->opt.ambient)
-		final_light_intensity *= 1 - rt->opt.ambient;
-
-	if (indirect_decay)
+	intensity = min(1 / dls->light_distance * dls->light_intensity * 2
+				* dls->normal_shadow_dot * rt->nb_lights, dls->light_intensity)
+				* (1 - rt->opt.ambient);
+	if (dls->indirect_decay)
 	{
 		distance_from_ray_origin = vec_len(sub(normal->origin, ray->origin));
-		final_light_intensity *= min(1 / distance_from_ray_origin, 1);
+		return (intensity * min(1 / distance_from_ray_origin, 1));
 	}
-	return (color_fade(random_light->color, final_light_intensity));
+	return (intensity);
+}
+
+t_rgb	direct_light_sampling(t_rt *rt, t_ray *ray, t_hit_info *hit, int indirect_decay)
+{
+	t_ray		shadow_ray;
+	t_material	*picked_light;
+	t_dls		dls;
+
+	picked_light = rt->lights[(int)roundf(randf() * (rt->nb_lights - 1))];
+	shadow_ray = sample_shadow_ray(picked_light, &(hit->normal), &dls.light_distance);
+	dls.normal_shadow_dot = dot(hit->normal.dir, shadow_ray.dir);
+
+	if (dls.normal_shadow_dot <= 0 || !cast_shadow_ray(rt, picked_light, &shadow_ray, dls.light_distance))
+		return ((t_rgb){0.f, 0.f, 0.f});
+
+	dls.light_intensity = picked_light->light_intensity;
+	dls.indirect_decay = indirect_decay;
+
+	return (color_fade(picked_light->color, dls_intensity(rt, &dls, ray, &(hit->normal))));
 }

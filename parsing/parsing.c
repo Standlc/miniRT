@@ -9,7 +9,7 @@ void	print_row(char **rows)
 void	print_rt(t_rt *rt)
 {
 	printf("A : %f %f,%f,%f\n", rt->opt.ambient, rt->opt.ambient_light.r, rt->opt.ambient_light.g, rt->opt.ambient_light.b);
-	printf("C : %f,%f,%f %f,%f,%f %f\n", rt->cam.pos.x, rt->cam.pos.y, rt->cam.pos.z, rt->cam.look_at.x, rt->cam.look_at.y, rt->cam.look_at.z, rt->cam.field_view);
+	printf("C : %f,%f,%f %f,%f,%f %f\n", rt->cam.system.origin.x, rt->cam.system.origin.y, rt->cam.system.origin.z, rt->cam.look_at.x, rt->cam.look_at.y, rt->cam.look_at.z, rt->cam.field_view);
 	// printf("L : %f,%f,%f %f %f,%f,%f\n", &(rt->lights.), );
 }
 

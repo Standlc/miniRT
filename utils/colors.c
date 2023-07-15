@@ -1,7 +1,5 @@
 #include "minirt.h"
 
-// blendedValue=(1−𝑡)⋅startValue+𝑡⋅endValue
-
 t_rgb	hex_to_rgb(int hex)
 {
 	t_rgb	rgb;
@@ -12,35 +10,11 @@ t_rgb	hex_to_rgb(int hex)
 	return (rgb);
 }
 
-// vec3 numerator = v * (1.0f + (v / vec3(max_white * max_white)));
-// return numerator / (1.0f + v);
-
-// t_rgb	aces_approx(t_rgb col)
-// {	
-// 	float a = 2.51f;
-// 	float b = 0.03f;
-// 	float c = 2.43f;
-// 	float d = 0.59f;
-// 	float e = 0.14f;
-
-// 	col.r *= 0.6f;
-// 	col.g *= 0.6f;
-// 	col.b *= 0.6f;
-
-// 	t_rgb	res;
-// 	res.r = min((col.r * (a * col.r + b)) / (col.r * (c * col.r + d) + e) * 1, 1.f);
-// 	res.g = min((col.g * (a * col.g + b)) / (col.g * (c * col.g + d) + e) * 1, 1.f);
-// 	res.b = min((col.b * (a * col.b + b)) / (col.b * (c * col.b + d) + e) * 1, 1.f);
-// 	return (res);
-// }
-
 int rgb_to_int(t_rgb rgb)
 {
-    unsigned char   r;
-    unsigned char   g;
-    unsigned char   b;
-
-	// rgb = aces_approx(rgb);
+    unsigned char	r;
+    unsigned char	g;
+    unsigned char	b;
 
     r = min(rgb.r, 1.) * 255;
     g = min(rgb.g, 1.) * 255;

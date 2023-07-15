@@ -80,25 +80,10 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 		stop_optimization(rt);
 		rt->mouse.is_down = 0;
 		rt->rendering_frame = 1;
-		clear_pixel_buff(rt->pixel_buff);
+		ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 	}
 	return (0);
 } //MOUSE UP
-
-// rotating around the Z-axis would be
-// |cos θ   −sin θ   0| |x|   |x cos θ − y sin θ|   |x'|
-// |sin θ    cos θ   0| |y| = |x sin θ + y cos θ| = |y'|
-// |  0       0      1| |z|   |        z        |   |z'|
-
-// around the Y-axis would be
-// | cos θ    0   sin θ| |x|   | x cos θ + z sin θ|   |x'|
-// |   0      1       0| |y| = |         y        | = |y'|
-// |−sin θ    0   cos θ| |z|   |−x sin θ + z cos θ|   |z'|
-
-// around the X-axis would be
-// |1     0           0| |x|   |        x        |   |x'|
-// |0   cos θ    −sin θ| |y| = |y cos θ − z sin θ| = |y'|
-// |0   sin θ     cos θ| |z|   |y sin θ + z cos θ|   |z'|
 
 int handle_mouse_move(int x, int y, t_rt *rt)
 {
@@ -113,16 +98,16 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 		if (mouse_dir_x == 0 && mouse_dir_y == 0)
 			return (0);
 
-		radius_len = vec_len(sub(rt->cam.pos, rt->cam.look_at));
-		t_vec	x_dir = scale(rt->cam.space.x, mouse_dir_x / 40.f);
-		t_vec	y_dir = scale(rt->space.y, mouse_dir_y / 40.f * -1);
-		t_vec	new_cam_pos = add(rt->cam.pos, add(y_dir, x_dir));
+		radius_len = vec_len(sub(rt->cam.system.origin, rt->cam.look_at));
+		t_vec	x_dir = scale(rt->cam.system.x, mouse_dir_x / 40.f);
+		t_vec	y_dir = scale(rt->system.y, mouse_dir_y / 40.f * -1);
+		t_vec	new_cam_pos = add(rt->cam.system.origin, add(y_dir, x_dir));
 		t_vec	lookat_to_cam_pos = normalize(sub(new_cam_pos, rt->cam.look_at));
 		lookat_to_cam_pos = get_ray_point((t_ray){rt->cam.look_at, lookat_to_cam_pos}, radius_len);
-		rt->cam.pos = lookat_to_cam_pos;
+		rt->cam.system.origin = lookat_to_cam_pos;
 
-		set_cam(rt);
-		clear_pixel_buff(rt->pixel_buff);
+		set_cam_system(rt);
+		ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 		rt->rendering_frame = 1;
 		rt->mouse.origin.x = x;
 		rt->mouse.origin.y = y;
@@ -143,7 +128,7 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		start_optimization(rt);
 		rt->mouse.is_down = 1;
 		rt->mouse.origin = (t_point){x, y};
-		rt->cam.look_at = add(rt->cam.pos, scale(rt->cam.space.z, len_to_center * 30 + 2));
+		rt->cam.look_at = add(rt->cam.system.origin, scale(rt->cam.system.z, len_to_center * 30 + 2));
 		return (0);
 	}
 	else if (event == 4)
@@ -151,31 +136,31 @@ int handle_mouse(int event, int x, int y, t_rt *rt)
 		float	horizontal = (float)x / WIDTH * 2 - 1;
 		float	vertical = 1 - (float)y / HEIGHT * 2;
 
-		rt->cam.pos = add(rt->cam.pos, scale(rt->cam.space.y, vertical));
-		rt->cam.look_at = add(rt->cam.look_at, scale(rt->cam.space.y, vertical));
+		rt->cam.system.origin = add(rt->cam.system.origin, scale(rt->cam.system.y, vertical));
+		rt->cam.look_at = add(rt->cam.look_at, scale(rt->cam.system.y, vertical));
 
-		rt->cam.pos = add(rt->cam.pos, scale(rt->cam.space.x, horizontal));
-		rt->cam.look_at = add(rt->cam.look_at, scale(rt->cam.space.x, horizontal));
+		rt->cam.system.origin = add(rt->cam.system.origin, scale(rt->cam.system.x, horizontal));
+		rt->cam.look_at = add(rt->cam.look_at, scale(rt->cam.system.x, horizontal));
 
-		rt->cam.pos = add(rt->cam.pos, rt->cam.space.z);
-		rt->cam.look_at = add(rt->cam.look_at, rt->cam.space.z);
+		rt->cam.system.origin = add(rt->cam.system.origin, rt->cam.system.z);
+		rt->cam.look_at = add(rt->cam.look_at, rt->cam.system.z);
 	} // SCROLL UP
 	else if (event == 5)
 	{
 		float	horizontal = (float)x / WIDTH * 2 - 1;
 		float	vertical = 1 - (float)y / HEIGHT * 2;
 
-		rt->cam.pos = sub(rt->cam.pos, scale(rt->cam.space.y, vertical));
-		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.space.y, vertical));
+		rt->cam.system.origin = sub(rt->cam.system.origin, scale(rt->cam.system.y, vertical));
+		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.system.y, vertical));
 
-		rt->cam.pos = sub(rt->cam.pos, scale(rt->cam.space.x, horizontal));
-		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.space.x, horizontal));
+		rt->cam.system.origin = sub(rt->cam.system.origin, scale(rt->cam.system.x, horizontal));
+		rt->cam.look_at = sub(rt->cam.look_at, scale(rt->cam.system.x, horizontal));
 
-		rt->cam.pos = sub(rt->cam.pos, rt->cam.space.z);
-		rt->cam.look_at = sub(rt->cam.look_at, rt->cam.space.z);
+		rt->cam.system.origin = sub(rt->cam.system.origin, rt->cam.system.z);
+		rt->cam.look_at = sub(rt->cam.look_at, rt->cam.system.z);
 	} // SCROLL DOWN
-	clear_pixel_buff(rt->pixel_buff);
-	set_cam(rt);
+		ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
+	set_cam_system(rt);
 	rt->rendering_frame = 1;
 	return (0);
 }

@@ -22,28 +22,24 @@ int	create_plane(t_material *obj, t_info *info)
 	return (0);
 }
 
-float	plane_pattern(void *shape, t_ray *normal)
+float	plane_pattern(void *shape, t_ray *normal, int surface_hit)
 {
-	float		u;
-	float		v;
-	int			scale;
-	float		pattern;
-
+	float	u;
+	float	v;
 	t_plane	*plane;
-	plane = (t_plane *)shape;
 
+	(void)surface_hit;
+	plane = (t_plane *)shape;
 	u = dot(normal->origin, plane->system.x);
 	v = dot(normal->origin, plane->system.z);
-
-	scale = 2;
-	pattern = (cos(u * scale) * sin(v * scale) + 1) * 0.5;
-	return (roundf(pattern));
+	return (uv_pattern(u, v, 1.f));
 }
 
-t_vec	plane_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
+t_vec	plane_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit)
 {
 	t_vec	normal;
 
+	(void)surface_hit;
 	(void)hit_point;
 	normal = ((t_plane *)shape)->normal;
 	if (dot(normal, *ray_dir) > 0)
@@ -51,12 +47,13 @@ t_vec	plane_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
 	return (normal);
 }
 
-int	intersect_plane(t_ray *ray, void *shape, double *t)
+int	intersect_plane(t_ray *ray, void *shape, double *t, int *surface_hit)
 {
 	double	d;
 	double	n_ray_dot;
 	t_plane	*plane;
 
+	(void)surface_hit;
 	plane = (t_plane *)shape;
 	n_ray_dot = dot(plane->normal, ray->dir);
 	if (n_ray_dot == 0.0)

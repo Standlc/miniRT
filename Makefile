@@ -9,6 +9,7 @@ SRCS		=	main.c						utils/vector.c	\
 				shapes/cylinder.c 			shapes/circle.c \
 				shapes/cone.c \
 				utils/coordinate_system.c \
+				shading/procedural_texturing.c utils/random.c\
 				scenes.c					shapes/rectangle.c	\
 				shading/shading.c			shading/direct_light_sampling.c \
 				parsing/parsing.c	\
@@ -55,7 +56,7 @@ linux : libs-l ${NAME_L}
 ${NAME_L} : ${OBJS}
 	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
-$(NAME) : minirt.h $(OBJS)
+$(NAME) : $(OBJS) minirt.h
 		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
 
 %.o : %.c Makefile

@@ -1,16 +1,15 @@
 #include "minirt.h"
 
-t_space	create_system(t_vec ref)
+t_system	create_system(t_vec up)
 {
-	t_space	system;
+	t_system	system;
  
-	system.y = ref;
-	if (fabs(dot((t_vec){0, 0, -1}, ref)) < 1)
-		system.x = cross_product((t_vec){0, 0, -1}, ref);
-	else if (fabs(dot((t_vec){0, 1, 0}, ref)) < 1)
-		system.x = cross_product((t_vec){0, 1, 0}, ref);
-	else if (fabs(dot((t_vec){1, 0, 0}, ref)) < 1)
-		system.x = cross_product((t_vec){1, 0, 0}, ref);
+	up = normalize(up);
+	system.y = up;
+	if (fabs(dot((t_vec){0, 0, -1}, up)) < 1)
+		system.x = cross_product((t_vec){0, 0, -1}, up);
+	else
+		system.x = cross_product((t_vec){0, 1, 0}, up);
 
 	system.z = cross_product(system.y, system.x);
 	return (system);

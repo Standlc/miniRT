@@ -5,6 +5,18 @@ void	print_vector(t_vec v)
 	printf("[%f, %f, %f],\n", v.x, v.y, v.z);
 }
 
+void	print_system(t_system s)
+{
+	printf("x ");
+	print_vector(s.x);
+	printf("y ");
+	print_vector(s.y);
+	printf("z ");
+	print_vector(s.z);
+	printf("origin: ");
+	print_vector(s.origin);
+}
+
 double  get_closest_intersection(double t1, double t2)
 {
 	if (t1 <= ZERO && t2 <= ZERO)
@@ -18,38 +30,28 @@ double  get_closest_intersection(double t1, double t2)
 
 t_vec	to_world_coordinates(t_cam *cam, double x, double y)
 {
-	t_vec	world_pixel;
 	float	tan_cam_view_field;
 
 	tan_cam_view_field = tan(cam->field_view / 2 * M_PI / 180);
 	x = (2 * (x + 0.5) / WIDTH - 1) * tan_cam_view_field;
 	y = (1 - 2 * (y + 0.5) / HEIGHT) * tan_cam_view_field * cam->aspect_ratio;
 
-	world_pixel.x = x * cam->space.x.x + y * cam->space.y.x + cam->space.z.x + cam->pos.x;
-	world_pixel.y = x * cam->space.x.y + y * cam->space.y.y + cam->space.z.y + cam->pos.y;
-	world_pixel.z = x * cam->space.x.z + y * cam->space.y.z + cam->space.z.z + cam->pos.z;
-	return (world_pixel);
+	return (system_transform((t_vec){x, y, -1.0}, cam->system));
 }
 
 t_ray	make_cam_ray(t_rt *rt, int x, int y)
 {
 	t_ray	cam_ray;
 	t_vec	world_pixel;
-	float	anti_aliasing_x;
-	float	anti_aliasing_y;
+	t_point	anti_aliasing;
 
-	anti_aliasing_x = randf() * rt->opt.cam_ray_fuzz - rt->opt.cam_ray_fuzz / 2;
-	anti_aliasing_y = randf() * rt->opt.cam_ray_fuzz - rt->opt.cam_ray_fuzz / 2;
+	anti_aliasing.x = randf() * rt->opt.cam_ray_fuzz - rt->opt.cam_ray_fuzz / 2;
+	anti_aliasing.y = randf() * rt->opt.cam_ray_fuzz - rt->opt.cam_ray_fuzz / 2;
 
-	cam_ray.origin = rt->cam.pos;
-	world_pixel = to_world_coordinates(&(rt->cam), x + anti_aliasing_x, y + anti_aliasing_y);
+	cam_ray.origin = rt->cam.system.origin;
+	world_pixel = to_world_coordinates(&(rt->cam), x + anti_aliasing.x, y + anti_aliasing.y);
 	cam_ray.dir = normalize(sub(world_pixel, cam_ray.origin));
 	return (cam_ray);
-}
-
-t_vec	cosine_hemisphere_dir(t_vec *normal_dir)
-{
-	return (normalize(add(random_dir(), *normal_dir)));
 }
 
 t_vec	lerp(t_vec v1, t_vec v2, float t)
@@ -60,19 +62,22 @@ t_vec	lerp(t_vec v1, t_vec v2, float t)
 	return (v1);
 }
 
-int	intersect_objects(t_rt *rt, t_ray *ray, t_material *obj_hit, double *t)
+int	intersect_objects(t_rt *rt, t_ray *ray, t_hit_info *hit, double *t)
 {
 	double	distance;
+	int		surface_hit;
 	int		i;
 
 	*t = INFINITY;
 	i = 0;
 	while (i < rt->nb_objects)
 	{
-		if (rt->objects[i].intersect(ray, rt->objects[i].shape, &distance) && distance < *t)
+		if (rt->objects[i].intersect(ray, rt->objects[i].shape, &distance, &surface_hit)
+			&& distance < *t)
 		{
 			*t = distance;
-			*obj_hit = rt->objects[i];
+			hit->surface_hit = surface_hit;
+			hit->obj = rt->objects[i];
 		}
 		i++;
 	}
@@ -81,44 +86,24 @@ int	intersect_objects(t_rt *rt, t_ray *ray, t_material *obj_hit, double *t)
 
 t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 {
-	double		t_distance;
-	t_material	obj_hit;
-	t_rgb		direct_lighting;
-	t_rgb		color;
-	t_ray		normal;
+	t_hit_info	hit;
 
 	if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
 		return ((t_rgb){0.f, 0.f, 0.f});
-
-	color = (t_rgb){0.f, 0.f, 0.f};
-	if (intersect_objects(rt, ray, &obj_hit, &t_distance))
+	if (intersect_objects(rt, ray, &hit, &hit.t))
 	{
-		//printf("%f %f %f\n", obj_hit.color.r,  obj_hit.color.g, obj_hit.color.b);
-		// return (color_fade(obj_hit.color, 10 / pow(t_distance, 2)));
-		if (obj_hit.light_intensity && rt->opt.ambient < 1.0)
-			return (color_fade(obj_hit.color, obj_hit.light_intensity));
+		// return (color_fade(hit.obj.color, 10 / pow(hit.t, 2)));
 
-		normal.origin = get_ray_point(*ray, t_distance);
-		normal.dir = obj_hit.normal(obj_hit.shape, &(ray->dir), &normal.origin);
-
-		if (obj_hit.smoothness && randf() <= obj_hit.specular_prob)
-			return (specular_lighting(rt, ray, &normal, obj_hit.smoothness, depth));
-
-		color = indirect_lighting(rt, &normal, depth);
-		if (rt->nb_lights && rt->opt.ambient < 1.0)
-		{
-			direct_lighting = direct_light_sampling(rt, ray, &normal, !is_specular_ray && depth > 1);
-			color = color_add(color, direct_lighting);
-		}
-
-		if (obj_hit.procedural_texturing != NULL)
-			obj_hit.color = color_fade(obj_hit.color, obj_hit.procedural_texturing(obj_hit.shape, &normal));
-		return (color_mult(color, obj_hit.color));
+		if (hit.obj.light_intensity && rt->opt.ambient < .5)
+			return (color_fade(hit.obj.color, hit.obj.light_intensity * (1 - rt->opt.ambient)));
+		hit.is_specular = is_specular_ray;
+		hit.normal.origin = get_ray_point(*ray, hit.t);
+		hit.normal.dir = hit.obj.normal(&(ray->dir), hit.obj.shape, &hit.normal.origin, hit.surface_hit);
+		return (shade_hitpoint(rt, &hit, ray, depth));
 	}
-
 	if (rt->opt.ambient)
 		return (ambient_light(rt->opt.ambient_light, ray, rt->opt.ambient));
-	return (color);
+	return ((t_rgb){0.f, 0.f, 0.f});
 }
 
 int	render(t_rt *rt)
@@ -133,14 +118,13 @@ int	render(t_rt *rt)
 	// if (rt->rendering_frame > 10)
 	// {
 	// 	close_program(rt);
-	// 	// return (0);
 	// }
 	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 	y = 0;
-	while (y < rt->cam.screen_height)
+	while (y < HEIGHT)
 	{
 		x = 0;
-		while (x < rt->cam.screen_width)
+		while (x < WIDTH)
 		{
 			cam_ray = make_cam_ray(rt, x, y);
 			pixel_color = cast_ray(rt, &cam_ray, 0, 1);
@@ -161,16 +145,11 @@ int	render(t_rt *rt)
 	return (0);
 }
 
-void	set_cam(t_rt *rt)
+void	set_cam_system(t_rt *rt)
 {
-	rt->cam.space.z = normalize(sub(rt->cam.look_at, rt->cam.pos));
-	rt->cam.space.x = cross_product(rt->cam.space.z, rt->space.y);
-	rt->cam.space.y = cross_product(rt->cam.space.x, rt->cam.space.z);
-}
-
-void	clear_pixel_buff(t_rgb *pixel_buff)
-{	
-	memset(pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
+	rt->cam.system.z = normalize(sub(rt->cam.look_at, rt->cam.system.origin));
+	rt->cam.system.x = cross_product(rt->cam.system.z, rt->system.y);
+	rt->cam.system.y = cross_product(rt->cam.system.x, rt->cam.system.z);
 }
 
 void	gather_lights(t_rt *rt)
@@ -195,8 +174,6 @@ void	other_shapes(t_rt *rt);
 int	main(int argc, char **argv)
 {
 	t_rt	rt;
-	rt.cam.screen_width = WIDTH;
-	rt.cam.screen_height = HEIGHT;
 	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
 
 	//tomato(&rt);
@@ -205,13 +182,11 @@ int	main(int argc, char **argv)
 	//other_shapes(&rt);
 	//gather_lights(&rt);
 
-	rt.opt.gamma = 1.f;
+	// rt.opt.gamma = 1.f;
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.pixel_rendered_interval = 1;
-	// start_optimization(&rt);
-	//rt.opt.ambient_light = (t_rgb){0.8, 0.2, .8};
 
 	parsing(argc, argv, &rt);
 	rt.mlx = mlx_init();
@@ -219,18 +194,18 @@ int	main(int argc, char **argv)
 	rt.img.p = mlx_new_image(rt.mlx, WIDTH, HEIGHT);
 	rt.img.img_addr = mlx_get_data_addr(rt.img.p, &rt.img.bpp,
 			&rt.img.line_length, &rt.img.endian);
-	rt.space.x = (t_vec){1, 0, 0};
-	rt.space.y = (t_vec){0, 1, 0};
-	rt.space.z = (t_vec){0, 0, -1};
+	rt.system.x = (t_vec){1, 0, 0};
+	rt.system.y = (t_vec){0, 1, 0};
+	rt.system.z = (t_vec){0, 0, -1};
+	rt.system.origin = (t_vec){0, 0, 0};
 
 	rt.mouse.is_down = 0;
 	rt.rendering_frame = 1;
-	//rt.cam.field_view = 90;
-	set_cam(&rt);
+	set_cam_system(&rt);
 
 	
 	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
-	clear_pixel_buff(rt.pixel_buff);
+	ft_memset(rt.pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 
 	mlx_hook(rt.win, 2, 0, handle_key, &rt);
 	mlx_hook(rt.win, ON_DESTROY, 0, close_program, &rt);
@@ -330,17 +305,6 @@ int	main(int argc, char **argv)
 		// float	fresnel = 0.5f + 0.5f * (1 - relu(dot(normal, scale(ray.dir, -1))));
 		// fresnel = 1;
 		// int		is_specular = randf() < obj_hit.specular_prob * fresnel;
-// double  get_angle(t_vec *v1, t_vec *v2)
-// {
-// 	double  product;
-// 	double  magnitude_v1;
-// 	double  magnitude_v2;
-
-// 	product = dot(*v1, *v2);
-// 	magnitude_v1 = vec_len(*v1);
-// 	magnitude_v2 = vec_len(*v2);
-// 	return (acos(product / (magnitude_v1 * magnitude_v2)) * 180 / M_PI);
-// }
 
 // void	createCoordinateSystem(t_vec normal, t_vec *Nt, t_vec *Nb)
 // { 

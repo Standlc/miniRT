@@ -24,8 +24,8 @@ void    fill_sphere(char **row, t_info *sphere)
     }
     else
         sphere->smoothness = 0;
+    sphere->procedural_texturing = !ft_strncmp("d", row[6], 1);
     sphere->light_intensity = 0;
-    sphere->procedural_texturing = 0;
 }
 
 void    fill_plan(char **row, t_info *plan)

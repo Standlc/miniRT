@@ -20,25 +20,16 @@ int	create_sphere(t_material *obj, t_info *info)
 	return (0);
 }
 
-float	sphere_pattern(void *shape, t_ray *normal)
+float	sphere_pattern(void *shape, t_ray *normal, int surface_hit)
 {
 	float		u;
 	float		v;
-	float		pattern;
-	int			scale;
-	
-	u = (1 + atan2(normal->dir.z, normal->dir.x) / M_PI) * 0.5;
+
+	(void)surface_hit;
+	(void)shape;
+	u = atan2(normal->dir.z, normal->dir.x) / M_PI;
 	v = acosf(normal->dir.y) / M_PI;
-
-	scale = 10;
-	pattern = (
-		cos(u * 2 * M_PI * scale)
-		*
-		sin(v * 2 * M_PI * scale)
-		 + 1) * 0.5;
-
-	pattern = roundf(pattern);
-	return (pattern);
+	return (uv_pattern(u, v, 10.f));
 }
 
 int	solve_quadratic(t_quadratic f, double *t_1, double *t_2)
@@ -63,7 +54,7 @@ int	solve_quadratic(t_quadratic f, double *t_1, double *t_2)
 	return (1);
 }
 
-int	intersect_sphere(t_ray *ray, void *shape, double *t)
+int	intersect_sphere(t_ray *ray, void *shape, double *t, int *surface_hit)
 {
 	t_quadratic	f;
 	t_sphere	*sphere;
@@ -94,10 +85,11 @@ t_vec	sample_sphere(void *shape, t_ray *normal)
 	return (add(sample_dir, sphere->center));
 }
 
-t_vec	sphere_normal(void *shape, t_vec *ray_dir, t_vec *hit_point)
+t_vec	sphere_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit)
 {
 	t_vec	normal;
 
+	(void)surface_hit;
 	normal = normalize(sub(*hit_point, ((t_sphere *)shape)->center));
 	if (dot(normal, *ray_dir) > 0)
 		return (scale(normal, -1));
