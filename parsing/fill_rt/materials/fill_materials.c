@@ -24,7 +24,10 @@ void    fill_sphere(char **row, t_info *sphere)
     }
     else
         sphere->smoothness = 0;
-    sphere->procedural_texturing = !ft_strncmp("d", row[6], 1);
+    if (row[4] && row[5] && row[6])
+        get_letters_options(row[6], row[7], &(sphere->procedural_texturing), &(sphere->bump_mapping));
+    else
+        (sphere->procedural_texturing = 0, sphere->bump_mapping = 0);
     sphere->light_intensity = 0;
 }
 
@@ -43,8 +46,11 @@ void    fill_plan(char **row, t_info *plan)
     }
     else
         plan->smoothness = 0;
+    if (row[4] && row[5] && row[6])
+        get_letters_options(row[6], row[7], &(plan->procedural_texturing), &(plan->bump_mapping));
+    else
+        (plan->procedural_texturing = 0, plan->bump_mapping = 0);
     plan->light_intensity = 0;
-    plan->procedural_texturing = 0;
 }
 
 void    fill_cylinder_cone(char **row, t_info *cylinder_cone)
@@ -64,6 +70,9 @@ void    fill_cylinder_cone(char **row, t_info *cylinder_cone)
     }
     else
         cylinder_cone->smoothness = 0;
+    if (row[6] && row[7] && row[8])
+        get_letters_options(row[8], row[9], &(cylinder_cone->procedural_texturing), &(cylinder_cone->bump_mapping));
+    else
+        (cylinder_cone->procedural_texturing = 0, cylinder_cone->bump_mapping = 0);
     cylinder_cone->light_intensity = 0;
-    cylinder_cone->procedural_texturing = 0;
 }

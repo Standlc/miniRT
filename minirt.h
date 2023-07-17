@@ -210,7 +210,7 @@ typedef struct	s_info
 	double	radius;
 	double	height;
 	int		procedural_texturing;
-	int		bump_map;
+	int		bump_mapping;
 }				t_info;
 
 typedef struct	s_parsing
@@ -375,6 +375,8 @@ int	rgb_information(char *str);
 int	range_zero_one(char *str);
 int	fov_information(char *str);
 
+int	letters_option(char *s1, char *s2);
+
 int check_double(char *str);
 int check_for_1(char *str);
 
@@ -407,6 +409,7 @@ int		conversion_int(char *str);
 
 void	get_value_vec(char *str, t_vec *vec);
 void    get_value_rgb(char *str, t_rgb *rgb);
+void    get_letters_options(char *s1, char *s2, int *procedural_texturing, int *bump_mapping);
 
 void    fill_ambient(char **row, t_rt *rt);
 void    fill_camera(char **row, t_rt *rt);

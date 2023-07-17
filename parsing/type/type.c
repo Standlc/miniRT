@@ -46,10 +46,10 @@ int check_sphere(char **row)
 			if (!range_zero_one(row[5]))
 				return (error_information("sp\n"), 0);
 		if (i == 6)
-			if (ft_strncmp(row[6], "d", 2) && ft_strncmp(row[6], "bm", 3))
-				return (error_information("sp\n"), 0);
-        if (i == 7)
-            return (error_information("sp\n"), 0);
+			if (!letters_option(row[6], row[7]))
+				return (error_information("pl\n"), 0);
+        if (i == 8)
+            return (error_information("pl\n"), 0);
 		i++;
 	}
 	return (1);
@@ -78,11 +78,10 @@ int check_plan(char **row)
 			if (!range_zero_one(row[5]))
 				return (error_information("pl\n"), 0);
 		if (i == 6)
-			if (ft_strncmp(row[6], "d", 2) && ft_strncmp(row[6], "bm", 3))
+			if (!letters_option(row[6], row[7]))
 				return (error_information("pl\n"), 0);
-        if (i == 7)
+        if (i == 8)
             return (error_information("pl\n"), 0);
-		
 		i++;
 	}
 	return (1);
@@ -117,9 +116,9 @@ int check_cylinder(char **row)
 			if (!range_zero_one(row[7]))
 				return (error_information("cy\n"), 0);
 		if (i == 8)
-			if (ft_strncmp(row[8], "d", 2) && ft_strncmp(row[8], "bm", 3))
+			if (letters_option(row[8], row[9]))
 				return (error_information("cy\n"), 0);
-        if (i == 9)
+        if (i == 10)
             return (error_information("cy\n"), 0);
 		i++;
 	}
@@ -155,10 +154,10 @@ int check_cone(char **row)
 			if (!range_zero_one(row[7]))
 				return (error_information("co\n"), 0);
 		if (i == 8)
-			if (ft_strncmp(row[8], "d", 2) && ft_strncmp(row[8], "bm", 3))
-				return (error_information("co\n"), 0);
-        if (i == 9)
-            return (error_information("co\n"), 0);
+			if (letters_option(row[8], row[9]))
+				return (error_information("cy\n"), 0);
+        if (i == 10)
+            return (error_information("cy\n"), 0);
 		i++;
 	}
 	return (1);

@@ -29,3 +29,19 @@ void    get_value_vec(char *str, t_vec *vec)
         i++;
     vec->z = conversion_double(&str[i]);
 }
+
+void    get_letters_options(char *s1, char *s2, int *procedural_texturing, int *bump_mapping)
+{
+    *procedural_texturing = 0;
+    *bump_mapping = 0;
+    if (!ft_strncmp(s1, "d", 2))
+        *procedural_texturing = 1;
+    if (ft_strncmp(s1, "bm", 3))
+        *bump_mapping = 1;
+    if (!s2)
+        return ;
+    if (!ft_strncmp(s2, "d", 2))
+        *procedural_texturing = 1;
+    if (ft_strncmp(s2, "bm", 3))
+        *bump_mapping = 1;
+}
