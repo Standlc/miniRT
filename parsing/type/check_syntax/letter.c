@@ -1,18 +1,12 @@
 #include "minirt.h"
 
-int	letters_option(char *s1, char *s2)
+int	letters_option(char *str)
 {
-	if (!s2)
-	{
-		if (!ft_strncmp(s1, "ch", 3) || !ft_strncmp(s1, "bm", 3))
-			return (1);
-		return (0);
-	}
-	if (ft_strncmp(s1, "ch", 3) && ft_strncmp(s1, "bm", 3))
-		return (0);
-	if (ft_strncmp(s2, "ch", 3) && ft_strncmp(s2, "bm", 3))
-		return (0);
-	if (!ft_strncmp(s1, s2, 3))
-		return (0);
-	return (1);
+	if (!ft_strncmp(str, "ch", 3))
+		return (1);
+	if (!ft_strncmp(str, "bm-1", 5))
+		return (1);
+	if (!ft_strncmp(str, "bm-2", 5))
+		return (1);
+	return (0);
 }

@@ -21,7 +21,7 @@ void    fill_sphere(char **row, t_info *sphere)
     if (row[4] && row[5])
         sphere->specular_prob = conversion_double(row[5]);
     if (row[4] && row[5] && row[6])
-        get_letters_options(row[6], row[7], &(sphere->procedural_texturing), &(sphere->bump_mapping));
+        get_letters_options(row[6], &(sphere->procedural_texturing), &(sphere->bump_mapping));
 }
 
 void    fill_plan(char **row, t_info *plan)
@@ -34,7 +34,7 @@ void    fill_plan(char **row, t_info *plan)
     if (row[4] && row[5])
         plan->specular_prob = conversion_double(row[5]);
     if (row[4] && row[5] && row[6])
-        get_letters_options(row[6], row[7], &(plan->procedural_texturing), &(plan->bump_mapping));
+        get_letters_options(row[6], &(plan->procedural_texturing), &(plan->bump_mapping));
 }
 
 void    fill_cylinder_cone(char **row, t_info *cylinder_cone)
@@ -49,5 +49,5 @@ void    fill_cylinder_cone(char **row, t_info *cylinder_cone)
     if (row[6] && row[7])
         cylinder_cone->specular_prob = conversion_double(row[7]);
     if (row[6] && row[7] && row[8])
-        get_letters_options(row[8], row[9], &(cylinder_cone->procedural_texturing), &(cylinder_cone->bump_mapping));
+        get_letters_options(row[8], &(cylinder_cone->procedural_texturing), &(cylinder_cone->bump_mapping));
 }
