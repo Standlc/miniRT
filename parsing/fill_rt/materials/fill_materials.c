@@ -5,7 +5,10 @@ void    fill_light(char **row, t_info *light)
     get_value_vec(row[1], &(light->center));
     light->light_intensity = conversion_double(row[2]);
     get_value_rgb(row[3], &(light->color));
-    light->radius = 1;
+    if (row[4])
+        light->radius = conversion_double(row[4]) / 2;
+    else
+        light->radius = 1;
 }
 
 void    fill_sphere(char **row, t_info *sphere)

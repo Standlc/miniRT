@@ -16,11 +16,14 @@ int check_light(char **row)
         if (i == 3)
 			if (!rgb_information(row[3]))
 				return (error_information("Light (3) color must be between 0 and 255 for each component\nExample : 200,0,255\n"), 0);
-        if (i == 4)
-            return (error_information("Light has only 3 parameters\n"), 0);
+		if (i == 4)
+			if (!check_double(row[4]))
+				return (error_information("Light (4) must have a diameter positive\nExample : 3.5\n"), 0);
+        if (i == 5)
+            return (error_information("Light has only 4 parameters\n"), 0);
 		i++;
 	}
-	if (i != 4)
+	if (i < 4)
 		return (error_information("Light must have 3 parameters\n"), 0);
 	return (1);
 }
