@@ -17,6 +17,7 @@ int	result_type_syntaxe(char **row, t_parsing *parsing)
 	if (!ft_strncmp(row[0], "co", 3))
 		return (parsing->number_of_materials++, check_cone(row));
 	error_information(row[0]);
+	ft_putstr_fd("\n", 2);
 	return (0);
 }
 

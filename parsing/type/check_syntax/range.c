@@ -19,7 +19,7 @@ int	range_zero_one(char *str)
 		return (0);
 	while (str[i] >= '0' && str[i] <= '9')
 		i++;
-	if (str[i])
+	if (str[i] || i - 2 > 9)
 		return (0);
 	return (1);
 }

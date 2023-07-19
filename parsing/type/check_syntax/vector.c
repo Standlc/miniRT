@@ -21,6 +21,7 @@ int good_chars_vector(char *str)
 int good_coordinate(char *str)
 {
     int i;
+    int stock;
 
     i = 0;
     if (str[i] == '-')
@@ -29,16 +30,17 @@ int good_coordinate(char *str)
         return (0);
     while (str[i] >= '0' && str[i] <= '9')
         i++;
-    if (str[i] != '\0' && str[i] != ',' && str[i] != '.')
+    if ((str[i] != '\0' && str[i] != ',' && str[i] != '.') || i - (str[0] == '-') > 9)
         return (0);
     if (!str[i] || str[i] == ',')
         return (1);
     i++;
+    stock = i;
     if (!(str[i] >= '0' && str[i] <= '9'))
         return (0);
     while (str[i] >= '0' && str[i] <= '9')
         i++;
-    if (str[i] != '\0' && str[i] != ',')
+    if ((str[i] != '\0' && str[i] != ',') || i - stock > 9)
         return (0);
     return (1);
 }
@@ -57,7 +59,6 @@ int vector_coordinates(char *str)
         call++;
         if (!good_coordinate(&str[i]))
             return (0);
-
         while (str[i] && str[i] != ',')
             i++;
         if (str[i] == ',' && str[i + 1])
@@ -71,6 +72,7 @@ int vector_coordinates(char *str)
 int good_coordinate_normal(char *str)
 {
     int i;
+    int stock;
 
     i = 0;
     if (str[i] == '-')
@@ -83,11 +85,12 @@ int good_coordinate_normal(char *str)
     if (!str[i] || str[i] == ',')
         return (1);
     i++;
+    stock = i;
     if (!(str[i] >= '0' && str[i] <= '9'))
         return (0);
     while (str[i] >= '0' && str[i] <= '9')
         i++;
-    if (str[i] != '\0' && str[i] != ',')
+    if ((str[i] != '\0' && str[i] != ',') || i - stock > 9)
         return (0);
     return (1);
 }

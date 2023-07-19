@@ -171,6 +171,17 @@ void	gather_lights(t_rt *rt)
 
 void	other_shapes(t_rt *rt);
 
+void	set_null(t_rt *rt)
+{
+	rt->mlx = NULL;
+	rt->win = NULL;
+	rt->objects = NULL;
+	rt->lights = NULL;
+	rt->pixel_buff = NULL;
+	rt->img.p = NULL;
+	rt->img.img_addr = NULL;
+}
+
 int	main(int argc, char **argv)
 {
 	t_rt	rt;
@@ -188,12 +199,19 @@ int	main(int argc, char **argv)
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.pixel_rendered_interval = 1;
 
+	set_null(&rt);
 	parsing(argc, argv, &rt);
 	rt.mlx = mlx_init();
+	if (!rt.mlx)
+		(error_allocation(), free_elements(&rt), exit(1));
 	rt.win = mlx_new_window(rt.mlx, WIDTH, HEIGHT, "miniRT");
 	rt.img.p = mlx_new_image(rt.mlx, WIDTH, HEIGHT);
+	if (!rt.win || !rt.img.p)
+		(error_allocation(), free_elements(&rt), exit(1));
 	rt.img.img_addr = mlx_get_data_addr(rt.img.p, &rt.img.bpp,
 			&rt.img.line_length, &rt.img.endian);
+	if (!rt.img.img_addr)
+		(error_allocation(), free_elements(&rt), exit(1));
 	rt.system.x = (t_vec){1, 0, 0};
 	rt.system.y = (t_vec){0, 1, 0};
 	rt.system.z = (t_vec){0, 0, -1};
@@ -205,6 +223,8 @@ int	main(int argc, char **argv)
 
 	
 	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
+	if (!rt.pixel_buff)
+		(error_allocation(), free_elements(&rt), exit(1));
 	ft_memset(rt.pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 
 	mlx_hook(rt.win, 2, 0, handle_key, &rt);

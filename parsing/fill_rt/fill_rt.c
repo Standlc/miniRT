@@ -42,6 +42,26 @@ int	fill_objects(char **row, t_rt *rt, t_info *info)
 	return (0);
 }
 
+void    set_zero(t_info *info)
+{
+    info->color.r = 0;
+    info->color.g = 0;
+    info->color.b = 0;
+    info->smoothness = 0;
+    info->specular_prob = 0;
+    info->light_intensity = 0;
+    info->center.x = 0;
+    info->center.y = 0;
+    info->center.z = 0;
+    info->dir.x = 0;
+    info->dir.y = 0;
+    info->dir.z = 0;
+    info->radius = 0;
+    info->height = 0;
+    info->procedural_texturing = 0;
+    info->bump_mapping = 0;
+}
+
 void	print_obj(t_material *obj)
 {
 	printf("color : %f,%f,%f\n", obj->color.r, obj->color.g, obj->color.b);
@@ -66,8 +86,6 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 	i = 0;
 	index_light = 0;
 	index_objects = 0;
-	rt->objects = NULL;
-	rt->lights = NULL;
 	rt->objects = malloc(sizeof(t_material) * parsing.number_of_materials);
 	rt->lights = malloc(sizeof(t_material *) * parsing.number_of_lights);
 	if (!rt->objects || !rt->lights)
@@ -77,6 +95,7 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 		row = ft_split(rows[i], ' ');
 		if (!row)
 			(free_split(rows), free(rt->objects), close(parsing.fd), exit(1));
+		set_zero(&info);
 		material = fill_objects(row, rt, &info);
 		if (material != AMBIENT && material != CAMERA)
 		{
@@ -85,7 +104,6 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 			complete_material(rt->objects + index_objects++, &info);
 			if (material == LIGHT)
 				rt->lights[index_light++] = rt->objects + (index_objects - 1);
-			print_obj(rt->objects + index_objects - 1);
 		}
 		free_split(row);
 		i++;

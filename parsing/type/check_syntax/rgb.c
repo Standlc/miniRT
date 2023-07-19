@@ -2,19 +2,19 @@
 
 int	atoi_rgb(char *str)
 {
-	int	resultat;
+	int	result;
 	int	i;
 
-	resultat = 0;
+	result = 0;
 	i = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		resultat = resultat * 10 + (str[i] - '0');
+		result = result * 10 + (str[i] - '0');
 		i++;
 	}
-	if (i == 0)
+	if (i == 0 || i > 3)
 		return (-1);
-	return (resultat);
+	return (result);
 }
 
 int	rgb_information(char *str)

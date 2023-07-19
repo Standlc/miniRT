@@ -43,13 +43,35 @@ int	handle_key(int key, t_rt *rt)
 	return (0);
 }
 
+void	free_object(t_material *object)
+{
+	free(object->shape);
+}
+
+void	free_elements(t_rt *rt)
+{
+	int	i;
+
+	i = rt->nb_objects - 1;
+	while (i >= 0)
+	{
+		free_object(rt->objects + i);
+		i--;
+	}
+	free(rt->objects);
+	free(rt->lights);
+	free(rt->pixel_buff);
+	if (rt->mlx && rt->img.p)
+		mlx_destroy_image(rt->mlx, rt->img.p);
+	if (rt->mlx && rt->win)
+		mlx_destroy_window(rt->mlx, rt->win);
+	if (rt->mlx)
+		(mlx_destroy_display(rt->mlx), free(rt->mlx));
+}
+
 int	close_program(t_rt *rt)
 {
-	mlx_destroy_window(rt->mlx, rt->win);
-	mlx_destroy_image(rt->mlx, rt->img.p);
-	// mlx_destroy_display(rt->mlx);
-	free(rt->mlx);
-	free(rt->pixel_buff);
+	free_elements(rt);
 	exit (0);
 }
 

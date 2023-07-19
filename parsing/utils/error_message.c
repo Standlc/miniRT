@@ -15,3 +15,8 @@ void	error_essential()
 {
 	ft_putstr_fd("Error\nthe file must contain once each essential information\n", 2);
 }
+
+void    error_allocation()
+{
+    ft_putstr_fd("Error\nThe program cannot allocate memory\n", 2);
+}

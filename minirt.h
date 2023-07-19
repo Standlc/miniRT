@@ -311,6 +311,8 @@ int		handle_key(int key, t_rt *data);
 int		handle_mouse_move(int x, int y, t_rt *rt);
 int		handle_mouse_up(int button, int x, int y, t_rt *rt);
 int		handle_mouse(int event, int x, int y, t_rt *rt);
+void	free_object(t_material *object);
+void	free_elements(t_rt *rt);
 int		close_program(t_rt *data);
 void	put_pixel(t_rt *data, int x, int y, t_rgb color);
 void	start_optimization(t_rt *rt);
@@ -389,6 +391,7 @@ int vector_normal_information(char *str);
 void	error_malloc();
 void	error_information(char *str);
 void	error_essential();
+void    error_allocation();
 
 int		check_argument(int argc, char **argv);
 
@@ -423,9 +426,8 @@ int		create_objects(int material, t_material *object, t_info *info);
 int		fill_objects(char **row, t_rt *rt, t_info *info);
 void	fill_rt(char **rows, t_rt *rt, t_parsing parsing);
 
-//MAIN
+//BRAIN
 
-void	print_row(char **rows);
 void	free_split(char **split);
 void	parsing(int argc, char **argv, t_rt *rt);
 
