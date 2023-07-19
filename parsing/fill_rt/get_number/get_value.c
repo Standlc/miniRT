@@ -36,12 +36,12 @@ void    get_letters_options(char *s1, char *s2, int *procedural_texturing, int *
     *bump_mapping = 0;
     if (!ft_strncmp(s1, "ch", 3))
         *procedural_texturing = 1;
-    if (ft_strncmp(s1, "bm", 3))
+    if (!ft_strncmp(s1, "bm", 3))
         *bump_mapping = 1;
     if (!s2)
         return ;
     if (!ft_strncmp(s2, "ch", 3))
         *procedural_texturing = 1;
-    if (ft_strncmp(s2, "bm", 3))
+    if (!ft_strncmp(s2, "bm", 3))
         *bump_mapping = 1;
 }
