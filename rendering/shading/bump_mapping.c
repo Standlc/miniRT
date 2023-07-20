@@ -23,8 +23,8 @@ t_vec	bump_mapping(t_hit_info *hit)
 
 	set_coordinate_system(&point_system, &(hit->normal));
 	hit->bump_normal = hit->obj.normal_map->map[(int)(point.x * hit->obj.normal_map->height + point.y)];
-	hit->bump_normal.x *= 10;
-	hit->bump_normal.y *= 10;
+	hit->bump_normal.x *= 1;
+	hit->bump_normal.y *= 1;
 	hit->bump_normal = normalize(system_transform(hit->bump_normal, point_system));
 
 	// t_plane	*plane;

@@ -94,7 +94,9 @@ t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 {
 	t_hit_info	hit;
 
-	if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
+	// if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
+	// 	return ((t_rgb){0.f, 0.f, 0.f});
+	if (depth > 1)
 		return ((t_rgb){0.f, 0.f, 0.f});
 	if (intersect_objects(rt, ray, &hit))
 	{

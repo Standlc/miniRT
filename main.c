@@ -34,7 +34,7 @@ int	load_normal_maps(t_rt *rt)
 	rt->nb_normal_maps = 1;
 	if (!rt->normal_maps)
 		return (1);
-	if (read_normal_map(rt->normal_maps, "normal_maps/sand"))
+	if (read_normal_map(rt->normal_maps, "normal_maps/wood"))
 		return (1);
 	return (0);
 }

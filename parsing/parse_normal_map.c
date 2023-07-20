@@ -15,8 +15,8 @@ int	read_normal_map(t_normal_map *normal_map, char *file_name)
 		return (1);
 
 	// A CALCULER AVANT !!!
-	normal_map->height = 736;
-	normal_map->width = 736;
+	normal_map->height = 1024;
+	normal_map->width = 1024;
 	// A CALCULER AVANT !!!
 
 	normal_map->map = malloc(sizeof(t_vec) * normal_map->height * normal_map->height);
