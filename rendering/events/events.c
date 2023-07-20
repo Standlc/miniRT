@@ -2,7 +2,7 @@
 
 int	handle_key_up(int key, t_rt *rt)
 {
-	if (key == 259 && rt->is_zoom_key_down)
+	if (key == CONTROL && rt->is_zoom_key_down)
 	{
 		rt->is_zoom_key_down = 0;
 		rt->mouse.is_down = 0;
@@ -14,7 +14,7 @@ int	handle_key_up(int key, t_rt *rt)
 
 int	handle_key_down(int key, t_rt *rt)
 {
-	if (key == 259 && !rt->mouse.is_down)
+	if (key == CONTROL && !rt->mouse.is_down)
 	{
 		rt->is_zoom_key_down = 1;
 		start_optimization(rt);

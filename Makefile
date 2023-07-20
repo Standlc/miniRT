@@ -37,7 +37,7 @@ CC			=	cc
 
 CFLAGS		=	-Wall -Wextra #-Werror
 
-INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -I.
+INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -Iinclude
 
 #LINUX
 INCLUDES_L	=	-Imlx $(INC_LIB)
@@ -60,7 +60,7 @@ linux : libs-l ${NAME_L}
 ${NAME_L} : ${OBJS}
 	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
-$(NAME) : $(OBJS) minirt.h
+$(NAME) : $(OBJS) include/minirt.h
 		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
 
 %.o : %.c Makefile

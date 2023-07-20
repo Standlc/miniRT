@@ -4,7 +4,7 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 {
 	(void)x;
 	(void)y;
-	if (button == 1 && rt->mouse.is_down)
+	if (button == RIGHT_CLICK && rt->mouse.is_down)
 	{
 		rt->mouse.is_down = 0;
 		if (!rt->is_zoom_key_down)
@@ -63,7 +63,7 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 	float	vertical;
 	float	len_to_center;
 
-	if (button != 1)
+	if (button != RIGHT_CLICK)
 		return (0);
 	rt->mouse.is_down = 1;
 	rt->mouse.origin = (t_vec2){x, y};
