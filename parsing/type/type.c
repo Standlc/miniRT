@@ -125,7 +125,7 @@ int check_cylinder(char **row)
 			if (!range_zero_one(row[7]))
 				return (error_information("Cylinder (7) reflexion probability must be between 0 and 1 for each component\nExample : 0.4\n"), 0);
 		if (i == 8)
-			if (letters_option(row[8]))
+			if (!letters_option(row[8]))
 				return (error_information("Cylinder (8) draughtboard is the letters 'ch' and bump mapping is the letters 'bm-(a number)'\nExample : bm-1\n"), 0);
         if (i == 9)
             return (error_information("Cylinder has only 8 parameters\n"), 0);
@@ -165,7 +165,7 @@ int check_cone(char **row)
 			if (!range_zero_one(row[7]))
 				return (error_information("Cone (7) reflexion probability must be between 0 and 1 for each component\nExample : 0.4\n"), 0);
 		if (i == 8)
-			if (letters_option(row[8]))
+			if (!letters_option(row[8]))
 				return (error_information("Cone (8) draughtboard is the letters 'ch' and bump mapping is the letters 'bm'\nExample : bm-1\n"), 0);
         if (i == 9)
             return (error_information("Cone has only 8 parameters\n"), 0);
