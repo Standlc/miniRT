@@ -265,6 +265,8 @@ int check_plan(char **row);
 int check_cylinder(char **row);
 int check_cone(char **row);
 
+int check_vector_null(char *str);
+
 int	atoi_rgb(char *str);
 int	rgb_information(char *str);
 

@@ -114,7 +114,7 @@ int vector_normal_information(char *str)
         if (str[i] == ',' && str[i + 1])
             i++;
     }
-    if (call != 3)
+    if (call != 3 || !check_vector_null(str))
         return (0);
     return (1);
 }

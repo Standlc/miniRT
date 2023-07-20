@@ -21,7 +21,7 @@ SRCS		=	main.c						rendering/render.c\
 				parsing/input/get_content.c		parsing/input/check_input.c\
 				parsing/type/type_unique.c		parsing/type/type.c	\
 				parsing/type/check_syntax/other.c parsing/type/check_syntax/range.c \
-				parsing/type/check_syntax/rgb.c \
+				parsing/type/check_syntax/rgb.c parsing/type/check_syntax/null.c\
 				parsing/type/check_syntax/vector.c parsing/type/check_syntax/letter.c\
 				parsing/fill_rt/fill_rt.c \
 				parsing/fill_rt/materials/fill_data.c	parsing/fill_rt/materials/fill_materials.c \
