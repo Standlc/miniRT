@@ -19,7 +19,13 @@
 #define ON_DESTROY  17
 #define MIRROR      1
 #define SOLID       2
-#define	ZERO		1e-6
+// #define	ZERO		1e-6
+#define	ZERO		0.0
+
+enum {
+	CHECKERS = 1,
+	BUMP_MAP = 2,
+};
 
 typedef struct	s_dls {
 	float	distance_from_ray_origin;
@@ -37,10 +43,10 @@ typedef struct	s_img {
 	int		endian;
 }				t_img;
 
-typedef struct s_point {
-	double  x;
-	double  y;
-} t_point;
+typedef struct	s_vec2 {
+	float	x;
+	float	y;
+}				t_vec2;
 
 typedef struct	s_rgb
 {
@@ -65,10 +71,12 @@ typedef struct	s_system
 }				t_system;
 
 typedef struct  s_cam {
+	t_vec		dir;
 	t_vec		look_at;
 	float		field_view;
 	float   	aspect_ratio;
 	t_system	system;
+	float		radius;
 }               t_cam;
 
 typedef struct	t_ray
@@ -84,26 +92,38 @@ typedef struct	t_quadratic
 	double c;
 }				t_quadratic;
 
+typedef struct	s_hit_info t_hit_info;
+
+typedef struct	s_normal_map
+{
+	t_vec	*map;
+	int		height;
+	int		width;
+}				t_normal_map;
+
 typedef struct	s_material
 {
-	t_rgb	color;
-	float   smoothness;
-	float	specular_prob;
-	float	light_intensity;
-	void	*shape;
-	int		(*intersect)(t_ray *ray, void *shape, double *t, int *surface_hit);
-	t_vec	(*normal)(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit);
-	t_vec	(*light_sample)(void *shape, t_ray *ray);
-	float	(*procedural_texturing)(void *shape, t_ray *normal, int surface_hit);
+	t_rgb			color;
+	float   		smoothness;
+	float			specular_prob;
+	float			light_intensity;
+	int				texture;
+	t_normal_map	*normal_map;
+	void			*shape;
+	int				(*intersect)(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+	t_vec			(*normal)(t_hit_info *hit);
+	t_vec2			(*texture_coordinates)(t_hit_info *hit, int keep_ratio);
 }				t_material;
 
 typedef struct	s_hit_info
 {
 	t_material	obj;
-	t_ray		normal;
+	t_vec		normal;
+	t_vec		hit_point;
+	t_vec		bump_normal;
 	double		t;
 	int			is_specular;
-	int			surface_hit;
+	int			is_surface_hit;
 }				t_hit_info;
 
 typedef struct	s_plane
@@ -166,7 +186,7 @@ typedef struct	s_cylinder
 
 typedef struct	s_mouse
 {
-	t_point	origin;
+	t_vec2	origin;
 	int		is_down;
 }				t_mouse;
 
@@ -185,8 +205,6 @@ typedef struct	s_rt {
 	void			*mlx;
 	void			*win;
 	t_img			img;
-	int				map_height;
-	int				map_width;
 	t_cam			cam;
 	t_material		*objects;
 	int         	nb_objects;
@@ -196,7 +214,10 @@ typedef struct	s_rt {
 	t_ray_options	opt;
 	int				rendering_frame;
 	t_mouse			mouse;
-	t_system			system;
+	t_system		system;
+	t_normal_map	*normal_maps;
+	int				nb_normal_maps;
+	int				is_zoom_key_down;
 }				t_rt;
 
 typedef struct	s_info
@@ -256,15 +277,21 @@ enum {
 	CONE = 7,
 };
 
+// NORMAL MAP
+int	read_normal_map(t_normal_map *normal_map, char *file_name);
+
 // SCENES
-void    balls_1(t_rt *rt);
-void    tomato(t_rt *rt);
-void    kernel(t_rt *rt);
 void	print_vector(t_vec v);
 void	print_system(t_system s);
 
+void	stop_optimization(t_rt *rt);
+void	start_optimization(t_rt *rt);
+void	rotate_camera(t_rt *rt, int mouse_dir_x, int mouse_dir_y);
+int	set_hooks(t_rt *rt);
+void	reset_rendering(t_rt *rt);
 
 int		render(t_rt *data);
+t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth);
 double  min(double a, double b);
 double  max(double a, double b);
 void	loading_bar(int max, float curr);
@@ -273,21 +300,23 @@ void	loader(int frequency);
 double  get_closest_intersection(double t1, double t2);
 t_vec	cosine_hemisphere_dir(t_vec *normal_dir);
 t_vec	lerp(t_vec v1, t_vec v2, float t);
+int	points_inwards(t_hit_info *hit, t_vec *ray_dir);
 
 
 // SHADING
 t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth);
-t_rgb	indirect_lighting(t_rt *rt, t_ray *normal, int depth);
-t_rgb	specular_lighting(t_rt *rt, t_ray *ray, t_ray *normal, float obj_smoothness, int depth);
+t_rgb	indirect_lighting(t_rt *rt, t_hit_info *hit, int depth);
+t_rgb	specular_lighting(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth);
 t_rgb	direct_light_sampling(t_rt *rt, t_ray *ray, t_hit_info *hit, int indirect_decay);
 t_rgb	shade_hitpoint(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth);
+t_vec	bump_mapping(t_hit_info *hit);
+t_vec	offset_ray_origin(t_hit_info *hit);
 
 
 t_vec	normalize(t_vec v);
 double  vec_len(t_vec v);
 t_vec	scale(t_vec v, double coef);
 double	dot(t_vec v1, t_vec v2);
-t_vec	vect_op(t_vec v1, char operation, t_vec v2);
 t_vec	get_reflection(t_vec *v, t_vec *normal);
 t_vec	cross_product(t_vec v1, t_vec v2);
 t_vec	get_ray_point(t_ray ray, double d);
@@ -307,10 +336,11 @@ t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t);
 t_rgb	ambient_light(t_rgb color, t_ray *ray, float intensity);
 
 
-int		handle_key(int key, t_rt *data);
+int	handle_key_down(int key, t_rt *rt);
+int	handle_key_up(int key, t_rt *rt);
 int		handle_mouse_move(int x, int y, t_rt *rt);
 int		handle_mouse_up(int button, int x, int y, t_rt *rt);
-int		handle_mouse(int event, int x, int y, t_rt *rt);
+int		handle_mouse_down(int button, int x, int y, t_rt *rt);
 void	free_object(t_material *object);
 void	free_elements(t_rt *rt);
 int		close_program(t_rt *data);
@@ -326,37 +356,25 @@ t_vec	random_dir();
 
 
 t_system	create_system(t_vec up);
-
-
-float	uv_pattern(float u, float v, float scale);
-
+float	checkers(t_vec2 point, float scale);
 
 // SPHERE
-t_vec	sphere_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit);
-int		intersect_sphere(t_ray *ray, void *shape, double *t, int *surface_hit);
-t_vec	sample_sphere(void *shape, t_ray *normal);
+t_vec	sample_sphere(void *shape, t_vec *normal_dir);
 int		solve_quadratic(t_quadratic f, double *x1, double *x2);
 int		create_sphere(t_material *obj, t_info *info);
-float	sphere_pattern(void *shape, t_ray *normal, int surface_hit);
+int intersect_circle(t_ray *ray, void *shape, double *t, int *is_surface_hit);
 
 
 // PLANE
-int		intersect_plane(t_ray *ray, void *shape, double *t, int *surface_hit);
-t_vec	plane_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit);
-float	plane_pattern(void *shape, t_ray *normal, int surface_hit);
+int	intersect_plane(t_ray *ray, void *shape, double *t, int *is_surface_hit);
 int		create_plane(t_material *obj, t_info *info);
 
 
 // CYLINDER
-int		intersect_cylinder(t_ray *ray, void *shape, double *t, int *surface_hit);
-t_vec	cylinder_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit);
-int		intersect_cirlce(t_ray *ray, void *shape, double *t, int *surface_hit);
 int		create_cylinder(t_material *obj, t_info *info);
 
 
 // CONE
-int		intersect_cone(t_ray *ray, void *shape, double *t, int *surface_hit);
-t_vec	cone_normal(t_vec *ray_dir, void *shape, t_vec *hit_point, int surface_hit);
 int		create_cone(t_material *obj, t_info *info);
 
 

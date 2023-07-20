@@ -2,16 +2,20 @@ NAME		=	miniRT
 
 NAME_L		=	miniRT_L
 
-SRCS		=	main.c						utils/vector.c	\
-				camera/libx.c				utils/colors.c	\
-				utils/utils.c				utils/loader.c	\
-				shapes/sphere.c				shapes/plane.c		\
-				shapes/cylinder.c 			shapes/circle.c \
-				shapes/cone.c \
-				utils/coordinate_system.c \
-				shading/procedural_texturing.c utils/random.c\
-				scenes.c					shapes/rectangle.c	\
-				shading/shading.c			shading/direct_light_sampling.c \
+SRCS		=	main.c						rendering/render.c\
+				rendering/utils/vector.c	\
+				rendering/events/utils.c				rendering/utils/colors.c	\
+				rendering/utils/utils.c				rendering/utils/loader.c	\
+				rendering/shapes/sphere.c				rendering/shapes/plane.c		\
+				rendering/shapes/cylinder.c 			rendering/shapes/circle.c \
+				rendering/shapes/cone.c 				\
+				rendering/shading/bump_mapping.c 		\
+				rendering/events/events.c  rendering/events/mouse_events.c \
+				rendering/utils/coordinate_system.c \
+				rendering/shading/procedural_texturing.c rendering/utils/random.c\
+				rendering/shapes/rectangle.c	\
+				rendering/shading/shading.c			rendering/shading/direct_light_sampling.c \
+				parsing/parse_normal_map.c	\
 				parsing/parsing.c	\
 				parsing/utils/error_message.c	parsing/utils/fonction_utils.c \
 				parsing/input/get_content.c		parsing/input/check_input.c\

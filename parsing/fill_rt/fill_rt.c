@@ -70,8 +70,7 @@ void	print_obj(t_material *obj)
 	printf("intensity : %f\n", obj->light_intensity);
 	printf("intersect : %p\n", obj->intersect);
 	printf("normal : %p\n", obj->normal);
-	printf("light_sample : %p\n", obj->light_sample);
-	printf("procedural : %p\n", obj->procedural_texturing);
+	printf("texture_coordinates : %p\n", obj->texture_coordinates);
 }
 
 void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
@@ -99,6 +98,7 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 		material = fill_objects(row, rt, &info);
 		if (material != AMBIENT && material != CAMERA)
 		{
+			rt->objects[index_objects].normal_map = rt->normal_maps + 0;
 			if (create_objects(material, rt->objects + index_objects, &info))
 				(free_split(row), free_split(rows), free(rt->objects), close(parsing.fd), exit(1));
 			complete_material(rt->objects + index_objects++, &info);
