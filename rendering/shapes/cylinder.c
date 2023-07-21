@@ -152,9 +152,6 @@ int	create_cylinder(t_material *obj, t_info *info)
 	obj->intersect = intersect_cylinder;
 	obj->normal = cylinder_normal;
 	obj->texture_coordinates = cylinder_texture_coordinates;
-	if (info->bump_mapping)
-		obj->texture = BUMP_MAP;
-	if (info->procedural_texturing)
-		obj->texture = CHECKERS;
+	obj->texture = info->texture;
 	return (0);
 }

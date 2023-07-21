@@ -8,5 +8,11 @@ int	letters_option(char *str)
 		return (1);
 	if (!ft_strncmp(str, "bm-2", 5))
 		return (1);
+	if (!ft_strncmp(str, "bm-3", 5))
+		return (1);
+	if (!ft_strncmp(str, "bm-4", 5))
+		return (1);
+	if (!ft_strncmp(str, "bm-5", 5))
+		return (1);
 	return (0);
 }

@@ -58,8 +58,8 @@ void    set_zero(t_info *info)
     info->dir.z = 0;
     info->radius = 0;
     info->height = 0;
-    info->procedural_texturing = 0;
-    info->bump_mapping = 0;
+    info->texture = 0;
+	info->index_bump_map = 0;
 }
 
 void	print_obj(t_material *obj)
@@ -88,19 +88,22 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 	rt->objects = malloc(sizeof(t_material) * parsing.number_of_materials);
 	rt->lights = malloc(sizeof(t_material *) * parsing.number_of_lights);
 	if (!rt->objects || !rt->lights)
-		(free(rt->objects), free(rt->lights), free_split(rows), close(parsing.fd), exit(1));
+		(free(rt->objects), free(rt->lights), free_split(rows), exit(1));
 	while (rows[i])
 	{
 		row = ft_split(rows[i], ' ');
 		if (!row)
-			(free_split(rows), free(rt->objects), close(parsing.fd), exit(1));
+			(free_split(rows), free(rt->objects), exit(1));
 		set_zero(&info);
 		material = fill_objects(row, rt, &info);
 		if (material != AMBIENT && material != CAMERA)
 		{
-			rt->objects[index_objects].normal_map = rt->normal_maps + 0;
+			if (info.texture == BUMP_MAP)
+				rt->objects[index_objects].normal_map = rt->normal_maps + info.index_bump_map;
+			else
+				rt->objects[index_objects].normal_map = NULL;
 			if (create_objects(material, rt->objects + index_objects, &info))
-				(free_split(row), free_split(rows), free(rt->objects), close(parsing.fd), exit(1));
+				(free_split(row), free_split(rows), free(rt->objects), exit(1));
 			complete_material(rt->objects + index_objects++, &info);
 			if (material == LIGHT)
 				rt->lights[index_light++] = rt->objects + (index_objects - 1);

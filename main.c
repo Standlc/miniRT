@@ -26,17 +26,7 @@ void	set_null(t_rt *rt)
 	rt->pixel_buff = NULL;
 	rt->img.p = NULL;
 	rt->img.img_addr = NULL;
-}
-
-int	load_normal_maps(t_rt *rt)
-{
-	rt->normal_maps = malloc(sizeof(t_normal_map) * 1);
-	rt->nb_normal_maps = 1;
-	if (!rt->normal_maps)
-		return (1);
-	if (read_normal_map(rt->normal_maps, "normal_maps/wood"))
-		return (1);
-	return (0);
+	rt->normal_maps = NULL;
 }
 
 int	main(int argc, char **argv)
@@ -48,12 +38,8 @@ int	main(int argc, char **argv)
 	rt.opt.cam_ray_fuzz = 1.f;
 	rt.opt.pixel_rendered_interval = 1;
 
-	if (load_normal_maps(&rt))
-		return (1);
-
 	set_null(&rt);
 	parsing(argc, argv, &rt);
-
 
 	rt.mlx = mlx_init();
 	if (!rt.mlx)

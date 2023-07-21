@@ -15,10 +15,12 @@ SRCS		=	main.c						rendering/render.c\
 				rendering/shading/procedural_texturing.c rendering/utils/random.c\
 				rendering/shapes/rectangle.c	\
 				rendering/shading/shading.c			rendering/shading/direct_light_sampling.c \
-				parsing/parse_normal_map.c	\
+				parsing/normal_map/parse_normal_map.c	\
+				parsing/normal_map/fill_good_maps.c	\
 				parsing/parsing.c	\
 				parsing/utils/error_message.c	parsing/utils/fonction_utils.c \
 				parsing/input/get_content.c		parsing/input/check_input.c\
+				parsing/input/check_argument.c\
 				parsing/type/type_unique.c		parsing/type/type.c	\
 				parsing/type/check_syntax/other.c parsing/type/check_syntax/range.c \
 				parsing/type/check_syntax/rgb.c parsing/type/check_syntax/null.c\
@@ -37,7 +39,7 @@ CC			=	cc
 
 CFLAGS		=	-Wall -Wextra #-Werror
 
-INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -Iinclude
+INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -Iincludes
 
 #LINUX
 INCLUDES_L	=	-Imlx $(INC_LIB)
@@ -60,7 +62,7 @@ linux : libs-l ${NAME_L}
 ${NAME_L} : ${OBJS}
 	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
-$(NAME) : $(OBJS) include/minirt.h
+$(NAME) : $(OBJS) includes/minirt.h
 		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
 
 %.o : %.c Makefile

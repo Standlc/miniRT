@@ -66,11 +66,7 @@ int	create_plane(t_material *obj, t_info *info)
 	obj->intersect = intersect_plane;
 	obj->normal = plane_normal;
 	obj->texture_coordinates = plane_texture_coordinates;
-
-	if (info->bump_mapping)
-		obj->texture = BUMP_MAP;
-	if (info->procedural_texturing)
-		obj->texture = CHECKERS;
+	obj->texture = info->texture;
 	return (0);
 }
 

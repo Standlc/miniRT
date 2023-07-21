@@ -30,12 +30,22 @@ void    get_value_vec(char *str, t_vec *vec)
     vec->z = conversion_double(&str[i]);
 }
 
-void    get_letters_options(char *str, int *procedural_texturing, int *bump_mapping)
+void    get_letters_options(char *str, int *texture, int *index)
 {
     if (!ft_strncmp(str, "ch", 3))
-        *procedural_texturing = 1;
+    {
+        *texture = CHECKERS;
+        return ;
+    }
     if (!ft_strncmp(str, "bm-1", 5))
-        *bump_mapping = 1;
+        *index = 0;
     if (!ft_strncmp(str, "bm-2", 5))
-        *bump_mapping = 2;
+        *index = 1;
+    if (!ft_strncmp(str, "bm-3", 5))
+        *index = 2;
+    if (!ft_strncmp(str, "bm-4", 5))
+        *index = 3;
+    if (!ft_strncmp(str, "bm-5", 5))
+        *index = 4;
+    *texture = BUMP_MAP;
 }

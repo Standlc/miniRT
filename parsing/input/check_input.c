@@ -67,32 +67,11 @@ void	check_rows(char **rows, t_parsing *parsing)
 
 	i = 0;
 	if (!check_essential(rows))
-		(free_split(rows), close(parsing->fd), exit(1));
+		(free_split(rows), exit(1));
 	while (rows[i])
 	{
 		if (!check_type(rows[i], parsing))
-			(free_split(rows), close(parsing->fd), exit(1));
+			(free_split(rows), exit(1));
 		i++;
 	}
-}
-
-int	check_argument(int argc, char **argv)
-{
-	int	i;
-	int	fd;
-
-	i = 0;	
-	if (argc != 2)
-		(ft_putstr_fd("Error\nAn argument is required.\n", 2), exit(1));
-	if (!argv[1] || !*argv[1])
-		(ft_putstr_fd("Error\nThe file must have a .rt extension.\n", 2), exit(1));
-	while (argv[1][i])
-		i++;
-	i -= 3;
-	if (i <= 0 || ft_strncmp(&argv[1][i], ".rt", 4))
-		(ft_putstr_fd("Error\nThe file must have a .rt extension.\n", 2), exit(1));
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		(ft_putstr_fd("Error\nThe file cannot be access.\n", 2), exit(errno));
-	return (fd);
 }

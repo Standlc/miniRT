@@ -63,7 +63,7 @@ int	close_program(t_rt *rt)
 {
 	free_elements(rt);
 	free_normal_maps(rt);
-	exit (0);
+	exit(0);
 }
 
 void	put_pixel(t_rt *rt, int x, int y, t_rgb color)
