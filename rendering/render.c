@@ -7,11 +7,6 @@ void	set_cam_system(t_rt *rt)
 	rt->cam.system.y = cross_product(rt->cam.system.z, rt->cam.system.x);
 }
 
-void	print_vector(t_vec v)
-{
-	printf("[%f, %f, %f],\n", v.x, v.y, v.z);
-}
-
 void	print_system(t_system s)
 {
 	printf("x ");
@@ -41,9 +36,9 @@ t_vec	to_world_coordinates(t_cam *cam, double x, double y)
 
 	tan_cam_view_field = tan(cam->field_view / 2 * M_PI / 180);
 	x = (2 * (x + 0.5) / WIDTH - 1) * tan_cam_view_field;
-	y = (1 - 2 * (y + 0.5) / HEIGHT) * tan_cam_view_field * cam->aspect_ratio;
+	y = (1 - 2 * (y + 0.5) / HEIGHT) * tan_cam_view_field * ((float)HEIGHT / WIDTH);
 
-	return (system_transform((t_vec){x, y, 1.0}, cam->system));
+	return (system_transform(&(t_vec){x, y, 1.0}, &(cam->system)));
 }
 
 void	set_cam_ray(t_rt *rt, t_ray *cam_ray, int x, int y)
@@ -94,9 +89,7 @@ t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 {
 	t_hit_info	hit;
 
-	// if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
-	// 	return ((t_rgb){0.f, 0.f, 0.f});
-	if (depth > 1)
+	if (depth > rt->opt.max_depth + (is_specular_ray * rt->opt.max_depth))
 		return ((t_rgb){0.f, 0.f, 0.f});
 	if (intersect_objects(rt, ray, &hit))
 	{
@@ -108,7 +101,7 @@ t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth)
 		return (shade_hitpoint(rt, &hit, ray, depth));
 	}
 	if (rt->opt.ambient)
-		return (ambient_light(rt->opt.ambient_light, ray, rt->opt.ambient));
+		return (ambient_light(&(rt->opt.ambient_light), ray, rt->opt.ambient));
 	return ((t_rgb){0.f, 0.f, 0.f});
 }
 
@@ -134,6 +127,8 @@ int	render(t_rt *rt)
 
 	if (rt->rendering_frame > rt->opt.rpp)
 		return (0);
+	// if (rt->rendering_frame > 10)
+	// 	close_program(rt);
 	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 	y = 0;
 	while (y < HEIGHT)

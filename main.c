@@ -43,7 +43,6 @@ int	main(int argc, char **argv)
 {
 	t_rt	rt;
 
-	rt.cam.aspect_ratio = (float)HEIGHT / WIDTH;
 	rt.opt.rpp = RPP;
 	rt.opt.max_depth = MAX_DEPTH;
 	rt.opt.cam_ray_fuzz = 1.f;

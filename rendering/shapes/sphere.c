@@ -7,9 +7,8 @@ t_vec2	sphere_texture_coordinates(t_hit_info *hit, int keep_ratio)
 {
 	t_vec2	coordinates;
 
+	(void)keep_ratio;
 	coordinates.x = atan2(hit->normal.z, hit->normal.x) / M_PI + 1;
-	if (!keep_ratio)
-		coordinates.x = coordinates.x / 2;
 	coordinates.y = acosf(hit->normal.y) / M_PI;
 	return (coordinates);
 }
@@ -64,10 +63,9 @@ t_vec	sample_sphere(void *shape, t_vec *normal_dir)
 	t_sphere	*sphere;
 	t_vec		sample_dir;
 
+	(void)normal_dir;
 	sphere = (t_sphere *)shape;
 	sample_dir = scale(random_dir(), sphere->radius);
-	if (dot(sample_dir, *normal_dir) < 0)
-		sample_dir = scale(sample_dir, -1);
 	return (add(sample_dir, sphere->center));
 }
 

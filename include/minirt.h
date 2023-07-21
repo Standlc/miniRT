@@ -32,6 +32,7 @@ typedef struct	s_dls {
 	float	light_intensity;
 	float	normal_shadow_dot;
 	int		indirect_decay;
+	float	light_area;
 }				t_dls;
 
 typedef struct	s_img {
@@ -73,7 +74,6 @@ typedef struct  s_cam {
 	t_vec		dir;
 	t_vec		look_at;
 	float		field_view;
-	float   	aspect_ratio;
 	t_system	system;
 	float		radius;
 }               t_cam;

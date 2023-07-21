@@ -42,7 +42,7 @@ t_vec	get_ray_point(t_ray ray, double d);
 t_vec	add(t_vec v1, t_vec v2);
 t_vec	sub(t_vec v1, t_vec v2);
 t_vec	project(t_vec projected, t_vec reference);
-t_vec	system_transform(t_vec v, t_system system);
+t_vec	system_transform(t_vec *v, t_system *system);
 float	get_angle(t_vec *v1, t_vec *v2);
 
 
@@ -52,7 +52,7 @@ t_rgb	color_add(t_rgb color_1, t_rgb color_2);
 t_rgb	color_fade(t_rgb color, float fade);
 int		rgb_to_int(t_rgb rgb);
 t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t);
-t_rgb	ambient_light(t_rgb color, t_ray *ray, float intensity);
+t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity);
 
 
 int		handle_key_down(int key, t_rt *rt);

@@ -12,6 +12,9 @@ t_vec2	cylinder_cover_pattern(t_cylinder *cylinder, t_vec *hitpoint, int keep_ra
 	else
 		hit_dir = sub(center_to_hitpoint, scale(cylinder->dir, cylinder->height / 2));
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180;
+	point.x *= (dot(hit_dir, cylinder->system.z) <= 0) * 2 - 1;
+	point.x += 1;
+
 	point.y = 1 - (vec_len(hit_dir)) / cylinder->radius;
 	if (keep_ratio)
 		point.y /= cylinder->circumference / cylinder->radius / 2;
@@ -25,6 +28,9 @@ t_vec2	cylinder_surface_pattern(t_cylinder *cylinder, t_hit_info *hit, int keep_
 	t_vec	base_center_to_hit;
 
 	point.x = get_angle(&(hit->normal), &(cylinder->system.x)) / 180;
+	point.x *= (dot(hit->normal, cylinder->system.z) <= 0) * 2 - 1;
+	point.x += 1;
+
 	base_center_to_hit = sub(hit->hit_point, cylinder->covers[0].plane.point);
 	height_from_base = dot(base_center_to_hit, cylinder->dir);
 	point.y = height_from_base / cylinder->height;

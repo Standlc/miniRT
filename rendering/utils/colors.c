@@ -28,7 +28,6 @@ t_rgb	color_mult(t_rgb color_1, t_rgb color_2)
 	color_1.g *= color_2.g;
 	color_1.b *= color_2.b;
 	return (color_1);
-	// return ((t_rgb){color_1.r * color_2.r, color_1.g * color_2.g, color_1.b * color_2.b});
 }
 
 t_rgb	color_add(t_rgb color_1, t_rgb color_2)
@@ -37,7 +36,6 @@ t_rgb	color_add(t_rgb color_1, t_rgb color_2)
 	color_1.g += color_2.g;
 	color_1.b += color_2.b;
 	return (color_1);
-	// return ((t_rgb){color_1.r + color_2.r, color_1.g + color_2.g, color_1.b + color_2.b});
 }
 
 t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
@@ -56,13 +54,13 @@ t_rgb	color_sub(t_rgb color, float sub)
 	return (color);
 }
 
-t_rgb	ambient_light(t_rgb color, t_ray *ray, float intensity)
+t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity)
 {
 	// return (lerp_color((t_rgb){0, 0, 1}, (t_rgb){1, 0, 0}, ray->dir.y * 0.5 + 0.5));
 	return (
 		lerp_color(
-				lerp_color(color_sub(color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
-				lerp_color(color_sub(color, 1 - intensity), color, intensity),
+				lerp_color(color_sub(*color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
+				lerp_color(color_sub(*color, 1 - intensity), *color, intensity),
 				ray->dir.y * 0.5 + 0.5
 			)
 		);
@@ -74,5 +72,4 @@ t_rgb	color_fade(t_rgb color, float fade)
 	color.g *= fade;
 	color.b *= fade;
 	return (color);
-	// return ((t_rgb){color.r * fade, color.g * fade, color.b * fade});
 }

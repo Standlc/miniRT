@@ -36,7 +36,7 @@ int	read_normal_map(t_normal_map *normal_map, char *file_name)
 
 		normal_map->map[i].x = (normal_map->map[i].x * 2 - 1);
 		normal_map->map[i].y = (normal_map->map[i].y * 2 - 1);
-		normal_map->map[i].z = normal_map->map[i].z * 2 - 1;
+		normal_map->map[i].z = (normal_map->map[i].z * 2 - 1);
 
 		normal_map->map[i] = normalize(normal_map->map[i]);
 		free(line);

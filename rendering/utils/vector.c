@@ -1,15 +1,20 @@
 #include "minirt.h"
 
-t_vec	system_transform(t_vec v, t_system system)
+void	print_vector(t_vec v)
+{
+	printf("[%f, %f, %f]\n", v.x, v.y, v.z);
+}
+
+t_vec	system_transform(t_vec *v, t_system *system)
 {
 	t_vec	transformed;
 
-	transformed.x = v.x * system.x.x + v.y * system.y.x + v.z * system.z.x
-		+ system.origin.x;
-	transformed.y = v.x * system.x.y + v.y * system.y.y + v.z * system.z.y
-		+ system.origin.y;
-	transformed.z = v.x * system.x.z + v.y * system.y.z + v.z * system.z.z
-		+ system.origin.z;
+	transformed.x = v->x * system->x.x + v->y * system->y.x + v->z * system->z.x
+		+ system->origin.x;
+	transformed.y = v->x * system->x.y + v->y * system->y.y + v->z * system->z.y
+		+ system->origin.y;
+	transformed.z = v->x * system->x.z + v->y * system->y.z + v->z * system->z.z
+		+ system->origin.z;
 	return (transformed);
 }
 

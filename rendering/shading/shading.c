@@ -14,7 +14,7 @@ t_rgb	indirect_lighting(t_rt *rt, t_hit_info *hit, int depth)
 	return (cast_ray(rt, &random_ray, 0, depth + 1));
 }
 
-t_rgb	specular_lighting(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth)
+t_rgb	specular_reflection(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth)
 {
 	t_ray	random_ray;
 	t_vec	reflection_vec;
@@ -52,7 +52,7 @@ t_rgb	shade_hitpoint(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth)
 	get_surface_normals(hit, ray);
 
 	if (hit->obj.smoothness && randf() <= hit->obj.specular_prob)
-		return (specular_lighting(rt, hit, ray, depth));
+		return (specular_reflection(rt, hit, ray, depth));
 
 	if (hit->obj.texture == CHECKERS)
 		hit->obj.color = color_fade(hit->obj.color, checkers(hit->obj.texture_coordinates(hit, 1), 10.f));

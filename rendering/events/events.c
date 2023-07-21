@@ -12,6 +12,15 @@ int	handle_key_up(int key, t_rt *rt)
 	return (0);
 }
 
+void	print_cam_setup(t_cam *cam)
+{
+	printf("\n\n\t\tCamera setup\t\n\nPosition:\t");
+	print_vector(cam->system.origin);
+	printf("Direction:\t");
+	print_vector(cam->dir);
+	printf("\n");
+}
+
 int	handle_key_down(int key, t_rt *rt)
 {
 	if (key == CONTROL && !rt->mouse.is_down)
@@ -21,6 +30,8 @@ int	handle_key_down(int key, t_rt *rt)
 	}
 	else if (key == ESC)
 		close_program(rt);
+	else if (key == PRINT)
+		print_cam_setup(&(rt->cam));
 	return (0);
 }
 
