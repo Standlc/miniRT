@@ -2,17 +2,16 @@ NAME		=	miniRT
 
 NAME_L		=	miniRT_L
 
-SRCS		=	main.c						rendering/render.c\
+SRCS		=	main.c						rendering/render.c rendering/utils/math.c \
 				rendering/utils/vector.c	\
 				rendering/events/utils.c				rendering/utils/colors.c	\
 				rendering/utils/utils.c				rendering/utils/loader.c	\
 				rendering/shapes/sphere.c				rendering/shapes/plane.c		\
 				rendering/shapes/cylinder.c 			rendering/shapes/circle.c \
 				rendering/shapes/cone.c 				\
-				rendering/shading/bump_mapping.c 		\
 				rendering/events/events.c  rendering/events/mouse_events.c \
 				rendering/utils/coordinate_system.c \
-				rendering/shading/procedural_texturing.c rendering/utils/random.c\
+				rendering/shading/texture.c rendering/utils/random.c\
 				rendering/shapes/rectangle.c	\
 				rendering/shading/shading.c			rendering/shading/direct_light_sampling.c \
 				parsing/normal_map/parse_normal_map.c	\

@@ -3,19 +3,20 @@
 
 #include "minirt.h"
 
+
+void	set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
+int		intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
 void	print_vector(t_vec v);
 void	print_system(t_system s);
-void	stop_optimization(t_rt *rt);
-void	start_optimization(t_rt *rt);
-void	rotate_camera(t_rt *rt, int mouse_dir_x, int mouse_dir_y);
+void	rotate_camera(t_world *world, int mouse_dir_x, int mouse_dir_y);
 int		set_hooks(t_rt *rt);
 void	reset_rendering(t_rt *rt);
 int		render(t_rt *data);
-t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth);
+t_rgb	cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth);
 double  min(double a, double b);
 double  max(double a, double b);
 void	loading_bar(int max, float curr);
-void	set_cam_system(t_rt *data);
+void	set_cam_system(t_world *world);
 void	loader(int frequency);
 double  get_closest_intersection(double t1, double t2);
 t_vec	cosine_hemisphere_dir(t_vec *normal_dir);
@@ -23,21 +24,22 @@ t_vec	lerp(t_vec v1, t_vec v2, float t);
 
 
 // SHADING
-t_rgb	cast_ray(t_rt *rt, t_ray *ray, int is_specular_ray, int depth);
-t_rgb	indirect_lighting(t_rt *rt, t_hit_info *hit, int depth);
-t_rgb	specular_lighting(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth);
-t_rgb	direct_light_sampling(t_rt *rt, t_ray *ray, t_hit_info *hit, int indirect_decay);
-t_rgb	shade_hitpoint(t_rt *rt, t_hit_info *hit, t_ray *ray, int depth);
+t_rgb	indirect_lighting(t_world *world, t_hit_info *hit, int depth);
+t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
+t_rgb	direct_light_sampling(t_world *world, t_ray *ray, t_hit_info *hit, int indirect_decay);
+t_rgb	shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
 t_vec	bump_mapping(t_hit_info *hit);
 t_vec	offset_ray_origin(t_hit_info *hit);
 
 
+double	pow2(double n);
+
 t_vec	normalize(t_vec v);
 double  vec_len(t_vec v);
 t_vec	scale(t_vec v, double coef);
-double	dot(t_vec v1, t_vec v2);
+double	dot(t_vec *v1, t_vec *v2);
 t_vec	get_reflection(t_vec *v, t_vec *normal);
-t_vec	cross_product(t_vec v1, t_vec v2);
+t_vec	cross_product(t_vec *v1, t_vec *v2);
 t_vec	get_ray_point(t_ray ray, double d);
 t_vec	add(t_vec v1, t_vec v2);
 t_vec	sub(t_vec v1, t_vec v2);
@@ -64,7 +66,6 @@ void	free_object(t_material *object);
 void	free_elements(t_rt *rt);
 int		close_program(t_rt *data);
 void	put_pixel(t_rt *data, int x, int y, t_rgb color);
-void	start_optimization(t_rt *rt);
 
 
 float	randf();
@@ -79,7 +80,7 @@ float		checkers(t_vec2 point, float scale);
 
 // SPHERE
 t_vec	sample_sphere(void *shape, t_vec *normal_dir);
-int		solve_quadratic(t_quadratic f, double *x1, double *x2);
+int		solve_quadratic(t_quadratic *f);
 int		create_sphere(t_material *obj, t_info *info);
 int 	intersect_circle(t_ray *ray, void *shape, double *t, int *is_surface_hit);
 

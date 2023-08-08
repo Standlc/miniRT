@@ -2,22 +2,9 @@
 
 void	reset_rendering(t_rt *rt)
 {
-	ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 	rt->rendering_frame = 1;
-}
-
-void	stop_optimization(t_rt *rt)
-{
-	// rt->opt.rpp = RPP;
-	rt->opt.max_depth = MAX_DEPTH;
-	rt->opt.pixel_rendered_interval = 1;
-}
-
-void	start_optimization(t_rt *rt)
-{
-	// rt->opt.rpp = 1;
-	rt->opt.max_depth = 1;
-	rt->opt.pixel_rendered_interval = 3;
+	ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
+	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 }
 
 void	free_object(t_material *object)
@@ -29,14 +16,14 @@ void	free_elements(t_rt *rt)
 {
 	int	i;
 
-	i = rt->nb_objects - 1;
-	while (i >= 0)
+	i = 0;
+	while (i < rt->world.nb_objects)
 	{
-		free_object(rt->objects + i);
-		i--;
+		free(rt->world.objects[i].shape);
+		i++;
 	}
-	free(rt->objects);
-	free(rt->lights);
+	free(rt->world.objects);
+	free(rt->world.lights);
 	free(rt->pixel_buff);
 	if (rt->mlx && rt->img.p)
 		mlx_destroy_image(rt->mlx, rt->img.p);

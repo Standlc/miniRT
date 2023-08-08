@@ -4,32 +4,27 @@ int handle_mouse_up(int button, int x, int y, t_rt *rt)
 {
 	(void)x;
 	(void)y;
-	if (button == RIGHT_CLICK && rt->mouse.is_down)
-	{
+	if (button == LEFT_CLICK && rt->mouse.is_down)
 		rt->mouse.is_down = 0;
-		if (!rt->is_zoom_key_down)
-			stop_optimization(rt);
-		reset_rendering(rt);
-	}
 	return (0);
 }
 
-void	handle_zoom(t_rt *rt, int mouse_dir_y)
+void	handle_zoom(t_world *world, int mouse_dir_y)
 {
-	rt->cam.system.origin = add(rt->cam.system.origin, scale(rt->cam.dir, -mouse_dir_y / 30.0));
+	world->cam.system.origin = add(world->cam.system.origin, scale(world->cam.dir, -mouse_dir_y / 30.0));
 }
 
-void	rotate_camera(t_rt *rt, int mouse_dir_x, int mouse_dir_y)
+void	rotate_camera(t_world *world, int mouse_dir_x, int mouse_dir_y)
 {
 	t_vec	x_dir;
 	t_vec	y_dir;
 	t_vec	new_cam_pos;
 
-	x_dir = scale(rt->cam.system.x, mouse_dir_x / 40.f);
-	y_dir = scale(rt->system.y, mouse_dir_y / 40.f * -1);
-	new_cam_pos = add(rt->cam.system.origin, add(y_dir, x_dir));
-	rt->cam.dir = normalize(sub(rt->cam.look_at, new_cam_pos));
-	rt->cam.system.origin = get_ray_point((t_ray){rt->cam.look_at, rt->cam.dir}, -rt->cam.radius);
+	x_dir = scale(world->cam.system.x, mouse_dir_x / 40.f);
+	y_dir = scale(world->cam.system.y, mouse_dir_y / 40.f * -1);
+	new_cam_pos = add(world->cam.system.origin, add(y_dir, x_dir));
+	world->cam.dir = normalize(sub(world->cam.look_at, new_cam_pos));
+	world->cam.system.origin = get_ray_point((t_ray){world->cam.look_at, world->cam.dir}, -world->cam.radius);
 }
 
 int handle_mouse_move(int x, int y, t_rt *rt)
@@ -46,11 +41,11 @@ int handle_mouse_move(int x, int y, t_rt *rt)
 		return (0);
 
 	if (rt->is_zoom_key_down)
-		handle_zoom(rt, mouse_dir_y);
+		handle_zoom(&(rt->world), mouse_dir_y);
 	else
-		rotate_camera(rt, mouse_dir_x, mouse_dir_y);
+		rotate_camera(&(rt->world), mouse_dir_x, mouse_dir_y);
 
-	set_cam_system(rt);
+	set_cam_system(&(rt->world));
 	reset_rendering(rt);
 	rt->mouse.origin.x = x;
 	rt->mouse.origin.y = y;
@@ -63,8 +58,9 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 	float	vertical;
 	float	len_to_center;
 
-	if (button != RIGHT_CLICK)
+	if (button != LEFT_CLICK)
 		return (0);
+
 	rt->mouse.is_down = 1;
 	rt->mouse.origin = (t_vec2){x, y};
 	if (rt->is_zoom_key_down)
@@ -73,8 +69,7 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 	horizontal = (float)x / WIDTH * 2 - 1;
 	vertical = 1 - (float)y / HEIGHT * 2;
 	len_to_center = sqrt(horizontal * horizontal + vertical * vertical);
-	start_optimization(rt);
-	rt->cam.look_at = add(rt->cam.system.origin, scale(rt->cam.dir, len_to_center * 30 + 2));
-	rt->cam.radius = vec_len(sub(rt->cam.system.origin, rt->cam.look_at));
+	rt->world.cam.look_at = add(rt->world.cam.system.origin, scale(rt->world.cam.dir, len_to_center * 40 + 2));
+	rt->world.cam.radius = vec_len(sub(rt->world.cam.system.origin, rt->world.cam.look_at));
 	return (0);
 }

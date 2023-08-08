@@ -6,8 +6,6 @@ int	handle_key_up(int key, t_rt *rt)
 	{
 		rt->is_zoom_key_down = 0;
 		rt->mouse.is_down = 0;
-		stop_optimization(rt);
-		reset_rendering(rt);
 	}
 	return (0);
 }
@@ -24,14 +22,11 @@ void	print_cam_setup(t_cam *cam)
 int	handle_key_down(int key, t_rt *rt)
 {
 	if (key == CONTROL && !rt->mouse.is_down)
-	{
 		rt->is_zoom_key_down = 1;
-		start_optimization(rt);
-	}
 	else if (key == ESC)
 		close_program(rt);
 	else if (key == PRINT)
-		print_cam_setup(&(rt->cam));
+		print_cam_setup(&(rt->world.cam));
 	return (0);
 }
 

@@ -11,6 +11,8 @@ void	load_normal_maps(t_rt *rt, char **rows);
 
 //PARSING
 
+void	print_syntaxe_error(char *obj_type, char *msg, char *example);
+
 int check_camera(char **row);
 int check_ambuant(char **row);
 

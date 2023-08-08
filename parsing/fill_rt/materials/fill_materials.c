@@ -3,7 +3,7 @@
 void    fill_light(char **row, t_info *light)
 {
     get_value_vec(row[1], &(light->center));
-    light->light_intensity = conversion_double(row[2]);
+    light->light_intensity = conversion_double(row[2]) * 7;
     get_value_rgb(row[3], &(light->color));
     if (row[4])
         light->radius = conversion_double(row[4]) / 2;

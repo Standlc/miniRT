@@ -56,12 +56,11 @@ t_rgb	color_sub(t_rgb color, float sub)
 
 t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity)
 {
-	// return (lerp_color((t_rgb){0, 0, 1}, (t_rgb){1, 0, 0}, ray->dir.y * 0.5 + 0.5));
 	return (
 		lerp_color(
-				lerp_color(color_sub(*color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
-				lerp_color(color_sub(*color, 1 - intensity), *color, intensity),
-				ray->dir.y * 0.5 + 0.5
+			lerp_color(color_sub(*color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
+			lerp_color(color_sub(*color, 1 - intensity), *color, intensity),
+			ray->dir.y * 0.5 + 0.5
 			)
 		);
 }

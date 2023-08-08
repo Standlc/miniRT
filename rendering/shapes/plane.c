@@ -6,7 +6,7 @@ t_vec	plane_bump_mapping(t_hit_info *hit)
 	t_vec	center_dir;
 	float	u;
 
-	plane = (t_plane *)(hit->obj.shape);
+	plane = (t_plane *)(hit->obj->shape);
 	center_dir = sub(hit->hit_point, plane->point);
 	u = vec_len(center_dir) * 5;
 	center_dir = normalize(center_dir);
@@ -14,15 +14,14 @@ t_vec	plane_bump_mapping(t_hit_info *hit)
 	return (hit->normal);
 }
 
-t_vec2	plane_texture_coordinates(t_hit_info *hit, int keep_ratio)
+t_vec2	plane_texture_coordinates(t_hit_info *hit)
 {
 	t_plane	*plane;
 	t_vec2	point;
 
-	(void)keep_ratio;
-	plane = (t_plane *)(hit->obj.shape);
-	point.x = dot(hit->hit_point, plane->system.x) / 10;
-	point.y = dot(hit->hit_point, plane->system.z) / 10;
+	plane = (t_plane *)(hit->obj->shape);
+	point.x = dot(&(hit->hit_point), &(plane->system.x)) / 10;
+	point.y = dot(&(hit->hit_point), &(plane->system.z)) / 10;
 	return (point);
 }
 
@@ -30,7 +29,7 @@ t_vec	plane_normal(t_hit_info *hit)
 {
 	t_plane	*plane;
 	
-	plane = (t_plane *)(hit->obj.shape);
+	plane = (t_plane *)(hit->obj->shape);
 	return (plane->normal);
 }
 
@@ -42,12 +41,12 @@ int	intersect_plane(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 
 	(void)is_surface_hit;
 	plane = (t_plane *)shape;
-	n_ray_dot = dot(plane->normal, ray->dir);
+	n_ray_dot = dot(&(plane->normal), &(ray->dir));
 	if (n_ray_dot == 0.0)
 		return (0);
-	d = dot(plane->normal, plane->point);
-	*t = (d - dot(plane->normal, ray->origin)) / n_ray_dot;
-	return (*t > ZERO);
+	d = dot(&(plane->normal), &(plane->point));
+	*t = (d - dot(&(plane->normal), &(ray->origin))) / n_ray_dot;
+	return (*t > 0.0);
 }
 
 int	create_plane(t_material *obj, t_info *info)

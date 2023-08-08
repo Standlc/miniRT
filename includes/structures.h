@@ -9,7 +9,6 @@ typedef struct	s_dls {
 	float	light_intensity;
 	float	normal_shadow_dot;
 	int		indirect_decay;
-	float	light_area;
 }				t_dls;
 
 typedef struct	s_img {
@@ -63,9 +62,11 @@ typedef struct	t_ray
 
 typedef struct	t_quadratic
 {
-	double a;
-	double b;
-	double c;
+	double	a;
+	double	b;
+	double	c;
+	double	t_1;
+	double	t_2;
 }				t_quadratic;
 
 typedef struct	s_hit_info t_hit_info;
@@ -88,12 +89,12 @@ typedef struct	s_material
 	void			*shape;
 	int				(*intersect)(t_ray *ray, void *shape, double *t, int *is_surface_hit);
 	t_vec			(*normal)(t_hit_info *hit);
-	t_vec2			(*texture_coordinates)(t_hit_info *hit, int keep_ratio);
+	t_vec2			(*texture_coordinates)(t_hit_info *hit);
 }				t_material;
 
 typedef struct	s_hit_info
 {
-	t_material	obj;
+	t_material	*obj;
 	t_vec		normal;
 	t_vec		hit_point;
 	t_vec		bump_normal;
@@ -166,34 +167,28 @@ typedef struct	s_mouse
 	int		is_down;
 }				t_mouse;
 
-typedef struct	s_ray_options
+typedef struct	s_world
 {
-	int		max_depth;
-	int		rpp;
-	float	ambient;
-	t_rgb	ambient_light;
-	float	cam_ray_fuzz;
-	float	gamma;
-	int		pixel_rendered_interval;
-}				t_ray_options;
+	t_cam		cam;
+	t_material	*objects;
+	int			nb_objects;
+	t_material	**lights;
+	int			nb_lights;
+	float		ambient;
+	t_rgb		ambient_light;
+}				t_world;
 
 typedef struct	s_rt {
 	void			*mlx;
 	void			*win;
 	t_img			img;
-	t_cam			cam;
-	t_material		*objects;
-	int         	nb_objects;
-	t_material		**lights;
-	int         	nb_lights;
+	t_world			world;
 	t_rgb			*pixel_buff;
-	t_ray_options	opt;
 	int				rendering_frame;
 	t_mouse			mouse;
-	t_system		system;
+	int				is_zoom_key_down;
 	t_normal_map	*normal_maps;
 	int				nb_normal_maps;
-	int				is_zoom_key_down;
 }				t_rt;
 
 typedef struct	s_info

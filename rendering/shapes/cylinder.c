@@ -1,112 +1,115 @@
 #include "minirt.h"
 
-t_vec2	cylinder_cover_pattern(t_cylinder *cylinder, t_vec *hitpoint, int keep_ratio)
+t_vec2	cylinder_cover_pattern(t_cylinder *cylinder, t_vec *hitpoint)
 {
 	t_vec	center_to_hitpoint;
 	t_vec	hit_dir;
 	t_vec2	point;
 
 	center_to_hitpoint = sub(*hitpoint, cylinder->center);
-	if (dot(center_to_hitpoint, cylinder->dir) < 0)
+	if (dot(&center_to_hitpoint, &(cylinder->dir)) < 0)
 		hit_dir = sub(center_to_hitpoint, scale(cylinder->dir, cylinder->height / -2));
 	else
 		hit_dir = sub(center_to_hitpoint, scale(cylinder->dir, cylinder->height / 2));
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180;
-	point.x *= (dot(hit_dir, cylinder->system.z) <= 0) * 2 - 1;
+	point.x *= (dot(&hit_dir, &(cylinder->system.z)) <= 0) * 2 - 1;
 	point.x += 1;
 
 	point.y = 1 - (vec_len(hit_dir)) / cylinder->radius;
-	if (keep_ratio)
-		point.y /= cylinder->circumference / cylinder->radius / 2;
+	point.y /= cylinder->circumference / cylinder->radius / 2;
 	return (point);
 }
 
-t_vec2	cylinder_surface_pattern(t_cylinder *cylinder, t_hit_info *hit, int keep_ratio)
+t_vec2	cylinder_surface_pattern(t_cylinder *cylinder, t_hit_info *hit)
 {
 	t_vec2	point;
 	float	height_from_base;
 	t_vec	base_center_to_hit;
 
 	point.x = get_angle(&(hit->normal), &(cylinder->system.x)) / 180;
-	point.x *= (dot(hit->normal, cylinder->system.z) <= 0) * 2 - 1;
+	point.x *= (dot(&(hit->normal), &(cylinder->system.z)) <= 0) * 2 - 1;
 	point.x += 1;
 
 	base_center_to_hit = sub(hit->hit_point, cylinder->covers[0].plane.point);
-	height_from_base = dot(base_center_to_hit, cylinder->dir);
+	height_from_base = dot(&base_center_to_hit, &(cylinder->dir));
 	point.y = height_from_base / cylinder->height;
-	if (keep_ratio)
-		point.y *= 2 / (cylinder->circumference / cylinder->height);
+	point.y *= 2 / (cylinder->circumference / cylinder->height);
 	return (point);
 }
 
-t_vec2	cylinder_texture_coordinates(t_hit_info *hit, int keep_ratio)
+t_vec2	cylinder_texture_coordinates(t_hit_info *hit)
 {
 	t_cylinder	*cylinder;
 
-	cylinder = (t_cylinder *)(hit->obj.shape);
-	if (hit->is_surface_hit)
-		return (cylinder_cover_pattern(cylinder, &(hit->hit_point), keep_ratio));
-	return (cylinder_surface_pattern(cylinder, hit, keep_ratio));
+	cylinder = (t_cylinder *)(hit->obj->shape);
+	if (!hit->is_surface_hit)
+		return (cylinder_cover_pattern(cylinder, &(hit->hit_point)));
+	return (cylinder_surface_pattern(cylinder, hit));
 }
 
 int	cut_cylinder(t_ray *ray, t_cylinder *cylinder, double *t)
 {
-	t_vec	hit_point;
-	t_vec	projected;
+	t_vec	hit_to_center;
 
-	hit_point = get_ray_point(*ray, *t);
-	projected = project(sub(hit_point, cylinder->center), cylinder->dir);
-	if (vec_len(projected) <= cylinder->height / 2)
+	hit_to_center = sub(get_ray_point(*ray, *t), cylinder->center);
+	if (fabs(dot(&hit_to_center, &(cylinder->dir))) <= cylinder->height / 2)
 		return (1);
-	*t = -1.0;
+	*t = 0.0;
 	return (0);
 }
 
 int	intersect_cylinder_covers(t_ray *ray, t_cylinder *cylinder, double *t)
 {
-	double		t_1;
-	double		t_2;
+	double	t_1;
+	double	t_2;
 
-	intersect_circle(ray, (void *)&(cylinder->covers[0]), &t_1, NULL);
-	intersect_circle(ray, (void *)&(cylinder->covers[1]), &t_2, NULL);
+	intersect_plane(ray, (void *)&(cylinder->covers[0].plane), &t_1, NULL);
+	intersect_plane(ray, (void *)&(cylinder->covers[1].plane), &t_2, NULL);
 	*t = get_closest_intersection(t_1, t_2);
+	return (*t > 0.0);
+}
+
+int	intersect_cylinder_tube(t_ray *ray, t_cylinder *cylinder, t_quadratic *f, double *t)
+{
+	t_vec	w;
+	double	dot_ray_dir_cylinder_dir;
+	double	dot_w_cylinder_dir;
+
+	w = sub(ray->origin, cylinder->center);
+	dot_ray_dir_cylinder_dir = dot(&(ray->dir), &(cylinder->dir));
+	dot_w_cylinder_dir = dot(&w, &(cylinder->dir));
+
+	f->a = 1 - pow2(dot_ray_dir_cylinder_dir);
+	f->b = 2 * (dot(&(ray->dir), &w) - dot_ray_dir_cylinder_dir * dot_w_cylinder_dir);
+	f->c = dot(&w, &w) - pow2(dot_w_cylinder_dir) - pow2(cylinder->radius);
+	if (!solve_quadratic(f))
+		return (0);
+	*t = get_closest_intersection(f->t_1, f->t_2);
 	return (*t > 0.0);
 }
 
 int	intersect_cylinder(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 {
 	t_quadratic	f;
-	double		t_1;
-	double		t_2;
 	t_cylinder	*cylinder;
 	double		t_cover;
 
     cylinder = (t_cylinder *)shape;
 
-	double		dot_ray_dir_cylinder_dir;
-	double		dot_w_cylinder_dir;
-	t_vec		w;
-	w = sub(ray->origin, cylinder->center);
-	dot_ray_dir_cylinder_dir = dot(ray->dir, cylinder->dir);
-	dot_w_cylinder_dir = dot(w, cylinder->dir);
-
-	f.a = 1 - pow(dot_ray_dir_cylinder_dir, 2);
-	f.b = 2 * (dot(ray->dir, w) - dot_ray_dir_cylinder_dir * dot_w_cylinder_dir);
-	f.c = dot(w, w) - pow(dot_w_cylinder_dir, 2) - pow(cylinder->radius, 2);
-
-	if (!solve_quadratic(f, &t_1, &t_2))
+	if (!intersect_cylinder_tube(ray, cylinder, &f, t))
 		return (0);
 
-	*t = get_closest_intersection(t_1, t_2);
-	if (*t <= 0.0)
-		return (0);
-
-	cut_cylinder(ray, cylinder, &(*t));
 	intersect_cylinder_covers(ray, cylinder, &t_cover);
-	*t = get_closest_intersection(*t, t_cover);
-
+	if ((t_cover > f.t_1 && t_cover < f.t_2) ||
+		(t_cover < f.t_1 && t_cover > f.t_2))
+	{
+		cut_cylinder(ray, cylinder, t);
+		*t = get_closest_intersection(t_cover, *t);
+	}
+	else
+		cut_cylinder(ray, cylinder, t);
 	if (is_surface_hit != NULL)
-		*is_surface_hit = *t == t_cover;
+		*is_surface_hit = *t != t_cover;
 	return (*t > 0.0);
 }
 
@@ -117,9 +120,9 @@ t_vec	cylinder_normal(t_hit_info *hit)
 	t_vec		projected_hit_dir;
 	t_vec		center_to_hitpoint;
 
-	cylinder = (t_cylinder *)(hit->obj.shape);
+	cylinder = (t_cylinder *)(hit->obj->shape);
 
-	if (hit->is_surface_hit)
+	if (!hit->is_surface_hit)
 		return (cylinder->dir);
 
 	center_to_hitpoint = sub(hit->hit_point, cylinder->center);
