@@ -50,10 +50,13 @@ t_vec	normalize(t_vec v)
 {
 	double  len;
 
-	len = vec_len(v);
-	if (len == 0)
+	len = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	if (len == 0.0)
 		return (v);
-	return (scale(v, 1 / len));
+	v.x *= 1.0 / len;
+	v.y *= 1.0 / len;
+	v.z *= 1.0 / len;
+	return (v);
 }
 
 t_vec	add(t_vec v1, t_vec v2)

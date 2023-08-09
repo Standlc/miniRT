@@ -5,7 +5,7 @@ t_rgb	indirect_lighting(t_world *world, t_hit_info *hit, int depth)
 	t_ray	random_ray;
 
 	random_ray.dir = cosine_hemisphere_dir(&(hit->bump_normal));
-    random_ray.origin = offset_ray_origin(hit);
+    random_ray.origin = offset_ray_origin(hit, hit->obj->hitpoint_offset);
 	return (cast_ray(world, &random_ray, 0, depth + 1));
 }
 
@@ -20,7 +20,7 @@ t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth
     else
         random_ray.dir = lerp(cosine_hemisphere_dir(&(hit->bump_normal)),
 								reflection_vec, hit->obj->smoothness);
-    random_ray.origin = offset_ray_origin(hit);
+    random_ray.origin = offset_ray_origin(hit, hit->obj->hitpoint_offset);
     return (color_fade(cast_ray(world, &random_ray, 1, depth + 1), 0.95f));
 }
 

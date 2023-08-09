@@ -1,4 +1,6 @@
 #include "minirt.h"
+// C 2.3,-1.6,2.7 -0.2,-0.2,-1.0 90
+// C 3.1,-0.7,6.3 -0.2,-0.2,-1.0 90
 
 t_vec2	cone_base_pattern(t_cone *cone, t_vec *center_to_hitpoint)
 {
@@ -47,24 +49,13 @@ t_vec2	cone_texture_coordinates(t_hit_info *hit)
 int	check_cone_surface_intersection(t_cone *cone, t_vec hit_point, double *t)
 {
 	t_vec	hit_to_center;
+	double	projected_height;
 
 	if (*t <= 0.0)
 		return (0);
 	hit_to_center = sub(hit_point, cone->center);
-	if (dot(&hit_to_center, &(cone->dir)) <= cone->height)
-		return (1);
-	*t = -1;
-	return (0);
-}
-
-int	check_below_cone_intersection(t_cone *cone, t_vec hit_point, double *t)
-{
-	t_vec	hit_to_center;
-
-	// if (*t <= 0.0)
-	// 	return (0);
-	hit_to_center = sub(hit_point, cone->center);
-	if (dot(&hit_to_center, &(cone->dir)) >= 0)
+	projected_height = dot(&hit_to_center, &(cone->dir));
+	if (projected_height <= cone->height && projected_height > 0.0)
 		return (1);
 	*t = 0.0;
 	return (0);
@@ -100,13 +91,18 @@ int	intersect_cone(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 	if (!intersect_entire_cone(ray, cone, &f))
 		return (0);
 
-	check_cone_surface_intersection(cone, get_ray_point(*ray, f.t_1), &f.t_1);
-	check_cone_surface_intersection(cone, get_ray_point(*ray, f.t_2), &f.t_2);
-	*t = get_closest_intersection(f.t_1, f.t_2);
-	if (*t <= 0.0)
-		return (0);
+	if (dot(&(cone->dir), &(ray->dir)) >= 0)
+	{
+		*t = get_closest_intersection(f.t_1, f.t_2);
+		check_cone_surface_intersection(cone, get_ray_point(*ray, *t), t);
+	}
+	else
+	{
+		check_cone_surface_intersection(cone, get_ray_point(*ray, f.t_1), &f.t_1);
+		check_cone_surface_intersection(cone, get_ray_point(*ray, f.t_2), &f.t_2);
+		*t = get_closest_intersection(f.t_1, f.t_2);
+	}
 
-	check_below_cone_intersection(cone, get_ray_point(*ray, *t), t);
 	intersect_circle(ray, (void *)&(cone->base), &t_base, NULL);
 	*t = get_closest_intersection(*t, t_base);
 
@@ -154,5 +150,6 @@ int	create_cone(t_material *obj, t_info *info)
 	obj->normal = cone_normal;
 	obj->texture_coordinates = cone_texture_coordinates;
 	obj->texture = info->texture;
+	obj->hitpoint_offset = 1e-5;
 	return (0);
 }

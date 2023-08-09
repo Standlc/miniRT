@@ -85,5 +85,6 @@ int	create_sphere(t_material *obj, t_info *info)
 	obj->normal = sphere_normal;
 	obj->texture_coordinates = sphere_texture_coordinates;
 	obj->texture = info->texture;
+	obj->hitpoint_offset = 1e-2;
 	return (0);
 }

@@ -29,7 +29,8 @@ t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth
 t_rgb	direct_light_sampling(t_world *world, t_ray *ray, t_hit_info *hit, int indirect_decay);
 t_rgb	shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
 t_vec	bump_mapping(t_hit_info *hit);
-t_vec	offset_ray_origin(t_hit_info *hit);
+// t_vec	offset_ray_origin(t_hit_info *hit);
+t_vec	offset_ray_origin(t_hit_info *hit, float offset);
 
 
 double	pow2(double n);

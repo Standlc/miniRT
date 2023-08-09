@@ -1,8 +1,8 @@
 #include "minirt.h"
 
-t_vec	offset_ray_origin(t_hit_info *hit)
+t_vec	offset_ray_origin(t_hit_info *hit, float offset)
 {
-	return (add(hit->hit_point, scale(hit->normal, 1e-2)));
+	return (add(hit->hit_point, scale(hit->normal, offset)));
 }
 
 t_ray	sample_shadow_ray(t_hit_info *hit, t_material *light, double *light_distance)
@@ -10,7 +10,7 @@ t_ray	sample_shadow_ray(t_hit_info *hit, t_material *light, double *light_distan
 	t_vec	light_sample_point;
 	t_ray	shadow_ray;
 
-	shadow_ray.origin = offset_ray_origin(hit);
+	shadow_ray.origin = offset_ray_origin(hit, hit->obj->hitpoint_offset);
 	light_sample_point = sample_sphere(light->shape, NULL);
 	shadow_ray.dir = sub(light_sample_point, hit->hit_point);
 	*light_distance = vec_len(shadow_ray.dir);

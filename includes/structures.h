@@ -84,6 +84,7 @@ typedef struct	s_material
 	float   		smoothness;
 	float			specular_prob;
 	float			light_intensity;
+	float			hitpoint_offset;
 	int				texture;
 	t_normal_map	*normal_map;
 	void			*shape;
