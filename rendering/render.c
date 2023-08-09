@@ -9,18 +9,6 @@ void	set_cam_system(t_world *world)
 	world->cam.system.y = cross_product(&(world->cam.system.z), &(world->cam.system.x));
 }
 
-void	print_system(t_system s)
-{
-	printf("x ");
-	print_vector(s.x);
-	printf("y ");
-	print_vector(s.y);
-	printf("z ");
-	print_vector(s.z);
-	printf("origin: ");
-	print_vector(s.origin);
-}
-
 double  get_closest_intersection(double t1, double t2)
 {
 	if (t1 <= 0.0 && t2 <= 0.0)
@@ -55,14 +43,6 @@ void	set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y)
 	cam_ray->origin = world->cam.system.origin;
 	world_pixel = to_world_coordinates(&(world->cam), x + anti_aliasing.x, y + anti_aliasing.y);
 	cam_ray->dir = normalize(sub(world_pixel, cam_ray->origin));
-}
-
-t_vec	lerp(t_vec v1, t_vec v2, float t)
-{
-	v1.x = (1 - t) * v1.x + t * v2.x;
-	v1.y = (1 - t) * v1.y + t * v2.y;
-	v1.z = (1 - t) * v1.z + t * v2.z;
-	return (v1);
 }
 
 int	intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit)
@@ -125,10 +105,10 @@ int	render(t_rt *rt)
 	int		y;
 	int		x;
 
-	// if ((rt->rendering_frame - 1) / INTERVAL + 1 > RPP)
-	// 	return (0);
-	if ((rt->rendering_frame - 1) / INTERVAL + 1 > 10)
-		close_program(rt);
+	if ((rt->rendering_frame - 1) / INTERVAL + 1 > RPP)
+		return (0);
+	// if ((rt->rendering_frame - 1) / INTERVAL + 1 > 10)
+	// 	close_program(rt);
 	y = 0;
 	while (y < HEIGHT)
 	{

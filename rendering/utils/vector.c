@@ -5,6 +5,14 @@ void	print_vector(t_vec v)
 	printf("%.1f,%.1f,%.1f\n", v.x, v.y, v.z);
 }
 
+t_vec	lerp(t_vec v1, t_vec v2, float t)
+{
+	v1.x = (1 - t) * v1.x + t * v2.x;
+	v1.y = (1 - t) * v1.y + t * v2.y;
+	v1.z = (1 - t) * v1.z + t * v2.z;
+	return (v1);
+}
+
 t_vec	system_transform(t_vec *v, t_system *system)
 {
 	t_vec	transformed;

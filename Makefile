@@ -12,7 +12,6 @@ SRCS		=	main.c						rendering/render.c rendering/utils/math.c \
 				rendering/events/events.c  rendering/events/mouse_events.c \
 				rendering/utils/coordinate_system.c \
 				rendering/shading/texture.c rendering/utils/random.c\
-				rendering/shapes/rectangle.c	\
 				rendering/shading/shading.c			rendering/shading/direct_light_sampling.c \
 				parsing/normal_map/parse_normal_map.c	\
 				parsing/normal_map/fill_good_maps.c	\

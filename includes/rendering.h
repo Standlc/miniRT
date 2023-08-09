@@ -7,7 +7,6 @@
 void	set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
 int		intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
 void	print_vector(t_vec v);
-void	print_system(t_system s);
 void	rotate_camera(t_world *world, int mouse_dir_x, int mouse_dir_y);
 int		set_hooks(t_rt *rt);
 void	reset_rendering(t_rt *rt);
