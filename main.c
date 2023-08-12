@@ -1,5 +1,6 @@
 #include "minirt.h"
 
+// MOVE TO PARSING FOLDER
 void	gather_lights(t_world *world)
 {
 	int	i;
@@ -27,6 +28,8 @@ void	set_null(t_rt *rt)
 	rt->img.p = NULL;
 	rt->img.img_addr = NULL;
 	rt->normal_maps = NULL;
+	rt->mouse.is_down = 0;
+	rt->is_zoom_key_down = 0;
 }
 
 int	init_mlx_window(t_rt *rt)
@@ -56,13 +59,10 @@ int	main(int argc, char **argv)
 	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
 	if (!rt.pixel_buff)
 		return (error_allocation(), free_elements(&rt), 1);
-	rt.mouse.is_down = 0;
-	rt.is_zoom_key_down = 0;
-	set_cam_system(&rt.world);
+	set_cam_system(&rt.world.cam);
 	reset_rendering(&rt);
 	set_hooks(&rt);
 	mlx_loop_hook(rt.mlx, render, &rt);
 	mlx_loop(rt.mlx);
-	close_program(&rt);
-	return (0);
+	return (close_program(&rt), 0);
 }

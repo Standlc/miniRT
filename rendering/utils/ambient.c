@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   random.c                                           :+:      :+:    :+:   */
+/*   ambient.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/10 15:46:50 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:46:06 by stde-la-         ###   ########.fr       */
+/*   Created: 2023/08/10 15:46:42 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/12 02:35:28 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-float	randf()
+t_rgb	color_sub(t_rgb color, float sub)
 {
-	return ((float)rand() / RAND_MAX);
+	color.r = max(color.r - sub, 0.0);
+	color.g = max(color.g - sub, 0.0);
+	color.b = max(color.b - sub, 0.0);
+	return (color);
 }
 
-float	normal_randf()
+t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity)
 {
-	float	theta;
-	float	rho;
+	t_rgb	darker;
 
-	theta = 2 * M_PI * randf();
-	rho = sqrtf(-2 * logf(randf()));
-    return (rho * cos(theta));
-}
-
-t_vec	random_dir()
-{
-	return (normalize((t_vec){normal_randf(), normal_randf(), normal_randf()}));
-}
-
-t_vec	cosine_hemisphere_dir(t_vec *normal_dir)
-{
-	return (normalize(add(random_dir(), *normal_dir)));
+	darker = color_sub(*color, 1 - intensity);
+	return (lerp_color(
+		lerp_color(darker, (t_rgb){1.f, 1.f, 1.f}, intensity),
+		lerp_color(darker, *color, intensity),
+		ray->dir.y * 0.5 + 0.5));
 }

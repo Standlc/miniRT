@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   circle.c                                           :+:      :+:    :+:   */
+/*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/10 15:46:36 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/10 15:46:36 by stde-la-         ###   ########.fr       */
+/*   Created: 2023/08/10 15:46:05 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/10 15:46:05 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	intersect_circle(t_ray *ray, void *shape, double *t, int *is_surface_hit)
+int	set_hooks(t_rt *rt)
 {
-	t_circle	*circle;
-	t_vec		hit_point;
-
-	(void)is_surface_hit;
-	circle = (t_circle *)shape;
-	if (!intersect_plane(ray, (void *)&(circle->plane), t, NULL))
-	   return (0);
-	hit_point = get_ray_point(*ray, *t);
-	if (vec_len(sub(hit_point, circle->plane.point)) <= circle->radius)
-		return (1);
-	*t = 0.0;
+	mlx_hook(rt->win, ON_DESTROY, 0, close_program, rt);
+	mlx_hook(rt->win, 2, 0, handle_key_down, rt);
+	mlx_hook(rt->win, 3, 0, handle_key_up, rt);
+	mlx_hook(rt->win, 4, 0, handle_mouse_down, rt);
+	mlx_hook(rt->win, 5, 0, handle_mouse_up, rt);
+	mlx_hook(rt->win, 6, 0, handle_mouse_move, rt);
 	return (0);
 }

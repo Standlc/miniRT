@@ -2,17 +2,26 @@ NAME		=	miniRT
 
 NAME_L		=	miniRT_L
 
-SRCS		=	main.c						rendering/render.c rendering/utils/math.c \
-				rendering/utils/vector.c	\
-				rendering/events/utils.c				rendering/utils/colors.c	\
-				rendering/utils/utils.c				rendering/utils/loader.c	\
-				rendering/shapes/sphere.c				rendering/shapes/plane.c		\
-				rendering/shapes/cylinder.c 			rendering/shapes/circle.c \
-				rendering/shapes/cone.c 				\
-				rendering/events/events.c  rendering/events/mouse_events.c \
-				rendering/utils/coordinate_system.c \
-				rendering/shading/texture.c rendering/utils/random.c\
-				rendering/shading/shading.c			rendering/shading/direct_light_sampling.c \
+SRCS		=	main.c									close_program.c \
+				rendering/render.c						rendering/cast_ray.c \
+				rendering/utils/ambient.c				rendering/utils/math.c \
+				rendering/utils/vector.c				rendering/utils/colors.c \
+				rendering/utils/loader.c				rendering/utils/random.c \
+				rendering/utils/coordinate_system.c		rendering/utils/vector_methods.c \
+				rendering/utils/vector_operations.c		\
+				\
+				rendering/shapes/cone/cone.c			rendering/shapes/cone/cone_intersection.c \
+				rendering/shapes/cylinder/cylinder.c	rendering/shapes/cylinder/cylinder_intersection.c \
+				rendering/shapes/cone/cone_texture.c	rendering/shapes/cylinder/cylinder_texture.c \
+				rendering/shapes/sphere.c				rendering/shapes/plane.c \
+				rendering/shapes/circle.c				\
+				\
+				rendering/shading/shading.c				rendering/shading/direct_light_sampling.c \
+				rendering/shading/texture.c \
+				\
+				rendering/events/hooks.c				rendering/events/mouse_events.c \
+				rendering/events/key_events.c			\
+				\
 				parsing/normal_map/parse_normal_map.c	\
 				parsing/normal_map/fill_good_maps.c	\
 				parsing/parsing.c	\

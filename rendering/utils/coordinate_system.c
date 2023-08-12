@@ -1,4 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   coordinate_system.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 15:46:45 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/12 02:48:56 by stde-la-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
+
+void	set_cam_system(t_cam *cam)
+{
+	cam->system.z = cam->dir;
+	cam->system.x = cross_product(&(t_vec){0, 1, 0}, &(cam->system.z));
+	cam->system.y = cross_product(&(cam->system.z), &(cam->system.x));
+}
+
+t_vec	system_transform(t_vec *v, t_system *system)
+{
+	t_vec	result;
+
+	result.x = v->x * system->x.x + v->y * system->y.x + v->z * system->z.x
+		+ system->origin.x;
+	result.y = v->x * system->x.y + v->y * system->y.y + v->z * system->z.y
+		+ system->origin.y;
+	result.z = v->x * system->x.z + v->y * system->y.z + v->z * system->z.z
+		+ system->origin.z;
+	return (result);
+}
 
 t_system	create_system(t_vec up)
 {

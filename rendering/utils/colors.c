@@ -1,14 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 15:46:43 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/12 02:33:26 by stde-la-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
-
-t_rgb	hex_to_rgb(int hex)
-{
-	t_rgb	rgb;
-
-	rgb.r = (hex >> 16) / 255.0f;
-	rgb.g = ((hex & 0x00FF00) >> 8) / 255.0f;
-	rgb.b = (hex & 0x0000FF) / 255.0f;
-	return (rgb);
-}
 
 int rgb_to_int(t_rgb rgb)
 {
@@ -44,25 +46,6 @@ t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
 	c1.g = (1 - t) * c1.g + t * c2.g;
 	c1.b = (1 - t) * c1.b + t * c2.b;
 	return (c1);
-}
-
-t_rgb	color_sub(t_rgb color, float sub)
-{
-	color.r = max(color.r - sub, 0.0);
-	color.g = max(color.g - sub, 0.0);
-	color.b = max(color.b - sub, 0.0);
-	return (color);
-}
-
-t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity)
-{
-	return (
-		lerp_color(
-			lerp_color(color_sub(*color, 1 - intensity), (t_rgb){1.f, 1.f, 1.f}, intensity),
-			lerp_color(color_sub(*color, 1 - intensity), *color, intensity),
-			ray->dir.y * 0.5 + 0.5
-			)
-		);
 }
 
 t_rgb	color_fade(t_rgb color, float fade)

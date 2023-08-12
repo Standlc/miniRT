@@ -59,4 +59,8 @@ enum events {
 #include "rendering.h"
 #include "parsing.h"
 
+int		close_program(t_rt *data);
+void	free_object(t_material *object);
+void	free_elements(t_rt *rt);
+
 #endif

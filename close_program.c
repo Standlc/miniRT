@@ -1,12 +1,6 @@
 #include "minirt.h"
 
-void	reset_rendering(t_rt *rt)
-{
-	rt->rendering_frame = 1;
-	ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
-	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
-}
-
+// IS THIS REALLY USEFUL??
 void	free_object(t_material *object)
 {
 	free(object->shape);
@@ -51,13 +45,4 @@ int	close_program(t_rt *rt)
 	free_elements(rt);
 	free_normal_maps(rt);
 	exit(0);
-}
-
-void	put_pixel(t_rt *rt, int x, int y, t_rgb color)
-{
-	char	*dst;
-
-	dst = rt->img.img_addr
-		+ (y * rt->img.line_length + x * (rt->img.bpp / 8));
-	*(unsigned int *)dst = rgb_to_int(color);
 }

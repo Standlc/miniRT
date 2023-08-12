@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 15:46:37 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/12 02:57:14 by stde-la-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_vec	plane_bump_mapping(t_hit_info *hit)
@@ -58,9 +70,7 @@ int	create_plane(t_material *obj, t_info *info)
 		return (1);
 	plane->point = info->center;
 	plane->normal = normalize(info->dir);
-
 	plane->system = create_system(plane->normal);
-
 	obj->shape = (void *)plane;
 	obj->intersect = intersect_plane;
 	obj->normal = plane_normal;

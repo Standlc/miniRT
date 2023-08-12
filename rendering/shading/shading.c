@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shading.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 15:46:14 by stde-la-          #+#    #+#             */
+/*   Updated: 2023/08/12 03:01:03 by stde-la-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_rgb	indirect_lighting(t_world *world, t_hit_info *hit, int depth)
@@ -9,7 +21,8 @@ t_rgb	indirect_lighting(t_world *world, t_hit_info *hit, int depth)
 	return (cast_ray(world, &random_ray, 0, depth + 1));
 }
 
-t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth)
+t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray,
+	int depth)
 {
 	t_ray	random_ray;
 	t_vec	reflection_vec;
@@ -24,7 +37,7 @@ t_rgb	specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth
     return (color_fade(cast_ray(world, &random_ray, 1, depth + 1), 0.95f));
 }
 
-void	get_surface_normals(t_hit_info *hit, t_ray *ray)
+void	set_surface_normals(t_hit_info *hit, t_ray *ray)
 {
 	hit->normal = hit->obj->normal(hit);
 	if (dot(&(hit->normal), &(ray->dir)) > 0)
@@ -38,26 +51,26 @@ void	get_surface_normals(t_hit_info *hit, t_ray *ray)
 
 t_rgb	shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth)
 {
-	t_rgb		color;
-	t_rgb		obj_color;
-	t_rgb		direct_lighting;
+	t_rgb	color;
 
-	obj_color = hit->obj->color;
 	hit->hit_point = get_ray_point(*ray, hit->t);
-	get_surface_normals(hit, ray);
+	set_surface_normals(hit, ray);
 
 	if (hit->obj->smoothness && randf() <= hit->obj->specular_prob)
 		return (specular_reflection(world, hit, ray, depth));
 
-	if (hit->obj->texture == CHECKERS)
-		obj_color = color_fade(hit->obj->color, checkers(hit->obj->texture_coordinates(hit), 10.f));
+	if (hit->obj->texture == CHECKERS
+		&& !checkers(hit->obj->texture_coordinates(hit), 10.f))
+			return ((t_rgb){0.f, 0.f, 0.f});
 
 	// color = (t_rgb){0, 0, 0};
 	color = indirect_lighting(world, hit, depth);
-	if (world->ambient < 1.0f)
+	if (world->ambient < 1.f)
 	{
-		direct_lighting = direct_light_sampling(world, ray, hit, !hit->is_specular && depth > 1);
-		color = color_add(color, direct_lighting);
+		color = color_add(color, direct_light_sampling(world, ray, hit,
+			// !hit->is_specular && depth > 1
+			0
+			));
 	}
-	return (color_mult(color, obj_color));
+	return (color_mult(color, hit->obj->color));
 }
