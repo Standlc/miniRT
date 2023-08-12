@@ -86,6 +86,7 @@ typedef struct	s_material
 	float			light_intensity;
 	float			hitpoint_offset;
 	int				texture;
+	int				checkers_scale;
 	t_normal_map	*normal_map;
 	void			*shape;
 	int				(*intersect)(t_ray *ray, void *shape, double *t, int *is_surface_hit);

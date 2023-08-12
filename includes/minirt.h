@@ -12,12 +12,12 @@
 #include "libft.h"
 #include "get_next_line.h"
 
-#define WIDTH       1000
-#define HEIGHT      550
+#define WIDTH		1000
+#define HEIGHT		550
 #define RPP			500
 #define CAM_FUZZ	1.0f
 #define MAX_DEPTH	5
-#define ON_DESTROY  17
+#define ON_DESTROY	17
 #define NB_MAP		5
 
 enum textures {
