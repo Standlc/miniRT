@@ -36,7 +36,9 @@ SRCS		=	main.c									close_program.c \
 				parsing/fill_rt/materials/fill_data.c	parsing/fill_rt/materials/fill_materials.c \
 				parsing/fill_rt/get_number/conversion.c parsing/fill_rt/get_number/get_value.c\
 
-OBJS		=	$(SRCS:.c=.o)
+OBJS_DIR	=	$(addprefix binaries/, ${SRCS})
+
+OBJS		=	$(OBJS_DIR:%.c=%.o)
 
 LIB			=	libft.a
 
@@ -44,7 +46,7 @@ LIBFT		=	Libft
 
 CC			=	cc
 
-CFLAGS		=	-Wall -Wextra #-Werror
+CFLAGS		=	-Wall -Wextra #Werror
 
 INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -Iincludes
 
@@ -62,18 +64,22 @@ MATH_LIB	=	-lm
 
 RM			=	rm -f
 
+MAKEFLAGS	+=	--no-print-directory
+
 all : libs $(NAME)
 
 linux : libs-l ${NAME_L}
 
+binaries/%.o : %.c Makefile includes/minirt.h | binaries
+		@mkdir -p $(@D)
+		$(CC) $(CFLAGS) $(INCLUDES) $(INCLUDES_L) -I./includes/ -c $< -o $@
+
 ${NAME_L} : ${OBJS}
 	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
 
-$(NAME) : $(OBJS) includes/minirt.h
+$(NAME) : $(OBJS)
 		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
 
-%.o : %.c Makefile
-		$(CC) $(CFLAGS) $(INCLUDES) $(INCLUDES_L) -c $< -o $@
 
 libs:
 		@$(MAKE) -C $(MINILIBX)
@@ -83,8 +89,13 @@ libs-l:
 		@$(MAKE) -C $(MINILIBX_L)
 		@$(MAKE) -C Libft
 
+binaries:
+		@mkdir -p binaries
+
+bonus: all
+
 clean:
-		@$(RM) $(OBJS)
+		@$(RM) -r binaries/
 		@$(MAKE) clean -C $(MINILIBX)
 		@$(MAKE) clean -C $(MINILIBX_L)
 		@$(MAKE) clean -C Libft

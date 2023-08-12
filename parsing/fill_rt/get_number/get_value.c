@@ -30,22 +30,28 @@ void    get_value_vec(char *str, t_vec *vec)
     vec->z = conversion_double(&str[i]);
 }
 
-void    get_letters_options(char *str, int *texture, int *index)
+void    get_letters_options(char *str, int *texture, int *texture_selection)
 {
-    if (!ft_strncmp(str, "ch", 3))
+    int index;
+
+    if (!ft_strncmp(str, "ch-", 3))
     {
         *texture = CHECKERS;
+        index = ft_strlen(str);
+        while (str[index - 1] != '-')
+            index--;
+        *texture_selection = ft_atoi(&str[index]);
         return ;
     }
     if (!ft_strncmp(str, "bm-1", 5))
-        *index = 0;
+        *texture_selection = 0;
     if (!ft_strncmp(str, "bm-2", 5))
-        *index = 1;
+        *texture_selection = 1;
     if (!ft_strncmp(str, "bm-3", 5))
-        *index = 2;
+        *texture_selection = 2;
     if (!ft_strncmp(str, "bm-4", 5))
-        *index = 3;
+        *texture_selection = 3;
     if (!ft_strncmp(str, "bm-5", 5))
-        *index = 4;
+        *texture_selection = 4;
     *texture = BUMP_MAP;
 }

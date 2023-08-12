@@ -7,7 +7,7 @@
 #define DIAMETER_ERR	"diameter must be positive"
 #define HEIGHT_ERR		"height must be positive"
 #define REFLECTION		"reflection probability must range from 0 to 1"
-#define TEXTURE			"texture must be either checkers 'ch' or a bump map 'bm-(0-5)'"
+#define TEXTURE			"texture must be either checkers 'ch-(1-20)' or a bump map 'bm-(1-5)'"
 #define DIR_VECTOR		"direction vector components must range from 0 to 1"
 
 int check_light(char **row)

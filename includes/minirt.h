@@ -46,6 +46,8 @@ enum events {
 
 #else
 
+#include <X11/keysym.h>
+
 enum events {
 	LEFT_CLICK = XK_Right,
 	CONTROL = XK_Alt_R,

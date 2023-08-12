@@ -59,19 +59,19 @@ void    set_zero(t_info *info)
     info->radius = 0;
     info->height = 0;
     info->texture = 0;
-	info->index_bump_map = 0;
+	info->texture_selection = 0;
 }
 
-void	print_obj(t_material *obj)
-{
-	printf("color : %f,%f,%f\n", obj->color.r, obj->color.g, obj->color.b);
-	printf("smooth : %f\n", obj->smoothness);
-	printf("spec : %f\n", obj->specular_prob);
-	printf("intensity : %f\n", obj->light_intensity);
-	printf("intersect : %p\n", obj->intersect);
-	printf("normal : %p\n", obj->normal);
-	printf("texture_coordinates : %p\n", obj->texture_coordinates);
-}
+// void	print_obj(t_material *obj)
+// {
+// 	printf("color : %f,%f,%f\n", obj->color.r, obj->color.g, obj->color.b);
+// 	printf("smooth : %f\n", obj->smoothness);
+// 	printf("spec : %f\n", obj->specular_prob);
+// 	printf("intensity : %f\n", obj->light_intensity);
+// 	printf("intersect : %p\n", obj->intersect);
+// 	printf("normal : %p\n", obj->normal);
+// 	printf("texture_coordinates : %p\n", obj->texture_coordinates);
+// }
 
 void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 {
@@ -99,9 +99,13 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 		if (material != AMBIENT && material != CAMERA)
 		{
 			if (info.texture == BUMP_MAP)
-				rt->world.objects[index_objects].normal_map = rt->normal_maps + info.index_bump_map;
+				rt->world.objects[index_objects].normal_map = rt->normal_maps + info.texture_selection;
 			else
 				rt->world.objects[index_objects].normal_map = NULL;
+			if (info.texture == CHECKERS)
+				rt->world.objects[index_objects].checkers_scale = info.texture_selection;
+			else
+				rt->world.objects[index_objects].checkers_scale = 0;
 			if (create_objects(material, rt->world.objects + index_objects, &info))
 				(free_split(row), free_split(rows), free(rt->world.objects), exit(1));
 			complete_material(rt->world.objects + index_objects++, &info);

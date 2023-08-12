@@ -204,7 +204,7 @@ typedef struct	s_info
 	double	radius;
 	double	height;
 	int		texture;
-	int		index_bump_map;
+	int		texture_selection;
 }				t_info;
 
 typedef struct	s_parsing
