@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:33 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/11 18:08:33 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:11:54 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@ t_vec	cylinder_normal(t_hit_info *hit)
 	t_vec		center_to_hitpoint;
 
 	cylinder = (t_cylinder *)(hit->obj->shape);
-
 	if (!hit->is_surface_hit)
 		return (cylinder->dir);
-
 	center_to_hitpoint = sub(hit->hit_point, cylinder->center);
 	projected = project(center_to_hitpoint, cylinder->dir);
 	return (normalize(sub(center_to_hitpoint, projected)));

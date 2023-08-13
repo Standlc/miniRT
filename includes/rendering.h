@@ -22,7 +22,7 @@ t_vec		lerp(t_vec v1, t_vec v2, float t);
 // SHADING
 t_rgb		indirect_lighting(t_world *world, t_hit_info *hit, int depth);
 t_rgb		specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
-t_rgb		direct_light_sampling(t_world *world, t_ray *ray, t_hit_info *hit, int indirect_decay);
+t_rgb		direct_light_sampling(t_world *world, t_hit_info *hit);
 t_rgb		shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
 void		bump_mapping(t_hit_info *hit);
 t_vec		offset_ray_origin(t_hit_info *hit, float offset);

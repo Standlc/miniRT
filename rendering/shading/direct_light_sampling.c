@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:12 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:38:19 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:10:16 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,8 @@ int	cast_shadow_ray(t_world *world, t_material *light, t_ray *shadow_ray,
 	return (1);
 }
 
-float	dls_intensity(t_world *world, t_dls *dls, t_ray *ray, t_vec *hit_point)
+float	dls_intensity(t_world *world, t_dls *dls)
 {
-	float	distance_from_ray_origin;
 	float	intensity;
 
 	intensity = min(1 / dls->light_distance, dls->light_intensity)
@@ -58,14 +57,10 @@ float	dls_intensity(t_world *world, t_dls *dls, t_ray *ray, t_vec *hit_point)
 				* dls->normal_shadow_dot
 				* world->nb_lights
 				* (1 - world->ambient);
-	if (!dls->indirect_decay)
-		return (intensity);
-	distance_from_ray_origin = vec_len(sub(*hit_point, ray->origin));
-	return (intensity * min(1 / distance_from_ray_origin, 1));
+	return (intensity);
 }
 
-t_rgb	direct_light_sampling(t_world *world, t_ray *ray, t_hit_info *hit,
-	int indirect_decay)
+t_rgb	direct_light_sampling(t_world *world, t_hit_info *hit)
 {
 	t_material	*picked_light;
 	t_ray		shadow_ray;
@@ -74,13 +69,9 @@ t_rgb	direct_light_sampling(t_world *world, t_ray *ray, t_hit_info *hit,
 	picked_light = world->lights[(int)roundf(randf() * (world->nb_lights - 1))];
 	set_shadow_ray(hit, picked_light, &shadow_ray, &dls.light_distance);
 	dls.normal_shadow_dot = dot(&(hit->bump_normal), &(shadow_ray.dir));
-
 	if (dls.normal_shadow_dot <= 0 ||
 		!cast_shadow_ray(world, picked_light, &shadow_ray, dls.light_distance))
 		return ((t_rgb){0.f, 0.f, 0.f});
-
 	dls.light_intensity = picked_light->light_intensity;
-	dls.indirect_decay = indirect_decay;
-	return (color_fade(picked_light->color,
-		dls_intensity(world, &dls, ray, &(hit->hit_point))));
+	return (color_fade(picked_light->color, dls_intensity(world, &dls)));
 }

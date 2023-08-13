@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:29 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/11 15:02:41 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:11:06 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	intersect_cylinder_tube(t_ray *ray, t_cylinder *cylinder, t_quadratic *f)
 	w = sub(ray->origin, cylinder->center);
 	dot_ray_dir_cyl_dir = dot(&(ray->dir), &(cylinder->dir));
 	dot_w_cylinder_dir = dot(&w, &(cylinder->dir));
-
 	f->a = 1 - pow2(dot_ray_dir_cyl_dir);
 	f->b = 2 * (dot(&(ray->dir), &w) - dot_ray_dir_cyl_dir * dot_w_cylinder_dir);
 	f->c = dot(&w, &w) - pow2(dot_w_cylinder_dir) - pow2(cylinder->radius);
@@ -59,14 +58,11 @@ int	intersect_cylinder(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 	double		t_cover;
 
     cylinder = (t_cylinder *)shape;
-
 	if (!intersect_cylinder_tube(ray, cylinder, &f))
 		return (0);
-
 	*t = get_closest_intersection(f.t_1, f.t_2);
 	if (*t <= 0.0)
 		return (0);
-
 	cut_cylinder(ray, cylinder, t);
 	if (intersect_cylinder_covers(ray, cylinder, &t_cover, &f))
 		*t = get_closest_intersection(t_cover, *t);

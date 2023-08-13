@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:31 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:55:37 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:11:55 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,8 @@ t_vec2	cylinder_cover_point(t_cylinder *cylinder, t_vec *hitpoint)
 		hit_dir = sub(center_to_hitpoint,
 			scale(cylinder->dir, cylinder->height / 2));
 	}
-
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&hit_dir, &(cylinder->system.z)) <= 0) * 2 - 1;
-	// point.x += 1;
-
 	point.y = 1 - (vec_len(hit_dir)) / cylinder->radius;
 	point.y /= cylinder->circumference / cylinder->radius / 2;
 	return (point);
@@ -47,8 +44,6 @@ t_vec2	cylinder_surface_point(t_cylinder *cylinder, t_hit_info *hit)
 
 	point.x = get_angle(&(hit->normal), &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&(hit->normal), &(cylinder->system.z)) <= 0) * 2 - 1;
-	// point.x += 1;
-
 	base_center_to_hit = sub(hit->hit_point, cylinder->covers->plane.point);
 	height_from_base = dot(&base_center_to_hit, &(cylinder->dir));
 	point.y = height_from_base / cylinder->height;

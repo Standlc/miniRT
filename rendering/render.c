@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:47:00 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 03:26:36 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:13:31 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y)
 
 	blur.x = randf() * CAM_FUZZ - CAM_FUZZ / 2;
 	blur.y = randf() * CAM_FUZZ - CAM_FUZZ / 2;
-
 	cam_ray->origin = world->cam.system.origin;
 	world_pixel = to_world_coordinates(&(world->cam), x + blur.x, y + blur.y);
 	cam_ray->dir = normalize(sub(world_pixel, cam_ray->origin));
@@ -53,7 +52,6 @@ t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame)
 
 	set_cam_ray(&(rt->world), &cam_ray, x, y);
 	pixel_color = cast_ray(&(rt->world), &cam_ray, 0, 1);
-
 	rt->pixel_buff[y * WIDTH + x] =
 		color_add(rt->pixel_buff[y * WIDTH + x], pixel_color);
 	return (color_fade(rt->pixel_buff[y * WIDTH + x], 1.f / curr_frame));
@@ -68,8 +66,6 @@ int	render(t_rt *rt)
 	curr_frame = (rt->rendering_frame - 1) / INTERVAL + 1;
 	if (curr_frame > RPP)
 		return (0);
-	// if (curr_frame > 10)
-	// 	close_program(rt);
 	y = 0;
 	while (y < HEIGHT)
 	{

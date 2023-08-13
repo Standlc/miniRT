@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:09 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:51:05 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:10:09 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,14 @@ int	handle_mouse_move(int x, int y, t_rt *rt)
 
 	if (!rt->mouse.is_down)
 		return (0);
-
 	mouse_dir_x = rt->mouse.origin.x - x;
 	mouse_dir_y = rt->mouse.origin.y - y;
 	if (mouse_dir_x == 0 && mouse_dir_y == 0)
 		return (0);
-
 	if (rt->is_zoom_key_down)
 		handle_zoom(&(rt->world.cam), mouse_dir_y);
 	else
 		rotate_camera(&(rt->world.cam), mouse_dir_x, mouse_dir_y);
-
 	set_cam_system(&(rt->world.cam));
 	reset_rendering(rt);
 	rt->mouse.origin.x = x;
@@ -75,12 +72,10 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 
 	if (button != LEFT_CLICK)
 		return (0);
-
 	rt->mouse.is_down = 1;
 	rt->mouse.origin = (t_vec2){x, y};
 	if (rt->is_zoom_key_down)
 		return (0);
-
 	cam = &(rt->world.cam);
 	horizontal = (float)x / WIDTH * 2 - 1;
 	vertical = 1 - (float)y / HEIGHT * 2;

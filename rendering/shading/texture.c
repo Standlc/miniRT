@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:16 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/11 15:01:30 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:10:29 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ void	bump_mapping(t_hit_info *hit)
 	point = hit->obj->texture_coordinates(hit);
 	x = (int)roundf(fabsf(point.x) * ((map->width * 4) - 1)) % map->width;
 	y = (int)roundf(fabsf(point.y) * ((map->height * 4) - 1)) % map->height;
-
 	set_coordinate_system(&point_system, &(hit->normal));
-
 	hit->bump_normal = map->map[y * map->width + x];
 	hit->bump_normal
 		= normalize(system_transform(&(hit->bump_normal), &(point_system)));

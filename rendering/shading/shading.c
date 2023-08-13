@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:14 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 03:26:53 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/08/13 02:13:09 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,26 +51,21 @@ void	set_surface_normals(t_hit_info *hit, t_ray *ray)
 
 t_rgb	shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth)
 {
-	t_rgb	color;
+	t_rgb		color;
+	t_material	*obj;
 
 	hit->hit_point = get_ray_point(*ray, hit->t);
 	set_surface_normals(hit, ray);
-
-	if (hit->obj->smoothness && randf() <= hit->obj->specular_prob)
+	obj = hit->obj;
+	if (obj->smoothness && randf() <= obj->specular_prob)
 		return (specular_reflection(world, hit, ray, depth));
-
-	if (hit->obj->texture == CHECKERS
-		&& !checkers(hit->obj->texture_coordinates(hit), 10.f))
+	if (obj->texture == CHECKERS
+		&& !checkers(obj->texture_coordinates(hit), obj->checkers_scale))
 			return ((t_rgb){0.f, 0.f, 0.f});
-
-	// color = (t_rgb){0, 0, 0};
 	color = indirect_lighting(world, hit, depth);
 	if (world->ambient < 1.f)
 	{
-		color = color_add(color, direct_light_sampling(world, ray, hit,
-			// !hit->is_specular && depth > 1
-			0
-			));
+		color = color_add(color, direct_light_sampling(world, hit));
 	}
 	return (color_mult(color, hit->obj->color));
 }

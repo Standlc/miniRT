@@ -4,11 +4,9 @@
 #include "minirt.h"
 
 typedef struct	s_dls {
-	float	distance_from_ray_origin;
 	double	light_distance;
 	float	light_intensity;
 	float	normal_shadow_dot;
-	int		indirect_decay;
 }				t_dls;
 
 typedef struct	s_img {
