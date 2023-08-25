@@ -15,10 +15,10 @@
 int	set_hooks(t_rt *rt)
 {
 	mlx_hook(rt->win, ON_DESTROY, 0, close_program, rt);
-	mlx_hook(rt->win, 2, 0, handle_key_down, rt);
-	mlx_hook(rt->win, 3, 0, handle_key_up, rt);
-	mlx_hook(rt->win, 4, 0, handle_mouse_down, rt);
-	mlx_hook(rt->win, 5, 0, handle_mouse_up, rt);
-	mlx_hook(rt->win, 6, 0, handle_mouse_move, rt);
+	mlx_hook(rt->win, KeyPress, KeyPressMask, handle_key_down, rt);
+	mlx_hook(rt->win, KeyRelease, KeyReleaseMask, handle_key_up, rt);
+	mlx_hook(rt->win, ButtonPress, ButtonPressMask, handle_mouse_down, rt);
+	mlx_hook(rt->win, ButtonRelease, ButtonReleaseMask, handle_mouse_up, rt);
+	mlx_hook(rt->win, MotionNotify, PointerMotionMask, handle_mouse_move, rt);
 	return (0);
 }

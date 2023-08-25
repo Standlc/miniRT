@@ -14,7 +14,7 @@ double  	min(double a, double b);
 double  	max(double a, double b);
 void		loading_bar(int max, float curr);
 void		set_cam_system(t_cam *cam);
-void		loader(int frequency);
+void		loader(int frequency, int reset);
 double  	get_closest_intersection(double t1, double t2);
 t_vec		cosine_hemisphere_dir(t_vec *normal_dir);
 t_vec		lerp(t_vec v1, t_vec v2, float t);

@@ -14,16 +14,22 @@
 
 # define LOADING_SYMBOLS	"\\|/-"
 
-void	loader(int frequency)
+void	loader(int frequency, int reset)
 {
 	static int	i = 0;
 
+	if (reset == 1)
+	{
+		i = 0;
+		return ;
+	}
 	if (i % frequency == 0)
 	{
+		if (i != 0)
+			write (1, "\b\b\b", 3);
 		write(1, "[", 1);
 		write(1, &(LOADING_SYMBOLS[i % 4]), 1);
 		write(1, "]", 1);
-		write (1, "\b\b\b", 3);
 	}
 	i++;
 }

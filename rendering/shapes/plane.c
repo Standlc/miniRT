@@ -55,7 +55,10 @@ int	intersect_plane(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 	plane = (t_plane *)shape;
 	n_ray_dot = dot(&(plane->normal), &(ray->dir));
 	if (n_ray_dot == 0.0)
+	{
+		*t = 0;
 		return (0);
+	}
 	d = dot(&(plane->normal), &(plane->point));
 	*t = (d - dot(&(plane->normal), &(ray->origin))) / n_ray_dot;
 	return (*t > 0.0);

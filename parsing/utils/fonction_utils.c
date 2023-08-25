@@ -31,11 +31,12 @@ void	set_maps(t_normal_map *normal_maps)
 	}
 }
 
-void	free_maps(t_normal_map *normal_maps)
+void	free_maps(t_normal_map *normal_maps, int *good_maps)
 {
 	int	i;
 
 	i = 0;
+	free(good_maps);
 	while (i < NB_MAP)
 	{
 		if (normal_maps[i].map)

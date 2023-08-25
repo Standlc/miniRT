@@ -47,12 +47,13 @@ enum events {
 #else
 
 #include <X11/keysym.h>
+#include <X11/X.h>
 
 enum events {
-	LEFT_CLICK = XK_Right,
-	CONTROL = XK_Alt_R,
+	LEFT_CLICK = 1,
+	CONTROL = 65513,
 	ESC = XK_Escape,
-	PRINT = 35,
+	PRINT = 112,
 };
 
 #endif

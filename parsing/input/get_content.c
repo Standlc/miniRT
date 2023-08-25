@@ -42,6 +42,20 @@ char	check_last_char(char *str)
 	return ('\n');
 }
 
+void	delete_comment(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		if (str[i] == '#')
+		{
+			str[i] = '\n';
+			str[i + 1] = '\0';
+			break ;
+		}
+}
+
 char    *get_string(int fd)
 {
 	char	*tmp;
@@ -58,6 +72,7 @@ char    *get_string(int fd)
             return (tmp);
         if (!str && !*tmp)
             return (free(tmp), NULL);
+		delete_comment(str);
         str = ft_strjoin_free(tmp, str);
 		if (!str)
 			return (NULL);

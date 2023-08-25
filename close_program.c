@@ -23,8 +23,8 @@ void	free_elements(t_rt *rt)
 		mlx_destroy_image(rt->mlx, rt->img.p);
 	if (rt->mlx && rt->win)
 		mlx_destroy_window(rt->mlx, rt->win);
-	// if (rt->mlx)
-	// 	(mlx_destroy_display(rt->mlx), free(rt->mlx));
+	if (rt->mlx)
+		(mlx_destroy_display(rt->mlx), free(rt->mlx));
 }
 
 void	free_normal_maps(t_rt *rt)
@@ -44,5 +44,6 @@ int	close_program(t_rt *rt)
 {
 	free_elements(rt);
 	free_normal_maps(rt);
+	printf("\n");
 	exit(0);
 }

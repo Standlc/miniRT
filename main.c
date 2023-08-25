@@ -1,23 +1,5 @@
 #include "minirt.h"
 
-// MOVE TO PARSING FOLDER
-void	gather_lights(t_world *world)
-{
-	int	i;
-
-	world->nb_lights = 0;
-	i = 0;
-	while (i < world->nb_objects)
-	{
-		if (world->objects[i].light_intensity)
-		{
-			world->lights[world->nb_lights] = &(world->objects[i]);
-			world->nb_lights += 1;
-		}
-		i++;
-	}
-}
-
 void	set_null(t_rt *rt)
 {
 	rt->mlx = NULL;
