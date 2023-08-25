@@ -24,7 +24,10 @@ void	free_elements(t_rt *rt)
 	if (rt->mlx && rt->win)
 		mlx_destroy_window(rt->mlx, rt->win);
 	if (rt->mlx)
-		(mlx_destroy_display(rt->mlx), free(rt->mlx));
+	{
+		// mlx_destroy_display(rt->mlx);
+		free(rt->mlx);
+	}
 }
 
 void	free_normal_maps(t_rt *rt)

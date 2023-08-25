@@ -44,6 +44,22 @@ enum events {
 	PRINT = 35,
 };
 
+enum event_hooks {
+	KEY_PRESS = 2,
+	KEY_UP = 3,
+	MOUSE_DOWN = 4,
+	MOUSE_UP = 5,
+	MOUSE_MOVE = 6
+};
+
+enum event_mask {
+	KEY_PRESS_MASK = 0,
+	KEY_UP_MASK = 0,
+	MOUSE_DOWN_MASK = 0,
+	MOUSE_UP_MASK = 0,
+	MOUSE_MOVE_MASK = 0
+};
+
 #else
 
 #include <X11/keysym.h>
@@ -54,6 +70,22 @@ enum events {
 	CONTROL = 65513,
 	ESC = XK_Escape,
 	PRINT = 112,
+};
+
+enum event_hooks {
+	KEY_PRESS = KeyPress,
+	KEY_UP = KeyRelease,
+	MOUSE_DOWN = ButtonPress,
+	MOUSE_UP = ButtonRelease,
+	MOUSE_MOVE = MotionNotify
+};
+
+enum event_mask {
+	KEY_PRESS_MASK = KeyPressMask,
+	KEY_UP_MASK = KeyReleaseMask,
+	MOUSE_DOWN_MASK = ButtonPressMask,
+	MOUSE_UP_MASK = ButtonReleaseMask,
+	MOUSE_MOVE_MASK = PointerMotionMask
 };
 
 #endif
