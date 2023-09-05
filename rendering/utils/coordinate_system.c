@@ -6,7 +6,7 @@
 /*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:45 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:48:56 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/05 15:21:18 by stde-la-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	set_cam_system(t_cam *cam)
 {
 	cam->system.z = cam->dir;
-	cam->system.x = cross_product(&(t_vec){0, 1, 0}, &(cam->system.z));
+	if (fabs(dot(&(t_vec){0, 1, 0}, &(cam->system.z))) < 1.0)
+		cam->system.x = cross_product(&(t_vec){0, 1, 0}, &(cam->system.z));
+	else
+		cam->system.x = cross_product(&(t_vec){0, 0, 1}, &(cam->system.z));
 	cam->system.y = cross_product(&(cam->system.z), &(cam->system.x));
 }
 
