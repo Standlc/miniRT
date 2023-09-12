@@ -14,7 +14,7 @@
 
 t_vec	get_reflection(t_vec *v, t_vec *normal)
 {
-	return (*v - scale(*normal, 2 * dot(v, normal)));
+	return (*v - *normal * (2 * dot(v, normal)));
 }
 
 float	get_angle(t_vec *v1, t_vec *normalized)
@@ -24,5 +24,5 @@ float	get_angle(t_vec *v1, t_vec *normalized)
 
 t_vec	project(t_vec projected, t_vec ref)
 {
-	return (scale(ref, dot(&projected, &ref)));
+	return (ref * dot(&projected, &ref));
 }

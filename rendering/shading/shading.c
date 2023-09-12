@@ -41,7 +41,7 @@ void	set_surface_normals(t_hit_info *hit, t_ray *ray)
 {
 	hit->normal = hit->obj->normal(hit);
 	if (dot(&(hit->normal), &(ray->dir)) > 0)
-		hit->normal = scale(hit->normal, -1);
+		hit->normal = hit->normal * -1;
 	if (hit->obj->texture == BUMP_MAP)
 		bump_mapping(hit);
 	else

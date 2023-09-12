@@ -49,5 +49,5 @@ void	bump_mapping(t_hit_info *hit)
 	hit->bump_normal
 		= normalize(system_transform(&(hit->bump_normal), &(point_system)));
 	if (dot(&(hit->bump_normal), &(hit->normal)) < 0)
-		hit->bump_normal = scale(hit->bump_normal, -1);
+		hit->bump_normal = hit->bump_normal * -1;
 }

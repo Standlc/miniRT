@@ -15,7 +15,7 @@
 void	handle_zoom(t_cam *cam, int mouse_dir_y)
 {
 	cam->system.origin
-		= cam->system.origin + scale(cam->dir, -mouse_dir_y / 30.0);
+		= cam->system.origin + cam->dir * (-mouse_dir_y / 30.0);
 }
 
 void	rotate_camera(t_cam *cam, int mouse_dir_x, int mouse_dir_y)
@@ -24,8 +24,8 @@ void	rotate_camera(t_cam *cam, int mouse_dir_x, int mouse_dir_y)
 	t_vec	y_dir;
 	t_vec	new_cam_pos;
 
-	x_dir = scale(cam->system.x, mouse_dir_x / 40.f);
-	y_dir = scale(cam->system.y, mouse_dir_y / 40.f * -1);
+	x_dir = cam->system.x * (mouse_dir_x / 40.f);
+	y_dir = cam->system.y * (mouse_dir_y / 40.f * -1);
 	new_cam_pos = cam->system.origin + y_dir + x_dir;
 	cam->dir = normalize(cam->look_at - new_cam_pos);
 	cam->system.origin
@@ -82,7 +82,7 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 	len_to_screen_center = sqrt(horizontal * horizontal + vertical * vertical);
 	cam->look_at
 		= cam->system.origin +
-			scale(cam->dir, len_to_screen_center * 40 + 2);
+			cam->dir * (len_to_screen_center * 40 + 2);
 	cam->radius = vec_len(cam->system.origin - cam->look_at);
 	return (0);
 }

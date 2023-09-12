@@ -37,9 +37,9 @@ int	create_cone(t_material *obj, t_info *info)
 	cone->radius = info->radius;
 	cone->height = info->height;
 	cone->dir = normalize(info->dir);
-	cone->top = info->center + scale(cone->dir, info->height);
+	cone->top = info->center + cone->dir * info->height;
 	cone->base.radius = info->radius;
-	cone->base.plane.normal = scale(cone->dir, -1);
+	cone->base.plane.normal = cone->dir * -1;
 	cone->base.plane.point = info->center;
 	cone->system = create_system(info->dir);
 	cone->circumference = 2 * M_PI * info->radius;

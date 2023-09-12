@@ -64,8 +64,9 @@ int	render(t_rt *rt)
 	int	x;
 
 	curr_frame = (rt->rendering_frame - 1) / INTERVAL + 1;
-	if (curr_frame > RPP)
-		return (0);
+	// if (curr_frame > RPP)
+	// 	return (0);
+	
 	y = 0;
 	while (y < HEIGHT)
 	{

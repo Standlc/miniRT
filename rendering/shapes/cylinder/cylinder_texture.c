@@ -22,12 +22,12 @@ t_vec2	cylinder_cover_point(t_cylinder *cylinder, t_vec *hitpoint)
 	if (dot(&center_to_hitpoint, &(cylinder->dir)) < 0)
 	{
 		hit_dir = center_to_hitpoint -
-				scale(cylinder->dir, cylinder->height / -2);
+				cylinder->dir * (cylinder->height / -2);
 	}
 	else
 	{
 		hit_dir = center_to_hitpoint -
-				scale(cylinder->dir, cylinder->height / 2);
+				cylinder->dir * (cylinder->height / 2);
 	}
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&hit_dir, &(cylinder->system.z)) <= 0) * 2 - 1;

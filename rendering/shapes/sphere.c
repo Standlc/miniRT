@@ -46,7 +46,7 @@ t_vec	sample_sphere(void *shape, t_vec *normal_dir)
 
 	(void)normal_dir;
 	sphere = (t_sphere *)shape;
-	sample_dir = scale(random_dir(), sphere->radius);
+	sample_dir = random_dir() * sphere->radius;
 	return (sample_dir + sphere->center);
 }
 

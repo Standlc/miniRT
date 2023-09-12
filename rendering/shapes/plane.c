@@ -22,7 +22,7 @@ t_vec	plane_bump_mapping(t_hit_info *hit)
 	center_dir = hit->hit_point - plane->point;
 	u = vec_len(center_dir) * 5;
 	center_dir = normalize(center_dir);
-	hit->normal = normalize(hit->normal + scale(center_dir, sinf(u) * 0.5));
+	hit->normal = normalize(hit->normal + center_dir * (sinf(u) * 0.5));
 	return (hit->normal);
 }
 
