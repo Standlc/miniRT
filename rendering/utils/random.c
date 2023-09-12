@@ -14,7 +14,7 @@
 
 float	randf(void)
 {
-	return ((float)rand() / RAND_MAX);
+	return ((float)rand() / (float)RAND_MAX);
 }
 
 float	normal_randf(void)
