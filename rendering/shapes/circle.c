@@ -22,7 +22,7 @@ int	intersect_circle(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 	if (!intersect_plane(ray, (void *)&(circle->plane), t, NULL))
 		return (0);
 	hit_point = get_ray_point(*ray, *t);
-	if (vec_len(sub(hit_point, circle->plane.point)) <= circle->radius)
+	if (vec_len(hit_point - circle->plane.point) <= circle->radius)
 		return (1);
 	*t = 0.0;
 	return (0);

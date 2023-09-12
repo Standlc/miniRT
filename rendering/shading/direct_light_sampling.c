@@ -14,14 +14,14 @@
 
 t_vec	offset_ray_origin(t_hit_info *hit, float offset)
 {
-	return (add(hit->hit_point, scale(hit->normal, offset)));
+	return (hit->hit_point + scale(hit->normal, offset));
 }
 
 void	set_shadow_ray(t_hit_info *hit, t_material *light, t_ray *shadow_ray,
 	double *light_distance)
 {
 	shadow_ray->origin = offset_ray_origin(hit, hit->obj->hitpoint_offset);
-	shadow_ray->dir = sub(sample_sphere(light->shape, NULL), hit->hit_point);
+	shadow_ray->dir = sample_sphere(light->shape, NULL) - hit->hit_point;
 	*light_distance = vec_len(shadow_ray->dir);
 	shadow_ray->dir = scale(shadow_ray->dir, 1 / *light_distance);
 }

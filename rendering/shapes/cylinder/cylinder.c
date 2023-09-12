@@ -21,9 +21,9 @@ t_vec	cylinder_normal(t_hit_info *hit)
 	cylinder = (t_cylinder *)(hit->obj->shape);
 	if (!hit->is_surface_hit)
 		return (cylinder->dir);
-	center_to_hitpoint = sub(hit->hit_point, cylinder->center);
+	center_to_hitpoint = hit->hit_point - cylinder->center;
 	projected = project(center_to_hitpoint, cylinder->dir);
-	return (normalize(sub(center_to_hitpoint, projected)));
+	return (normalize(center_to_hitpoint - projected));
 }
 
 void	set_cylinder_covers(t_cylinder *cylinder)
@@ -31,11 +31,11 @@ void	set_cylinder_covers(t_cylinder *cylinder)
 	cylinder->covers[0].radius = cylinder->radius;
 	cylinder->covers[0].plane.normal = cylinder->dir;
 	cylinder->covers[0].plane.point
-		= add(cylinder->center, scale(cylinder->dir, cylinder->height / 2));
+		= cylinder->center + scale(cylinder->dir, cylinder->height / 2);
 	cylinder->covers[1].radius = cylinder->radius;
 	cylinder->covers[1].plane.normal = scale(cylinder->dir, -1);
 	cylinder->covers[1].plane.point
-		= add(cylinder->center, scale(cylinder->dir, cylinder->height / -2));
+		= cylinder->center + scale(cylinder->dir, cylinder->height / -2);
 }
 
 int	create_cylinder(t_material *obj, t_info *info)

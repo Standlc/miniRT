@@ -25,21 +25,21 @@ t_vec	scale(t_vec v, double coef)
 	return (v);
 }
 
-t_vec	add(t_vec v1, t_vec v2)
-{
-	v1.x += v2.x;
-	v1.y += v2.y;
-	v1.z += v2.z;
-	return (v1);
-}
+// t_vec	add(t_vec v1, t_vec v2)
+// {
+// 	v1.x += v2.x;
+// 	v1.y += v2.y;
+// 	v1.z += v2.z;
+// 	return (v1);
+// }
 
-t_vec	sub(t_vec v1, t_vec v2)
-{
-	v1.x -= v2.x;
-	v1.y -= v2.y;
-	v1.z -= v2.z;
-	return (v1);
-}
+// t_vec	sub(t_vec v1, t_vec v2)
+// {
+// 	v1.x -= v2.x;
+// 	v1.y -= v2.y;
+// 	v1.z -= v2.z;
+// 	return (v1);
+// }
 
 t_vec	cross_product(t_vec *v1, t_vec *v2)
 {

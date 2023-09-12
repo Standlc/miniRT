@@ -19,10 +19,10 @@ t_vec	plane_bump_mapping(t_hit_info *hit)
 	float	u;
 
 	plane = (t_plane *)(hit->obj->shape);
-	center_dir = sub(hit->hit_point, plane->point);
+	center_dir = hit->hit_point - plane->point;
 	u = vec_len(center_dir) * 5;
 	center_dir = normalize(center_dir);
-	hit->normal = normalize(add(hit->normal, scale(center_dir, sinf(u) * 0.5)));
+	hit->normal = normalize(hit->normal + scale(center_dir, sinf(u) * 0.5));
 	return (hit->normal);
 }
 

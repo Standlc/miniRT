@@ -34,5 +34,5 @@ t_vec	random_dir(void)
 
 t_vec	cosine_hemisphere_dir(t_vec *normal_dir)
 {
-	return (normalize(add(random_dir(), *normal_dir)));
+	return (normalize(random_dir() + *normal_dir));
 }

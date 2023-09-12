@@ -42,7 +42,7 @@ void	set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y)
 	blur.y = randf() * CAM_FUZZ - CAM_FUZZ / 2;
 	cam_ray->origin = world->cam.system.origin;
 	world_pixel = to_world_coordinates(&(world->cam), x + blur.x, y + blur.y);
-	cam_ray->dir = normalize(sub(world_pixel, cam_ray->origin));
+	cam_ray->dir = normalize(world_pixel - cam_ray->origin);
 }
 
 t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame)

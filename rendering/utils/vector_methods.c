@@ -14,7 +14,7 @@
 
 t_vec	get_reflection(t_vec *v, t_vec *normal)
 {
-	return (sub(*v, scale(*normal, 2 * dot(v, normal))));
+	return (*v - scale(*normal, 2 * dot(v, normal)));
 }
 
 float	get_angle(t_vec *v1, t_vec *normalized)

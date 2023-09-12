@@ -15,6 +15,8 @@
 
 # include "minirt.h"
 
+typedef float t_vec __attribute__((ext_vector_type(3)));
+
 typedef struct s_dls {
 	double	light_distance;
 	float	light_intensity;
@@ -41,12 +43,12 @@ typedef struct s_rgb
 	float	b;
 }				t_rgb;
 
-typedef struct s_vec
-{
-	double	x;
-	double	y;
-	double	z;
-}				t_vec;
+// typedef struct s_vec
+// {
+// 	double	x;
+// 	double	y;
+// 	double	z;
+// }				t_vec;
 
 typedef struct s_system
 {

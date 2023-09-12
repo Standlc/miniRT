@@ -16,7 +16,7 @@ int	cut_cylinder(t_ray *ray, t_cylinder *cylinder, double *t)
 {
 	t_vec	hit_to_center;
 
-	hit_to_center = sub(get_ray_point(*ray, *t), cylinder->center);
+	hit_to_center = get_ray_point(*ray, *t) - cylinder->center;
 	if (fabs(dot(&hit_to_center, &(cylinder->dir))) <= cylinder->height / 2)
 		return (1);
 	*t = 0.0;
@@ -42,7 +42,7 @@ int	intersect_cylinder_tube(t_ray *ray, t_cylinder *cylinder, t_quadratic *f)
 	double	dot_ray_dir_cyl_dir;
 	double	dot_w_cylinder_dir;
 
-	w = sub(ray->origin, cylinder->center);
+	w = ray->origin - cylinder->center;
 	dot_ray_dir_cyl_dir = dot(&(ray->dir), &(cylinder->dir));
 	dot_w_cylinder_dir = dot(&w, &(cylinder->dir));
 	f->a = 1 - pow2(dot_ray_dir_cyl_dir);

@@ -29,7 +29,7 @@ int	intersect_sphere(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 
 	(void)is_surface_hit;
 	sphere = (t_sphere *)shape;
-	w = sub(ray->origin, sphere->center);
+	w = ray->origin - sphere->center;
 	f.a = 1.0;
 	f.b = 2 * dot(&(ray->dir), &w);
 	f.c = dot(&w, &w) - pow2(sphere->radius);
@@ -47,7 +47,7 @@ t_vec	sample_sphere(void *shape, t_vec *normal_dir)
 	(void)normal_dir;
 	sphere = (t_sphere *)shape;
 	sample_dir = scale(random_dir(), sphere->radius);
-	return (add(sample_dir, sphere->center));
+	return (sample_dir + sphere->center);
 }
 
 t_vec	sphere_normal(t_hit_info *hit)
@@ -55,7 +55,7 @@ t_vec	sphere_normal(t_hit_info *hit)
 	t_sphere	*sphere;
 
 	sphere = (t_sphere *)(hit->obj->shape);
-	return (normalize(sub(hit->hit_point, sphere->center)));
+	return (normalize(hit->hit_point - sphere->center));
 }
 
 int	create_sphere(t_material *obj, t_info *info)

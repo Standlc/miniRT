@@ -21,7 +21,7 @@ t_vec	cone_normal(t_hit_info *hit)
 	cone = (t_cone *)(hit->obj->shape);
 	if (!hit->is_surface_hit)
 		return (cone->base.plane.normal);
-	top_to_hitpoint_dir = sub(hit->hit_point, cone->top);
+	top_to_hitpoint_dir = hit->hit_point - cone->top;
 	local_x_dir = cross_product(&top_to_hitpoint_dir, &(cone->dir));
 	return (cross_product(&local_x_dir, &top_to_hitpoint_dir));
 }
@@ -37,7 +37,7 @@ int	create_cone(t_material *obj, t_info *info)
 	cone->radius = info->radius;
 	cone->height = info->height;
 	cone->dir = normalize(info->dir);
-	cone->top = add(info->center, scale(cone->dir, info->height));
+	cone->top = info->center + scale(cone->dir, info->height);
 	cone->base.radius = info->radius;
 	cone->base.plane.normal = scale(cone->dir, -1);
 	cone->base.plane.point = info->center;

@@ -18,16 +18,16 @@ t_vec2	cylinder_cover_point(t_cylinder *cylinder, t_vec *hitpoint)
 	t_vec	hit_dir;
 	t_vec2	point;
 
-	center_to_hitpoint = sub(*hitpoint, cylinder->center);
+	center_to_hitpoint = *hitpoint - cylinder->center;
 	if (dot(&center_to_hitpoint, &(cylinder->dir)) < 0)
 	{
-		hit_dir = sub(center_to_hitpoint,
-				scale(cylinder->dir, cylinder->height / -2));
+		hit_dir = center_to_hitpoint -
+				scale(cylinder->dir, cylinder->height / -2);
 	}
 	else
 	{
-		hit_dir = sub(center_to_hitpoint,
-				scale(cylinder->dir, cylinder->height / 2));
+		hit_dir = center_to_hitpoint -
+				scale(cylinder->dir, cylinder->height / 2);
 	}
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&hit_dir, &(cylinder->system.z)) <= 0) * 2 - 1;
@@ -44,7 +44,7 @@ t_vec2	cylinder_surface_point(t_cylinder *cylinder, t_hit_info *hit)
 
 	point.x = get_angle(&(hit->normal), &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&(hit->normal), &(cylinder->system.z)) <= 0) * 2 - 1;
-	base_center_to_hit = sub(hit->hit_point, cylinder->covers->plane.point);
+	base_center_to_hit = hit->hit_point - cylinder->covers->plane.point;
 	height_from_base = dot(&base_center_to_hit, &(cylinder->dir));
 	point.y = height_from_base / cylinder->height;
 	point.y *= 2 / (cylinder->circumference / cylinder->height);

@@ -19,7 +19,7 @@ int	cut_cone_surface(t_cone *cone, t_vec hit_point, double *t)
 
 	if (*t <= 0.0)
 		return (0);
-	hit_to_center = sub(hit_point, cone->center);
+	hit_to_center = hit_point - cone->center;
 	projected_height = dot(&hit_to_center, &(cone->dir));
 	if (projected_height <= cone->height && projected_height > 0.0)
 		return (1);
@@ -36,7 +36,7 @@ int	intersect_entire_cone(t_ray *ray, t_cone *cone, t_quadratic *f)
 	double	dot_w_h_squared;
 
 	m = pow2(cone->radius) / pow2(cone->height);
-	w = sub(ray->origin, cone->top);
+	w = ray->origin - cone->top;
 	dot_ray_dir_h = dot(&(ray->dir), &(cone->dir));
 	dot_w_h = dot(&w, &(cone->dir));
 	dot_w_h_squared = pow2(dot_w_h);
