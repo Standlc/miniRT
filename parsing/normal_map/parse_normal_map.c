@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_normal_map.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:23:09 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:24:17 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 int	get_rgb_pixel_value(int fd, t_vec *map)
@@ -33,7 +45,7 @@ int	get_rgb_pixel_value(int fd, t_vec *map)
 
 int	get_width_height(int fd, int *width, int *height)
 {
-	char *str;
+	char	*str;
 	int		i;
 
 	i = 0;
@@ -51,8 +63,8 @@ int	get_width_height(int fd, int *width, int *height)
 
 int	read_normal_map(t_normal_map *normal_map, char *file_name)
 {
-	int	fd;
-	char *name_path;
+	int		fd;
+	char	*name_path;
 
 	name_path = ft_strjoin("normal_maps/", file_name);
 	fd = open(name_path, O_RDONLY);
@@ -96,19 +108,19 @@ void	load_normal_maps(t_rt *rt, char **rows)
 	int	i;
 
 	rt->normal_maps = malloc(sizeof(t_normal_map) * NB_MAP);
-    if (!rt->normal_maps)
-        (free_split(rows), error_allocation(), exit(1));
+	if (!rt->normal_maps)
+		(free_split(rows), error_allocation(), exit(1));
 	rt->nb_normal_maps = NB_MAP;
 	set_maps(rt->normal_maps);
 	good_maps = fill_good_maps(rows);
 	if (good_maps == NULL)
-		 (free_maps(rt->normal_maps, NULL), free_split(rows), exit(1));
+		(free_maps(rt->normal_maps, NULL), free_split(rows), exit(1));
 	i = 0;
 	while (i < NB_MAP)
 	{
 		if (good_maps[i])
 			if (read_normal_map(rt->normal_maps + i, good_file(i)))
-        		(free_maps(rt->normal_maps, good_maps), free_split(rows), exit(1));	
+				(free_maps(rt->normal_maps, good_maps), free_split(rows), exit(1));	
 		i++;
 	}
 	free(good_maps);

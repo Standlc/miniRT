@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:47:00 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/13 02:13:31 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:34:30 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-# define INTERVAL 5
+#define INTERVAL 5
 
 void	put_pixel(t_rt *rt, int x, int y, t_rgb color)
 {
@@ -52,8 +52,8 @@ t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame)
 
 	set_cam_ray(&(rt->world), &cam_ray, x, y);
 	pixel_color = cast_ray(&(rt->world), &cam_ray, 0, 1);
-	rt->pixel_buff[y * WIDTH + x] =
-		color_add(rt->pixel_buff[y * WIDTH + x], pixel_color);
+	rt->pixel_buff[y * WIDTH + x]
+		= color_add(rt->pixel_buff[y * WIDTH + x], pixel_color);
 	return (color_fade(rt->pixel_buff[y * WIDTH + x], 1.f / curr_frame));
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder_intersection.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:29 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/13 02:11:06 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:51:59 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	intersect_cylinder_covers(t_ray *ray, t_cylinder *cylinder, double *t,
 	intersect_plane(ray, (void *)&(cylinder->covers[1].plane), &t_2, NULL);
 	*t = get_closest_intersection(t_1, t_2);
 	return (*t > 0.0 && ((*t > f->t_1 && *t < f->t_2)
-		|| (*t < f->t_1 && *t > f->t_2)));
+			|| (*t < f->t_1 && *t > f->t_2)));
 }
 
 int	intersect_cylinder_tube(t_ray *ray, t_cylinder *cylinder, t_quadratic *f)
@@ -46,7 +46,8 @@ int	intersect_cylinder_tube(t_ray *ray, t_cylinder *cylinder, t_quadratic *f)
 	dot_ray_dir_cyl_dir = dot(&(ray->dir), &(cylinder->dir));
 	dot_w_cylinder_dir = dot(&w, &(cylinder->dir));
 	f->a = 1 - pow2(dot_ray_dir_cyl_dir);
-	f->b = 2 * (dot(&(ray->dir), &w) - dot_ray_dir_cyl_dir * dot_w_cylinder_dir);
+	f->b = 2 * (dot(&(ray->dir), &w)
+			- dot_ray_dir_cyl_dir * dot_w_cylinder_dir);
 	f->c = dot(&w, &w) - pow2(dot_w_cylinder_dir) - pow2(cylinder->radius);
 	return (solve_quadratic(f));
 }
@@ -57,7 +58,7 @@ int	intersect_cylinder(t_ray *ray, void *shape, double *t, int *is_surface_hit)
 	t_cylinder	*cylinder;
 	double		t_cover;
 
-    cylinder = (t_cylinder *)shape;
+	cylinder = (t_cylinder *)shape;
 	if (!intersect_cylinder_tube(ray, cylinder, &f))
 		return (0);
 	*t = get_closest_intersection(f.t_1, f.t_2);

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rendering.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:42:21 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:42:21 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RENDERING_H
 # define RENDERING_H
 
-#include "minirt.h"
+# include "minirt.h"
 
 void		set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
 int			intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
@@ -9,27 +21,30 @@ void		print_vector(t_vec v);
 int			set_hooks(t_rt *rt);
 void		reset_rendering(t_rt *rt);
 int			render(t_rt *data);
-t_rgb		cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth);
-double  	min(double a, double b);
-double  	max(double a, double b);
+t_rgb		cast_ray(t_world *world, t_ray *ray,
+				int is_specular_ray, int depth);
+double		min(double a, double b);
+double		max(double a, double b);
 void		loading_bar(int max, float curr);
 void		set_cam_system(t_cam *cam);
 void		loader(int frequency, int reset);
-double  	get_closest_intersection(double t1, double t2);
+double		get_closest_intersection(double t1, double t2);
 t_vec		cosine_hemisphere_dir(t_vec *normal_dir);
 t_vec		lerp(t_vec v1, t_vec v2, float t);
 
 // SHADING
 t_rgb		indirect_lighting(t_world *world, t_hit_info *hit, int depth);
-t_rgb		specular_reflection(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
+t_rgb		specular_reflection(t_world *world, t_hit_info *hit,
+				t_ray *ray, int depth);
 t_rgb		direct_light_sampling(t_world *world, t_hit_info *hit);
-t_rgb		shade_hitpoint(t_world *world, t_hit_info *hit, t_ray *ray, int depth);
+t_rgb		shade_hitpoint(t_world *world,
+				t_hit_info *hit, t_ray *ray, int depth);
 void		bump_mapping(t_hit_info *hit);
 t_vec		offset_ray_origin(t_hit_info *hit, float offset);
 
 
 t_vec		normalize(t_vec v);
-double  	vec_len(t_vec v);
+double		vec_len(t_vec v);
 t_vec		scale(t_vec v, double coef);
 double		dot(t_vec *v1, t_vec *v2);
 t_vec		get_reflection(t_vec *v, t_vec *normal);
@@ -59,11 +74,11 @@ void		put_pixel(t_rt *data, int x, int y, t_rgb color);
 
 
 double		pow2(double n);
-float		randf();
-float		normal_randf();
-double  	min(double a, double b);
+float		randf(void);
+float		normal_randf(void);
+double		min(double a, double b);
 double		relu(double n);
-t_vec		random_dir();
+t_vec		random_dir(void);
 
 
 t_system	create_system(t_vec up);
@@ -73,20 +88,24 @@ float		checkers(t_vec2 point, float scale);
 t_vec		sample_sphere(void *shape, t_vec *normal_dir);
 int			solve_quadratic(t_quadratic *f);
 int			create_sphere(t_material *obj, t_info *info);
-int 		intersect_circle(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+int			intersect_circle(t_ray *ray, void *shape,
+				double *t, int *is_surface_hit);
 
 // PLANE
-int			intersect_plane(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+int			intersect_plane(t_ray *ray,
+				void *shape, double *t, int *is_surface_hit);
 int			create_plane(t_material *obj, t_info *info);
 
 // CYLINDER
 int			create_cylinder(t_material *obj, t_info *info);
 t_vec2		cylinder_texture_coordinates(t_hit_info *hit);
-int			intersect_cylinder(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+int			intersect_cylinder(t_ray *ray,
+				void *shape, double *t, int *is_surface_hit);
 
 // CONE
 int			create_cone(t_material *obj, t_info *info);
 t_vec2		cone_texture_coordinates(t_hit_info *hit);
-int			intersect_cone(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+int			intersect_cone(t_ray *ray,
+				void *shape, double *t, int *is_surface_hit);
 
 #endif

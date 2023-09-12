@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:56 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:50:19 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:48:51 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_vec	normalize(t_vec v)
 	return (v);
 }
 
-t_vec  get_ray_point(t_ray ray, double d)
+t_vec	get_ray_point(t_ray ray, double d)
 {
 	ray.dir.x = ray.dir.x * d + ray.origin.x;
 	ray.dir.y = ray.dir.y * d + ray.origin.y;

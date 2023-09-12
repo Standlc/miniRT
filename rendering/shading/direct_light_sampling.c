@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   direct_light_sampling.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:12 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/13 02:10:16 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:55:24 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	cast_shadow_ray(t_world *world, t_material *light, t_ray *shadow_ray,
 	i = 0;
 	while (i < world->nb_objects)
 	{
-		if (light != (objects + i) &&
-			objects[i].intersect(shadow_ray, objects[i].shape, &t, NULL)
+		if (light != (objects + i)
+			&& objects[i].intersect(shadow_ray, objects[i].shape, &t, NULL)
 			&& t < light_distance)
 		{
 			return (0);
@@ -53,10 +53,10 @@ float	dls_intensity(t_world *world, t_dls *dls)
 	float	intensity;
 
 	intensity = min(1 / dls->light_distance, dls->light_intensity)
-				* dls->light_intensity
-				* dls->normal_shadow_dot
-				* world->nb_lights
-				* (1 - world->ambient);
+		* dls->light_intensity
+		* dls->normal_shadow_dot
+		* world->nb_lights
+		* (1 - world->ambient);
 	return (intensity);
 }
 
@@ -69,8 +69,9 @@ t_rgb	direct_light_sampling(t_world *world, t_hit_info *hit)
 	picked_light = world->lights[(int)roundf(randf() * (world->nb_lights - 1))];
 	set_shadow_ray(hit, picked_light, &shadow_ray, &dls.light_distance);
 	dls.normal_shadow_dot = dot(&(hit->bump_normal), &(shadow_ray.dir));
-	if (dls.normal_shadow_dot <= 0 ||
-		!cast_shadow_ray(world, picked_light, &shadow_ray, dls.light_distance))
+	if (dls.normal_shadow_dot <= 0
+		|| !cast_shadow_ray(world, picked_light,
+			&shadow_ray, dls.light_distance))
 		return ((t_rgb){0.f, 0.f, 0.f});
 	dls.light_intensity = picked_light->light_intensity;
 	return (color_fade(picked_light->color, dls_intensity(world, &dls)));

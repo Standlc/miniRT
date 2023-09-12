@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   math.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:49 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:50:23 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:38:22 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ double	relu(double n)
 	return (0.0);
 }
 
-double  min(double a, double b)
+double	min(double a, double b)
 {
 	if (a > b)
 		return (b);
 	return (a);
 }
 
-double  max(double a, double b)
+double	max(double a, double b)
 {
 	if (a < b)
 		return (b);
@@ -48,7 +48,7 @@ int	solve_quadratic(t_quadratic *f)
 		return (0);
 	if (discr == 0.0)
 	{
-		f->t_1 = - 0.5 * f->b / f->a;
+		f->t_1 = -0.5 * f->b / f->a;
 		f->t_2 = f->t_1;
 	}
 	else

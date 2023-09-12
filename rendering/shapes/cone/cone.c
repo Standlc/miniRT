@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cone.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:24 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/11 18:08:57 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:53:15 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-// C 2.3,-1.6,2.7 -0.2,-0.2,-1.0 90
-// C 3.1,-0.7,6.3 -0.2,-0.2,-1.0 90
 
 t_vec	cone_normal(t_hit_info *hit)
 {
@@ -21,10 +19,8 @@ t_vec	cone_normal(t_hit_info *hit)
 	t_vec	local_x_dir;
 
 	cone = (t_cone *)(hit->obj->shape);
-
 	if (!hit->is_surface_hit)
 		return (cone->base.plane.normal);
-
 	top_to_hitpoint_dir = sub(hit->hit_point, cone->top);
 	local_x_dir = cross_product(&top_to_hitpoint_dir, &(cone->dir));
 	return (cross_product(&local_x_dir, &top_to_hitpoint_dir));

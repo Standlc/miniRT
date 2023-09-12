@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coordinate_system.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:45 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/09/05 15:21:18 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:56:12 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,13 @@ t_vec	system_transform(t_vec *v, t_system *system)
 t_system	create_system(t_vec up)
 {
 	t_system	system;
- 
+
 	up = normalize(up);
 	system.y = up;
 	if (fabs(dot(&(t_vec){0, 0, 1}, &up)) < 1)
 		system.x = cross_product(&up, &(t_vec){0, 0, 1});
 	else
 		system.x = cross_product(&up, &(t_vec){0, 1, 0});
-
 	system.z = cross_product(&(system.x), &(system.y));
 	return (system);
 }

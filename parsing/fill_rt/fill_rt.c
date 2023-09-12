@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fill_rt.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:27:06 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:27:16 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 void	complete_material(t_material *object, t_info *info)
@@ -42,36 +54,25 @@ int	fill_objects(char **row, t_rt *rt, t_info *info)
 	return (0);
 }
 
-void    set_zero(t_info *info)
+void	set_zero(t_info *info)
 {
-    info->color.r = 0;
-    info->color.g = 0;
-    info->color.b = 0;
-    info->smoothness = 0;
-    info->specular_prob = 0;
-    info->light_intensity = 0;
-    info->center.x = 0;
-    info->center.y = 0;
-    info->center.z = 0;
-    info->dir.x = 0;
-    info->dir.y = 0;
-    info->dir.z = 0;
-    info->radius = 0;
-    info->height = 0;
-    info->texture = 0;
+	info->color.r = 0;
+	info->color.g = 0;
+	info->color.b = 0;
+	info->smoothness = 0;
+	info->specular_prob = 0;
+	info->light_intensity = 0;
+	info->center.x = 0;
+	info->center.y = 0;
+	info->center.z = 0;
+	info->dir.x = 0;
+	info->dir.y = 0;
+	info->dir.z = 0;
+	info->radius = 0;
+	info->height = 0;
+	info->texture = 0;
 	info->texture_selection = 0;
 }
-
-// void	print_obj(t_material *obj)
-// {
-// 	printf("color : %f,%f,%f\n", obj->color.r, obj->color.g, obj->color.b);
-// 	printf("smooth : %f\n", obj->smoothness);
-// 	printf("spec : %f\n", obj->specular_prob);
-// 	printf("intensity : %f\n", obj->light_intensity);
-// 	printf("intersect : %p\n", obj->intersect);
-// 	printf("normal : %p\n", obj->normal);
-// 	printf("texture_coordinates : %p\n", obj->texture_coordinates);
-// }
 
 void	fill_rt(char **rows, t_rt *rt, t_parsing parsing)
 {

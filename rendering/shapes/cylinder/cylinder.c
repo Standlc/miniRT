@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:33 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/13 02:11:54 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:51:34 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void	set_cylinder_covers(t_cylinder *cylinder)
 {
 	cylinder->covers[0].radius = cylinder->radius;
 	cylinder->covers[0].plane.normal = cylinder->dir;
-	cylinder->covers[0].plane.point =
-		add(cylinder->center, scale(cylinder->dir, cylinder->height / 2));
+	cylinder->covers[0].plane.point
+		= add(cylinder->center, scale(cylinder->dir, cylinder->height / 2));
 	cylinder->covers[1].radius = cylinder->radius;
 	cylinder->covers[1].plane.normal = scale(cylinder->dir, -1);
-	cylinder->covers[1].plane.point =
-		add(cylinder->center, scale(cylinder->dir, cylinder->height / -2));
+	cylinder->covers[1].plane.point
+		= add(cylinder->center, scale(cylinder->dir, cylinder->height / -2));
 }
 
 int	create_cylinder(t_material *obj, t_info *info)

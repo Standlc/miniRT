@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fill_good_maps.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:22:42 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:23:05 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
-int is_bump_map(char *str)
+int	is_bump_map(char *str)
 {
 	if (!ft_strncmp(str, "bm-1", 4))
 		return (0);
@@ -15,41 +27,41 @@ int is_bump_map(char *str)
 	return (-1);
 }
 
-int found_bump_map(char *row)
+int	found_bump_map(char *row)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (row[i])
-        i++;
-    if (i == 0)
-        return (-1);
-    i--;
-    while (row[i] == ' ')
-        i--;
-    i -= 3;
-    if (i < 0)
-        return (-1);
-    return (is_bump_map(&row[i]));
+	i = 0;
+	while (row[i])
+		i++;
+	if (i == 0)
+		return (-1);
+	i--;
+	while (row[i] == ' ')
+		i--;
+	i -= 3;
+	if (i < 0)
+		return (-1);
+	return (is_bump_map(&row[i]));
 }
 
-int *fill_good_maps(char **rows)
+int	*fill_good_maps(char **rows)
 {
-    int *arr;
-    int i;
-    int index_bm;
+	int	*arr;
+	int	i;
+	int	index_bm;
 
-    i = 0;
-    index_bm = 0;
-    arr = ft_calloc(sizeof(int), NB_MAP);
-    if (!arr)
-        return (error_allocation(), NULL);
-    while (rows[i])
-    {
-        index_bm = found_bump_map(rows[i]);
-        if (index_bm != -1)
-            arr[index_bm] = 1;
-        i++;
-    }
-    return (arr);
+	i = 0;
+	index_bm = 0;
+	arr = ft_calloc(sizeof(int), NB_MAP);
+	if (!arr)
+		return (error_allocation(), NULL);
+	while (rows[i])
+	{
+		index_bm = found_bump_map(rows[i]);
+		if (index_bm != -1)
+			arr[index_bm] = 1;
+		i++;
+	}
+	return (arr);
 }

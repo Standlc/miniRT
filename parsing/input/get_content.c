@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_content.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:25:06 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:26:32 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
- 
+
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	int		i;
@@ -25,8 +37,8 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		j++;
 	}
 	str[i] = '\0';
-    free(s1);
-    free(s2);
+	free(s1);
+	free(s2);
 	return (str);
 }
 
@@ -44,47 +56,49 @@ char	check_last_char(char *str)
 
 void	delete_comment(char *str)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (str[++i])
+	{
 		if (str[i] == '#')
 		{
 			str[i] = '\n';
 			str[i + 1] = '\0';
 			break ;
 		}
+	}
 }
 
-char    *get_string(int fd)
+char	*get_string(int fd)
 {
 	char	*tmp;
-    char    *str;
+	char	*str;
 
-    tmp = malloc(1);
-    if (!tmp)
-        return (NULL);
-    *tmp = '\0';
-    while (1)
-    {
-        str = get_next_line(fd);
+	tmp = malloc(1);
+	if (!tmp)
+		return (NULL);
+	*tmp = '\0';
+	while (1)
+	{
+		str = get_next_line(fd);
 		if (!str && *tmp)
-            return (tmp);
-        if (!str && !*tmp)
-            return (free(tmp), NULL);
+			return (tmp);
+		if (!str && !*tmp)
+			return (free(tmp), NULL);
 		delete_comment(str);
-        str = ft_strjoin_free(tmp, str);
+		str = ft_strjoin_free(tmp, str);
 		if (!str)
 			return (NULL);
 		if (check_last_char(str) == '\0')
 			return (str);
 		tmp = str;
-    }
+	}
 }
 
 char	**get_content(int fd)
 {
-    char    **rows;
+	char	**rows;
 	char	*str;
 
 	str = get_string(fd);

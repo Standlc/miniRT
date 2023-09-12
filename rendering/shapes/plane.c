@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   plane.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:37 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/12 02:57:14 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:41:28 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_vec2	plane_texture_coordinates(t_hit_info *hit)
 t_vec	plane_normal(t_hit_info *hit)
 {
 	t_plane	*plane;
-	
+
 	plane = (t_plane *)(hit->obj->shape);
 	return (plane->normal);
 }
@@ -82,31 +82,3 @@ int	create_plane(t_material *obj, t_info *info)
 	obj->hitpoint_offset = 1e-2;
 	return (0);
 }
-
-// int	intersect_triangle(t_tri triangle, t_ray ray, double *t)
-// {
-// 	t_vec	intersection;
-// 	t_vec	edge;
-// 	t_vec	v_to_intersection;
-
-// 	if (!intersect_plane(&ray, &triangle.plane, t))
-// 		return (0);
-// 	intersection = get_ray_point(ray, *t);
-// 	t_vec	normal = triangle.plane.normal;
-
-// 	edge = sub(triangle.a, triangle.b);
-// 	v_to_intersection = sub(intersection, triangle.b);
-// 	if (dot(normal, cross_product(edge, v_to_intersection)) < 0)
-// 		return (0);
-
-// 	edge = sub(triangle.b, triangle.c);
-// 	v_to_intersection = sub(intersection, triangle.c);
-// 	if (dot(normal, cross_product(edge, v_to_intersection)) < 0)
-// 		return (0);
-
-// 	edge = sub(triangle.c, triangle.a);
-// 	v_to_intersection = sub(intersection, triangle.a);
-// 	if (dot(normal, cross_product(edge, v_to_intersection)) < 0)
-// 		return (0);
-// 	return (1);
-// }

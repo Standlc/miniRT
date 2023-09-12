@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   type.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:18:50 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:19:24 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 #define SPACE_POINT 	"must have a point in space"
@@ -10,7 +22,7 @@
 #define TEXTURE			"texture must be either checkers 'ch-(1-20)' or a bump map 'bm-(1-5)'"
 #define DIR_VECTOR		"direction vector components must range from 0 to 1"
 
-int check_light(char **row)
+int	check_light(char **row)
 {
 	int	i;
 
@@ -38,7 +50,7 @@ int check_light(char **row)
 	return (1);
 }
 
-int check_sphere(char **row)
+int	check_sphere(char **row)
 {
 	int	i;
 

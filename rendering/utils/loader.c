@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   loader.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:46 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/10 15:46:47 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:55:43 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-# define LOADING_SYMBOLS	"\\|/-"
+#define LOADING_SYMBOLS "\\|/-"
 
 void	loader(int frequency, int reset)
 {
@@ -26,7 +26,7 @@ void	loader(int frequency, int reset)
 	if (i % frequency == 0)
 	{
 		if (i != 0)
-			write (1, "\b\b\b", 3);
+			write(1, "\b\b\b", 3);
 		write(1, "[", 1);
 		write(1, &(LOADING_SYMBOLS[i % 4]), 1);
 		write(1, "]", 1);

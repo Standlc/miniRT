@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder_texture.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stde-la- <stde-la-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:46:31 by stde-la-          #+#    #+#             */
-/*   Updated: 2023/08/13 02:11:55 by stde-la-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:51:09 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ t_vec2	cylinder_cover_point(t_cylinder *cylinder, t_vec *hitpoint)
 	if (dot(&center_to_hitpoint, &(cylinder->dir)) < 0)
 	{
 		hit_dir = sub(center_to_hitpoint,
-			scale(cylinder->dir, cylinder->height / -2));
+				scale(cylinder->dir, cylinder->height / -2));
 	}
 	else
 	{
 		hit_dir = sub(center_to_hitpoint,
-			scale(cylinder->dir, cylinder->height / 2));
+				scale(cylinder->dir, cylinder->height / 2));
 	}
 	point.x = get_angle(&hit_dir, &(cylinder->system.x)) / 180 + 1;
 	point.x *= (dot(&hit_dir, &(cylinder->system.z)) <= 0) * 2 - 1;

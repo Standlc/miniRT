@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_input.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/10 18:24:47 by svan-de-          #+#    #+#             */
+/*   Updated: 2023/09/10 18:24:54 by svan-de-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 int	result_type_syntaxe(char **row, t_parsing *parsing)
@@ -37,7 +49,7 @@ int	check_type(char *str, t_parsing *parsing)
 
 int	check_essential(char **rows)
 {
-	int i;
+	int	i;
 	int	nb_ambient;
 	int	nb_camera;
 	int	nb_lights;
