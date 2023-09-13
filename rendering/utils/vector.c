@@ -19,7 +19,7 @@ void	print_vector(t_vec v)
 
 t_vec	lerp(t_vec v1, t_vec v2, float t)
 {
-	return ((1 - t) *  v1 + t * v2);
+	return ((1 - t) * v1 + t * v2);
 }
 
 double	vec_len(t_vec v)

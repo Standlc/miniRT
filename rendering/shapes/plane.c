@@ -79,6 +79,6 @@ int	create_plane(t_material *obj, t_info *info)
 	obj->normal = plane_normal;
 	obj->texture_coordinates = plane_texture_coordinates;
 	obj->texture = info->texture;
-	obj->hitpoint_offset = 1e-2;
+	obj->hitpoint_offset = PLANE_OFFSET;
 	return (0);
 }

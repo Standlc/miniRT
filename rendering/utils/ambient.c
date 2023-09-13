@@ -26,7 +26,7 @@ t_rgb	ambient_light(t_rgb *color, t_ray *ray, float intensity)
 
 	darker = color_sub(*color, 1 - intensity);
 	return (lerp_color(
-			lerp_color(darker, (t_rgb){1.f, 1.f, 1.f}, intensity),
+			lerp_color(darker, 1.f, intensity),
 		lerp_color(darker, *color, intensity),
 		ray->dir.y * 0.5 + 0.5));
 }

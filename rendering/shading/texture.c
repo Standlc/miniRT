@@ -23,7 +23,7 @@ float	checkers(t_vec2 point, float scale)
 
 void	set_coordinate_system(t_system *system, t_vec *z)
 {
-	system->origin = (t_vec){0.0, 0.0, 0.0};
+	system->origin = 0.f;
 	system->z = *z;
 	if (fabs(dot(&(t_vec){0, 1, 0}, &(system->z))) < 1.f)
 		system->x = cross_product(&(t_vec){0, 1, 0}, &(system->z));
@@ -49,5 +49,5 @@ void	bump_mapping(t_hit_info *hit)
 	hit->bump_normal
 		= normalize(system_transform(&(hit->bump_normal), &(point_system)));
 	if (dot(&(hit->bump_normal), &(hit->normal)) < 0)
-		hit->bump_normal = hit->bump_normal * -1;
+		hit->bump_normal *= -1;
 }

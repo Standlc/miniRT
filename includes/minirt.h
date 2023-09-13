@@ -26,7 +26,7 @@
 
 # define WIDTH		1000
 # define HEIGHT		550
-# define RPP			500
+# define RPP		1000
 # define CAM_FUZZ	1.0f
 # define MAX_DEPTH	5
 # define ON_DESTROY	17

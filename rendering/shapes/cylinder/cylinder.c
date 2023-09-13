@@ -57,6 +57,6 @@ int	create_cylinder(t_material *obj, t_info *info)
 	obj->normal = cylinder_normal;
 	obj->texture_coordinates = cylinder_texture_coordinates;
 	obj->texture = info->texture;
-	obj->hitpoint_offset = 1e-2;
+	obj->hitpoint_offset = CYLINDER_OFFSET;
 	return (0);
 }

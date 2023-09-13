@@ -7,8 +7,7 @@ SRCS		=	main.c									close_program.c \
 				rendering/utils/ambient.c				rendering/utils/math.c \
 				rendering/utils/vector.c				rendering/utils/colors.c \
 				rendering/utils/loader.c				rendering/utils/random.c \
-				rendering/utils/coordinate_system.c		rendering/utils/vector_methods.c \
-				rendering/utils/vector_operations.c		\
+				rendering/utils/coordinate_system.c		rendering/utils/vector_operations.c \
 				\
 				rendering/shapes/cone/cone.c			rendering/shapes/cone/cone_intersection.c \
 				rendering/shapes/cylinder/cylinder.c	rendering/shapes/cylinder/cylinder_intersection.c \

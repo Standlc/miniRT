@@ -62,16 +62,15 @@ t_rgb	cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth)
 	t_hit_info	hit;
 
 	if (depth > MAX_DEPTH + (is_specular_ray * MAX_DEPTH))
-		return ((t_rgb){0.f, 0.f, 0.f});
+		return (0.f);
 	if (intersect_objects(world, ray, &hit))
 	{
 		if (hit.obj->light_intensity && world->ambient < 1.0)
-			return (color_fade(hit.obj->color,
-					hit.obj->light_intensity * (1 - world->ambient)));
-		hit.is_specular = is_specular_ray;
+			return (hit.obj->color
+				* (hit.obj->light_intensity * (1 - world->ambient)));
 		return (shade_hitpoint(world, &hit, ray, depth));
 	}
 	if (world->ambient)
 		return (ambient_light(&(world->ambient_light), ray, world->ambient));
-	return ((t_rgb){0.f, 0.f, 0.f});
+	return (0.f);
 }

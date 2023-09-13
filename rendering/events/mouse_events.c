@@ -81,8 +81,8 @@ int	handle_mouse_down(int button, int x, int y, t_rt *rt)
 	vertical = 1 - (float)y / HEIGHT * 2;
 	len_to_screen_center = sqrt(horizontal * horizontal + vertical * vertical);
 	cam->look_at
-		= cam->system.origin +
-			cam->dir * (len_to_screen_center * 40 + 2);
+		= cam->system.origin
+		+ cam->dir * (len_to_screen_center * 40 + 2);
 	cam->radius = vec_len(cam->system.origin - cam->look_at);
 	return (0);
 }

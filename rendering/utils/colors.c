@@ -24,34 +24,7 @@ int	rgb_to_int(t_rgb rgb)
 	return (r << 16 | g << 8 | b);
 }
 
-t_rgb	color_mult(t_rgb color_1, t_rgb color_2)
-{
-	color_1.r *= color_2.r;
-	color_1.g *= color_2.g;
-	color_1.b *= color_2.b;
-	return (color_1);
-}
-
-t_rgb	color_add(t_rgb color_1, t_rgb color_2)
-{
-	color_1.r += color_2.r;
-	color_1.g += color_2.g;
-	color_1.b += color_2.b;
-	return (color_1);
-}
-
 t_rgb	lerp_color(t_rgb c1, t_rgb c2, float t)
 {
-	c1.r = (1 - t) * c1.r + t * c2.r;
-	c1.g = (1 - t) * c1.g + t * c2.g;
-	c1.b = (1 - t) * c1.b + t * c2.b;
-	return (c1);
-}
-
-t_rgb	color_fade(t_rgb color, float fade)
-{
-	color.r *= fade;
-	color.g *= fade;
-	color.b *= fade;
-	return (color);
+	return ((1 - t) * c1 + t * c2);
 }

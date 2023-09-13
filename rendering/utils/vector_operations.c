@@ -26,3 +26,18 @@ t_vec	cross_product(t_vec *v1, t_vec *v2)
 	res.z = (v1->x * v2->y) - (v1->y * v2->x);
 	return (normalize(res));
 }
+
+t_vec	get_reflection(t_vec *v, t_vec *normal)
+{
+	return (*v - *normal * (2 * dot(v, normal)));
+}
+
+float	get_angle(t_vec *v1, t_vec *normalized)
+{
+	return (acosf(dot(v1, normalized) / vec_len(*v1)) * (180 / M_PI));
+}
+
+t_vec	project(t_vec projected, t_vec ref)
+{
+	return (ref * dot(&projected, &ref));
+}

@@ -48,6 +48,6 @@ int	create_cone(t_material *obj, t_info *info)
 	obj->normal = cone_normal;
 	obj->texture_coordinates = cone_texture_coordinates;
 	obj->texture = info->texture;
-	obj->hitpoint_offset = 1e-5;
+	obj->hitpoint_offset = CONE_OFFSET;
 	return (0);
 }

@@ -23,7 +23,7 @@ void	set_shadow_ray(t_hit_info *hit, t_material *light, t_ray *shadow_ray,
 	shadow_ray->origin = offset_ray_origin(hit, hit->obj->hitpoint_offset);
 	shadow_ray->dir = sample_sphere(light->shape, NULL) - hit->hit_point;
 	*light_distance = vec_len(shadow_ray->dir);
-	shadow_ray->dir = shadow_ray->dir * (1 / *light_distance);
+	shadow_ray->dir /= *light_distance;
 }
 
 int	cast_shadow_ray(t_world *world, t_material *light, t_ray *shadow_ray,
@@ -72,7 +72,7 @@ t_rgb	direct_light_sampling(t_world *world, t_hit_info *hit)
 	if (dls.normal_shadow_dot <= 0
 		|| !cast_shadow_ray(world, picked_light,
 			&shadow_ray, dls.light_distance))
-		return ((t_rgb){0.f, 0.f, 0.f});
+		return (0.f);
 	dls.light_intensity = picked_light->light_intensity;
-	return (color_fade(picked_light->color, dls_intensity(world, &dls)));
+	return (picked_light->color * dls_intensity(world, &dls));
 }
