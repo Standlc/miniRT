@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:28:08 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:28:37 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:51:34 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	fill_sphere(char **row, t_info *sphere)
 	if (row[4] && row[5])
 		sphere->specular_prob = conversion_double(row[5]);
 	if (row[4] && row[5] && row[6])
-		get_letters_options(row[6], &(sphere->texture), &(sphere->texture_selection));
+		get_letters_options(row[6], &(sphere->texture),
+			&(sphere->texture_selection));
 }
 
 void	fill_plan(char **row, t_info *plan)
@@ -46,7 +47,8 @@ void	fill_plan(char **row, t_info *plan)
 	if (row[4] && row[5])
 		plan->specular_prob = conversion_double(row[5]);
 	if (row[4] && row[5] && row[6])
-		get_letters_options(row[6], &(plan->texture), &(plan->texture_selection));
+		get_letters_options(row[6], &(plan->texture),
+			&(plan->texture_selection));
 }
 
 void	fill_cylinder_cone(char **row, t_info *cylinder_cone)
@@ -61,5 +63,6 @@ void	fill_cylinder_cone(char **row, t_info *cylinder_cone)
 	if (row[6] && row[7])
 		cylinder_cone->specular_prob = conversion_double(row[7]);
 	if (row[6] && row[7] && row[8])
-		get_letters_options(row[8], &(cylinder_cone->texture), &(cylinder_cone->texture_selection));
+		get_letters_options(row[8], &(cylinder_cone->texture),
+			&(cylinder_cone->texture_selection));
 }

@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:42:16 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:42:16 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:46:03 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ typedef struct s_material
 	int				checkers_scale;
 	t_normal_map	*normal_map;
 	void			*shape;
-	int				(*intersect)(t_ray *ray, void *shape, double *t, int *is_surface_hit);
+	int				(*intersect)(t_ray *ray, void *shape, double *t,
+			int *is_surface_hit);
 	t_vec			(*normal)(t_hit_info	*hit);
 	t_vec2			(*texture_coordinates)(t_hit_info	*hit);
 }				t_material;
@@ -207,7 +208,7 @@ typedef struct s_rt {
 typedef struct s_info
 {
 	t_rgb	color;
-	float   smoothness;
+	float	smoothness;
 	float	specular_prob;
 	float	light_intensity;
 	t_vec	center;

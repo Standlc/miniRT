@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:42:36 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:44:47 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:48:48 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <math.h>
 # include <unistd.h>
 # include <string.h>
-# include <time.h>
 # include <errno.h>
 # include "mlx.h"
 # include "libft.h"
@@ -31,22 +30,6 @@
 # define MAX_DEPTH	5
 # define ON_DESTROY	17
 # define NB_MAP		5
-
-enum	e_textures
-{
-	CHECKERS = 1,
-	BUMP_MAP = 2,
-};
-
-enum {
-	AMBIENT = 1,
-	CAMERA = 2,
-	LIGHT = 3,
-	SPHERE = 4,
-	PLAN = 5,
-	CYLINDER = 6,
-	CONE = 7,
-};
 
 # ifdef __APPLE__
 

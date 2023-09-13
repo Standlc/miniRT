@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:32:54 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:34:58 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 19:40:42 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,35 @@
 # define PARSING_H
 
 # include "minirt.h"
+
+# define DOTRT_ERR "Error\nThe scene file must have a .rt extension.\n"
+# define FDNM_ERR "Error\nOne of the normal map file cannot be access.\n"
+
+# define SPACE_POINT 	"must have a point in space"
+# define INTENSITY		"intensity must range from 0 to 1"
+# define SMOOTHNESS		"smoothness must range from 0 to 1"
+# define COLOR			"rgb color components must range from 0 to 255"
+# define DIAMETER_ERR	"diameter must be positive"
+# define SIZE_ERR		"size must be positive"
+# define REFLECTION		"reflection arguments must range from 0 to 1"
+# define TEXTURE		"texture must be either checkers or a bump map"
+# define DIR_VECTOR		"direction vector components must range from -1 to 1"
+# define FOV_ERR		"FOV must range from 0 to 180"
+
+enum {
+	CHECKERS = 1,
+	BUMP_MAP = 2,
+};
+
+enum {
+	AMBIENT = 1,
+	CAMERA = 2,
+	LIGHT = 3,
+	SPHERE = 4,
+	PLAN = 5,
+	CYLINDER = 6,
+	CONE = 7,
+};
 
 //NORMAL_MAP
 
@@ -23,11 +52,12 @@ void	load_normal_maps(t_rt *rt, char **rows);
 
 //PARSING
 
-void	print_syntaxe_error(char *obj_type, char *msg, char *example);
+int		print_syntaxe_error(char *obj_type, char *msg, char *example);
 
 int		check_camera(char **row);
 int		check_ambuant(char **row);
 
+int		cylinder_cone_optionnal(char **row, int i, int type);
 int		check_light(char **row);
 int		check_sphere(char **row);
 int		check_plan(char **row);
@@ -55,7 +85,7 @@ int		vector_normal_information(char *str);
 
 void	error_malloc(void);
 void	error_information(char *str);
-void	error_essential(void);
+void	error_essential(int n);
 void	error_allocation(void);
 
 int		check_argument(int argc, char **argv);
@@ -86,6 +116,11 @@ void	fill_light(char **row, t_info *object);
 void	fill_sphere(char **row, t_info *object);
 void	fill_plan(char **row, t_info *object);
 void	fill_cylinder_cone(char **row, t_info *object);
+
+void	complete_material(t_material *object, t_info *info);
+int		create_objects(int material, t_material *object, t_info *info);
+int		fill_objects(char **row, t_rt *rt, t_info *info);
+void	set_zero(t_info *info);
 
 int		create_objects(int material, t_material *object, t_info *info);
 int		fill_objects(char **row, t_rt *rt, t_info *info);

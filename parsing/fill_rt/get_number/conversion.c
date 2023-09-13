@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:28:52 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:29:13 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:00:39 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,18 @@ double	conversion_double(char *str)
 	sign = 1;
 	integer = 0;
 	decimal = 0;
-	if (str[i] == '-')
-		(sign = -1, i++);
+	sign = (str[i] == '-') * -2 + 1;
+	i += (str[i] == '-');
 	while (str[i] >= '0' && str[i] <= '9')
 		integer = integer * 10 + (str[i++] - '0');
 	if (str[i] != '.')
 		return (integer * sign);
-	(i++, j = i);
+	i++;
+	j = i;
 	while (str[i] >= '0' && str[i] <= '9')
 		decimal = decimal * 10 + (str[i++] - '0');
-	(decimal /= pow(10, (i - j)), integer += decimal);
+	decimal /= pow(10, (i - j));
+	integer += decimal;
 	return (integer * sign);
 }
 

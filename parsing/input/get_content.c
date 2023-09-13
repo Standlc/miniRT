@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:25:06 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:26:32 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 14:50:05 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,14 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	char	*str;
 	size_t	nb;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	nb = ft_strlen(s1) + ft_strlen(s2);
 	str = malloc(sizeof(char) * nb + 1);
 	if (!str)
 		return (NULL);
-	while (s1[i])
-	{
+	while (s1[++i])
 		str[i] = s1[i];
-		i++;
-	}
 	while (s2[j])
 	{
 		str[i] = s2[j];

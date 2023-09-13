@@ -32,7 +32,8 @@ SRCS		=	main.c									close_program.c \
 				parsing/type/check_syntax/other.c parsing/type/check_syntax/range.c \
 				parsing/type/check_syntax/rgb.c parsing/type/check_syntax/null.c\
 				parsing/type/check_syntax/vector.c parsing/type/check_syntax/letter.c\
-				parsing/fill_rt/fill_rt.c \
+				parsing/type/type_cylinder_cone_optionnal.c \
+				parsing/fill_rt/fill_rt.c parsing/fill_rt/fill_rt_utils.c\
 				parsing/fill_rt/materials/fill_data.c	parsing/fill_rt/materials/fill_materials.c \
 				parsing/fill_rt/get_number/conversion.c parsing/fill_rt/get_number/get_value.c\
 

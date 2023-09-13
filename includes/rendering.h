@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:42:21 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:42:21 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:47:42 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ t_rgb		shade_hitpoint(t_world *world,
 void		bump_mapping(t_hit_info *hit);
 t_vec		offset_ray_origin(t_hit_info *hit, float offset);
 
-
 t_vec		normalize(t_vec v);
 double		vec_len(t_vec v);
 t_vec		scale(t_vec v, double coef);
@@ -56,14 +55,12 @@ t_vec		project(t_vec projected, t_vec reference);
 t_vec		system_transform(t_vec *v, t_system *system);
 float		get_angle(t_vec *v1, t_vec *normalized);
 
-
 t_rgb		color_mult(t_rgb color_1, t_rgb color_2);
 t_rgb		color_add(t_rgb color_1, t_rgb color_2);
 t_rgb		color_fade(t_rgb color, float fade);
 int			rgb_to_int(t_rgb rgb);
 t_rgb		lerp_color(t_rgb c1, t_rgb c2, float t);
 t_rgb		ambient_light(t_rgb *color, t_ray *ray, float intensity);
-
 
 int			handle_key_down(int key, t_rt *rt);
 int			handle_key_up(int key, t_rt *rt);
@@ -72,14 +69,12 @@ int			handle_mouse_up(int button, int x, int y, t_rt *rt);
 int			handle_mouse_down(int button, int x, int y, t_rt *rt);
 void		put_pixel(t_rt *data, int x, int y, t_rgb color);
 
-
 double		pow2(double n);
 float		randf(void);
 float		normal_randf(void);
 double		min(double a, double b);
 double		relu(double n);
 t_vec		random_dir(void);
-
 
 t_system	create_system(t_vec up);
 float		checkers(t_vec2 point, float scale);

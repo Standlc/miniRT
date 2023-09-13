@@ -6,27 +6,26 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:18:15 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:18:41 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 19:15:26 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int check_ambuant(char **row)
+int	check_ambuant(char **row)
 {
 	int	i;
 
 	i = 1;
 	while (row[i])
 	{
-		if (i == 1)
-			if (!range_zero_one(row[1]))
-				return (print_syntaxe_error("Ambient light [1]", "intensity must be between 0 and 1", NULL), 0);
-		if (i == 2)
-			if (!rgb_information(row[2]))
-				return (print_syntaxe_error("Ambient light [1]", "rgb color components must range from 0 to 255", "180,200,255"), 0);
-        if (i == 3)
-            return (error_information("Ambient light has only 2 parameters\n"), 0);
+		if (i == 1 && !range_zero_one(row[1]))
+			return (print_syntaxe_error("AMBUANT [1]", INTENSITY, "0.3"));
+		if (i == 2 && !rgb_information(row[2]))
+			return (print_syntaxe_error("AMBUANT [2]", COLOR, "200,0,255"));
+		if (i == 3)
+			return (error_information("Ambient light has only 2 parameters\n"),
+				0);
 		i++;
 	}
 	if (i != 3)
@@ -34,24 +33,21 @@ int check_ambuant(char **row)
 	return (1);
 }
 
-int check_camera(char **row)
+int	check_camera(char **row)
 {
 	int	i;
 
 	i = 1;
 	while (row[i])
 	{
-		if (i == 1)
-			if (!vector_coordinates(row[1]))
-				return (print_syntaxe_error("Camera [1]", "must have a point in space", NULL), 0);
-		if (i == 2)
-			if (!vector_normal_information(row[2]))
-				return (print_syntaxe_error("Camera [2]", "direction vector components must range from 0 to 1", "0,0.5,1"), 0);
-        if (i == 3)
-			if (!fov_information(row[3]))
-				return (print_syntaxe_error("Camera [3]", "field view must range from 0 to 180", NULL), 0);
-        if (i == 4)
-            return (error_information("Camera has only 3 parameters\n"), 0);
+		if (i == 1 && !vector_coordinates(row[1]))
+			return (print_syntaxe_error("CAMERA [1]", SPACE_POINT, "3,4,4"));
+		if (i == 2 && !vector_normal_information(row[2]))
+			return (print_syntaxe_error("CAMERA [2]", DIR_VECTOR, "-0.2,1,0"));
+		if (i == 3 && !fov_information(row[3]))
+			return (print_syntaxe_error("CAMERA [3]", FOV_ERR, "90"));
+		if (i == 4)
+			return (error_information("Camera has only 3 parameters\n"), 0);
 		i++;
 	}
 	if (i != 4)

@@ -6,11 +6,20 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:24:47 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:24:54 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 21:07:37 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void	found_parsing_error(int i, char **rows)
+{
+	ft_putstr_fd("line : ", 2);
+	ft_putnbr_fd(i + 1, 2);
+	write(2, "\n", 1);
+	free_split(rows);
+	exit(1);
+}
 
 int	result_type_syntaxe(char **row, t_parsing *parsing)
 {
@@ -19,7 +28,8 @@ int	result_type_syntaxe(char **row, t_parsing *parsing)
 	if (!ft_strncmp(row[0], "C", 2))
 		return (check_camera(row));
 	if (!ft_strncmp(row[0], "L", 2))
-		return (parsing->number_of_lights++, parsing->number_of_materials++, check_light(row));
+		return (parsing->number_of_lights++, parsing->number_of_materials++,
+			check_light(row));
 	if (!ft_strncmp(row[0], "sp", 3))
 		return (parsing->number_of_materials++, check_sphere(row));
 	if (!ft_strncmp(row[0], "pl", 3))
@@ -42,7 +52,8 @@ int	check_type(char *str, t_parsing *parsing)
 	row = ft_split(str, ' ');
 	if (!row)
 		return (error_malloc(), 0);
-	result = result_type_syntaxe(row, parsing);
+	if (row[0])
+		result = result_type_syntaxe(row, parsing);
 	free_split(row);
 	return (result);
 }
@@ -68,8 +79,10 @@ int	check_essential(char **rows)
 			nb_lights++;
 		i++;
 	}
-	if (nb_ambient != 1 || nb_camera != 1 || nb_lights < 1)
-		return (error_essential(), 0);
+	if (nb_ambient < 1 || nb_camera > 1 || nb_lights < 1)
+		return (error_essential(1), 0);
+	if (nb_ambient > 1 || nb_camera > 1)
+		return (error_essential(2), 0);
 	return (1);
 }
 
@@ -83,7 +96,7 @@ void	check_rows(char **rows, t_parsing *parsing)
 	while (rows[i])
 	{
 		if (!check_type(rows[i], parsing))
-			(free_split(rows), exit(1));
+			found_parsing_error(i, rows);
 		i++;
 	}
 }

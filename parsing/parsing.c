@@ -6,28 +6,11 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:16:07 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:17:49 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 18:08:14 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-void	print_syntaxe_error(char *obj_type, char *msg, char *example)
-{
-	ft_putstr_fd("Error\n", 2);
-	if (obj_type)
-	{
-		ft_putstr_fd(obj_type, 2);
-		write(2, ": ", 2);
-	}
-	ft_putstr_fd(msg, 2);
-	if (example)
-	{
-		write(2, "\nexample: ", 10);
-		ft_putstr_fd(example, 2);
-	}
-	write(2, "\n", 1);
-}
 
 void	parsing(int argc, char **argv, t_rt *rt)
 {

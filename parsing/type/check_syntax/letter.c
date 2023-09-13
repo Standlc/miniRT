@@ -6,7 +6,7 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:19:39 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/10 18:19:43 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/13 22:30:45 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	number_texture_checker(char *str)
 	if (len != 1 && len != 2)
 		return (0);
 	if (!(str[0] >= '1' && str[0] <= '9'))
+		return (0);
+	if (len == 2 && !(str[1] >= '0' && str[1] <= '9'))
 		return (0);
 	number = ft_atoi(str);
 	if (!(number >= 1 && number <= 20))
