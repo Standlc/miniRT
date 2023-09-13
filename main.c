@@ -53,6 +53,9 @@ int	main(int argc, char **argv)
 	rt.pixel_buff = malloc(sizeof(t_rgb) * HEIGHT * WIDTH);
 	if (!rt.pixel_buff)
 		return (error_allocation(), free_elements(&rt), 1);
+
+	read_normal_map(&rt.world.stars, "stars");
+
 	set_cam_system(&rt.world.cam);
 	reset_rendering(&rt);
 	set_hooks(&rt);

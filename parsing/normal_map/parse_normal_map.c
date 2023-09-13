@@ -31,7 +31,7 @@ int	get_rgb_pixel_value(int fd, t_vec *map)
 		map[i].x = ft_atoi(rgb[0]) / 255.0 * 2 - 1;
 		map[i].y = ft_atoi(rgb[1]) / 255.0 * 2 - 1;
 		map[i].z = ft_atoi(rgb[2]) / 255.0 * 2 - 1;
-		map[i] = normalize(map[i]);
+		// map[i] = normalize(map[i]);
 		free(str);
 		free_split(rgb);
 		str = get_next_line(fd);

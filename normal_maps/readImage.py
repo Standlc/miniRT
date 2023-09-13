@@ -1,6 +1,6 @@
 from PIL import Image
 
-im = Image.open('cliff.jpg')
+im = Image.open('stars3.jpg')
 pix = im.load()
 
 
