@@ -20,15 +20,18 @@ int	check_ambuant(char **row)
 	while (row[i])
 	{
 		if (i == 1 && !range_zero_one(row[1]))
-			return (print_syntaxe_error("AMBUANT [1]", INTENSITY, "0.3"));
+			return (print_syntaxe_error("Ambient [1]", INTENSITY, "0.3"));
 		if (i == 2 && !rgb_information(row[2]))
-			return (print_syntaxe_error("AMBUANT [2]", COLOR, "200,0,255"));
+			return (print_syntaxe_error("Ambient [2]", COLOR, "200,0,255"));
 		if (i == 3)
-			return (error_information("Ambient light has only 2 parameters\n"),
+			if (!stars_option(row[3]))
+				return (print_syntaxe_error("Ambient [3]", ST_ERR, "st"), 0);
+		if (i == 4)
+			return (error_information("Ambient light has only 3 parameters\n"),
 				0);
 		i++;
 	}
-	if (i != 3)
+	if (i < 3)
 		return (error_information("Ambient light must have 2 parameters\n"), 0);
 	return (1);
 }

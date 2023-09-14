@@ -16,6 +16,10 @@ void	fill_ambient(char **row, t_rt *rt)
 {
 	rt->world.ambient = conversion_double(row[1]);
 	get_value_rgb(row[2], &(rt->world.ambient_light));
+	if (row[3] && !ft_strncmp(row[3], "st", 3))
+		rt->world.display_stars = 1;
+	else
+		rt->world.display_stars = 0;
 }
 
 void	fill_camera(char **row, t_rt *rt)

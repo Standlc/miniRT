@@ -28,6 +28,7 @@
 # define TEXTURE		"texture must be either checkers or a bump map"
 # define DIR_VECTOR		"direction vector components must range from -1 to 1"
 # define FOV_ERR		"FOV must range from 0 to 180"
+# define ST_ERR			"stars option can't be implemented"
 
 enum {
 	CHECKERS = 1,
@@ -47,7 +48,7 @@ enum {
 //NORMAL_MAP
 
 int		*fill_good_maps(char **rows);
-int		read_normal_map(t_normal_map *normal_map, char *file_name);
+int		read_normal_map(t_texture_map *normal_map, char *file_name);
 void	load_normal_maps(t_rt *rt, char **rows);
 
 //PARSING
@@ -72,6 +73,7 @@ int		rgb_information(char *str);
 int		range_zero_one(char *str);
 int		fov_information(char *str);
 
+int		stars_option(char *str);
 int		letters_option(char *str);
 
 int		check_double(char *str);
@@ -128,8 +130,8 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing);
 
 //BRAIN
 
-void	free_maps(t_normal_map *normal_maps, int *good_maps);
-void	set_maps(t_normal_map *normal_maps);
+void	free_maps(t_texture_map *normal_maps, int *good_maps);
+void	set_maps(t_texture_map *normal_maps);
 void	free_split(char **split);
 void	parsing(int argc, char **argv, t_rt *rt);
 

@@ -24,7 +24,7 @@ int	get_rgb_pixel_value(int fd, t_vec *map)
 	i = -1;
 	while (str != NULL && *str != '\n' && *str != '\0')
 	{
-		loader(50001, 0);
+		loader(50000, 0);
 		rgb = ft_split(str, ' ');
 		if (!rgb)
 			return (error_allocation(), 0);
@@ -59,7 +59,7 @@ int	get_width_height(int fd, int *width, int *height)
 	return (1);
 }
 
-int	read_normal_map(t_normal_map *normal_map, char *file_name)
+int	read_normal_map(t_texture_map *normal_map, char *file_name)
 {
 	int		fd;
 	char	*name_path;
@@ -108,7 +108,7 @@ void	load_normal_maps(t_rt *rt, char **rows)
 	int	*good_maps;
 	int	i;
 
-	rt->normal_maps = malloc(sizeof(t_normal_map) * NB_MAP);
+	rt->normal_maps = malloc(sizeof(t_texture_map) * NB_MAP);
 	if (!rt->normal_maps)
 		(free_split(rows), error_allocation(), exit(1));
 	rt->nb_normal_maps = NB_MAP;
