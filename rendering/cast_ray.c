@@ -81,7 +81,7 @@ t_rgb	cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth)
 		hit.is_specular = is_specular_ray;
 		return (shade_hitpoint(world, &hit, ray, depth));
 	}
-	if (deterministic_stars(ray->dir))
+	if (world->display_stars && deterministic_stars(ray->dir))
 		return ((t_rgb){1.f, 1.f, 1.f});
 	if (world->ambient)
 		return (ambient_light(&(world->ambient_light), ray, world->ambient));

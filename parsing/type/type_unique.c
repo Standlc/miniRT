@@ -24,12 +24,15 @@ int check_ambuant(char **row)
 				return (print_syntaxe_error("Ambient light [1]", "intensity must be between 0 and 1", NULL), 0);
 		if (i == 2)
 			if (!rgb_information(row[2]))
-				return (print_syntaxe_error("Ambient light [1]", "rgb color components must range from 0 to 255", "180,200,255"), 0);
-        if (i == 3)
-            return (error_information("Ambient light has only 2 parameters\n"), 0);
+				return (print_syntaxe_error("Ambient light [2]", "rgb color components must range from 0 to 255", "180,200,255"), 0);
+		if (i == 3)
+			if (!stars_option(row[3]))
+				return (print_syntaxe_error("Ambient light [3]", "stars option can't be implemented", "st"), 0);
+        if (i == 4)
+            return (error_information("Ambient light has only 3 parameters\n"), 0);
 		i++;
 	}
-	if (i != 3)
+	if (i < 3)
 		return (error_information("Ambient light must have 2 parameters\n"), 0);
 	return (1);
 }

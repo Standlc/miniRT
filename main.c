@@ -24,6 +24,7 @@ void	set_null(t_rt *rt)
 	rt->normal_maps = NULL;
 	rt->mouse.is_down = 0;
 	rt->is_zoom_key_down = 0;
+	rt->world.display_stars = 0;
 }
 
 int	init_mlx_window(t_rt *rt)

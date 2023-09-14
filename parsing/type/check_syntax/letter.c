@@ -12,6 +12,13 @@
 
 #include "minirt.h"
 
+int	stars_option(char *str)
+{
+	if (!ft_strncmp(str, "st", 3))
+		return (1);
+	return (0);
+}
+
 int	number_texture_bump_map(char *str)
 {
 	if (ft_strlen(str) != 1)

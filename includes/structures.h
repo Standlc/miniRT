@@ -189,6 +189,7 @@ typedef struct s_world
 	int			nb_lights;
 	float		ambient;
 	t_rgb		ambient_light;
+	int			display_stars;
 }				t_world;
 
 typedef struct s_rt {

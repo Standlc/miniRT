@@ -42,6 +42,7 @@ int		rgb_information(char *str);
 int		range_zero_one(char *str);
 int		fov_information(char *str);
 
+int		stars_option(char *str);
 int		letters_option(char *str);
 
 int		check_double(char *str);
