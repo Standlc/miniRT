@@ -15,6 +15,8 @@
 
 # include "minirt.h"
 
+# define	LIGHT_BOOSTER 9
+
 void		set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
 int			intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
 void		print_vector(t_vec v);
