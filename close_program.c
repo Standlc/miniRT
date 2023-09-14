@@ -6,15 +6,24 @@
 /*   By: svan-de- <svan-de-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 12:46:01 by svan-de-          #+#    #+#             */
-/*   Updated: 2023/09/11 12:46:10 by svan-de-         ###   ########.fr       */
+/*   Updated: 2023/09/14 00:01:31 by svan-de-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	free_object(t_material *object)
+void	free_normal_maps(t_rt *rt)
 {
-	free(object->shape);
+	int	i;
+
+	i = 0;
+	while (i < rt->nb_normal_maps)
+	{
+		if (rt->normal_maps && rt->normal_maps[i].map)
+			(free(rt->normal_maps[i].map), rt->normal_maps[i].map = NULL);
+		i++;
+	}
+	free(rt->normal_maps);
 }
 
 void	free_elements(t_rt *rt)
@@ -36,28 +45,15 @@ void	free_elements(t_rt *rt)
 		mlx_destroy_window(rt->mlx, rt->win);
 	if (rt->mlx)
 	{
-		// mlx_destroy_display(rt->mlx);
+		//mlx_destroy_display(rt->mlx);
 		free(rt->mlx);
 	}
-}
-
-void	free_normal_maps(t_rt *rt)
-{
-	int	i;
-
-	i = 0;
-	while (i < rt->nb_normal_maps)
-	{
-		free(rt->normal_maps[i].map);
-		i++;
-	}
-	free(rt->normal_maps);
+	free_normal_maps(rt);
 }
 
 int	close_program(t_rt *rt)
 {
 	free_elements(rt);
-	free_normal_maps(rt);
 	printf("\n");
 	exit(0);
 }

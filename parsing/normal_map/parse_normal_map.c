@@ -65,6 +65,8 @@ int	read_normal_map(t_normal_map *normal_map, char *file_name)
 	char	*name_path;
 
 	name_path = ft_strjoin("normal_maps/", file_name);
+	if (!name_path)
+		return (error_allocation(), 1);
 	fd = open(name_path, O_RDONLY);
 	free(name_path);
 	if (fd == -1)
@@ -80,7 +82,7 @@ int	read_normal_map(t_normal_map *normal_map, char *file_name)
 	if (!normal_map->map)
 		return (error_allocation(), close(fd), 1);
 	if (!get_rgb_pixel_value(fd, normal_map->map))
-		return (close(fd), 1);
+		return (free(normal_map->map), close(fd), 1);
 	close(fd);
 	printf("\x1b[32m\033[2K\r%s map is loaded\n", file_name);
 	return (0);

@@ -16,6 +16,7 @@ void	free_fill_rt(t_rt *rt, char **rows)
 {
 	free(rt->world.objects);
 	free(rt->world.lights);
+	free_maps(rt->normal_maps, NULL);
 	free_split(rows);
 	exit(1);
 }
@@ -56,7 +57,7 @@ void	assign_info_at_the_world(char **rows, t_rt *rt)
 	{
 		row = ft_split(rows[i], ' ');
 		if (!row)
-			(free_split(rows), free(rt->world.objects), exit(1));
+			free_fill_rt(rt, rows);
 		set_zero(&info);
 		material = fill_objects(row, rt, &info);
 		if (material != AMBIENT && material != CAMERA)

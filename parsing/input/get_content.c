@@ -100,7 +100,8 @@ char	**get_content(int fd)
 
 	str = get_string(fd);
 	if (!str)
-		(error_malloc(), exit(1));
+		(error_malloc(), close(fd), exit(1));
+	close(fd);
 	rows = ft_split(str, '\n');
 	if (!rows)
 		(free(str), error_malloc(), exit(1));
