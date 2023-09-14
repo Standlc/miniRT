@@ -87,7 +87,7 @@ typedef struct s_normal_map
 	t_vec	*map;
 	int		height;
 	int		width;
-}				t_normal_map;
+}				t_texture_map;
 
 typedef struct s_material
 {
@@ -98,7 +98,7 @@ typedef struct s_material
 	float			hitpoint_offset;
 	int				texture;
 	int				checkers_scale;
-	t_normal_map	*normal_map;
+	t_texture_map	*normal_map;
 	void			*shape;
 	int				(*intersect)(t_ray *ray, void *shape, double *t, int *is_surface_hit);
 	t_vec			(*normal)(t_hit_info	*hit);
@@ -189,7 +189,6 @@ typedef struct s_world
 	int			nb_lights;
 	float		ambient;
 	t_rgb		ambient_light;
-	t_normal_map	stars;
 }				t_world;
 
 typedef struct s_rt {
@@ -201,7 +200,7 @@ typedef struct s_rt {
 	int				rendering_frame;
 	t_mouse			mouse;
 	int				is_zoom_key_down;
-	t_normal_map	*normal_maps;
+	t_texture_map	*normal_maps;
 	int				nb_normal_maps;
 }				t_rt;
 

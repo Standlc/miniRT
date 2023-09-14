@@ -36,7 +36,7 @@ void	bump_mapping(t_hit_info *hit)
 {
 	t_vec2			local_point;
 	t_system		point_system;
-	t_normal_map	*map;
+	t_texture_map	*map;
 	int				x;
 	int				y;
 

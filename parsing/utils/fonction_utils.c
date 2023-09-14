@@ -31,7 +31,7 @@ void	free_split(char **split)
 	}
 }
 
-void	set_maps(t_normal_map *normal_maps)
+void	set_maps(t_texture_map *normal_maps)
 {
 	int	i;
 
@@ -43,7 +43,7 @@ void	set_maps(t_normal_map *normal_maps)
 	}
 }
 
-void	free_maps(t_normal_map *normal_maps, int *good_maps)
+void	free_maps(t_texture_map *normal_maps, int *good_maps)
 {
 	int	i;
 

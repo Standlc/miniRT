@@ -18,7 +18,7 @@
 //NORMAL_MAP
 
 int		*fill_good_maps(char **rows);
-int		read_normal_map(t_normal_map *normal_map, char *file_name);
+int		read_normal_map(t_texture_map *normal_map, char *file_name);
 void	load_normal_maps(t_rt *rt, char **rows);
 
 //PARSING
@@ -93,8 +93,8 @@ void	fill_rt(char **rows, t_rt *rt, t_parsing parsing);
 
 //BRAIN
 
-void	free_maps(t_normal_map *normal_maps, int *good_maps);
-void	set_maps(t_normal_map *normal_maps);
+void	free_maps(t_texture_map *normal_maps, int *good_maps);
+void	set_maps(t_texture_map *normal_maps);
 void	free_split(char **split);
 void	parsing(int argc, char **argv, t_rt *rt);
 

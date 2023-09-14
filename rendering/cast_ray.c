@@ -57,61 +57,14 @@ int	intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit)
 	return (hit->t != INFINITY);
 }
 
-// int	get_rgb_pixel_value(int fd, t_vec *map)
-// {
-// 	char	*str;
-// 	char	**rgb;
-// 	int		i;
-
-// 	str = get_next_line(fd);
-// 	if (!str)
-// 		return (error_malloc(), 0);
-// 	i = 0;
-// 	while (str != NULL && *str != '\n' && *str != '\0')
-// 	{
-// 		loader(50001, 0);
-// 		rgb = ft_split(str, ' ');
-// 		if (!rgb)
-// 			return (error_allocation(), 0);
-// 		map[i].x = ft_atoi(rgb[0]) / 255.0;
-// 		map[i].y = ft_atoi(rgb[1]) / 255.0;
-// 		map[i].z = ft_atoi(rgb[2]) / 255.0;
-// 		free(str);
-// 		free_split(rgb);
-// 		str = get_next_line(fd);
-// 		i++;
-// 	}
-// 	loader(0, 1);
-// 	if (str != NULL && (*str == '\n' || *str == '\0'))
-// 		free(str);
-// 	return (1);
-// }
-
-t_rgb	stars_mapping(t_normal_map *stars, t_vec2 local_point)
+int	deterministic_stars(t_vec dir)
 {
-	int		x;
-	int		y;
-	t_vec	map_vector;
-	t_rgb	color;
+	int	sum;
 
-	x = (int)roundf(fabsf(local_point.x)
-		* ((stars->width * 10) - 1)) % stars->width;
-	y = (int)roundf(fabsf(local_point.y)
-		* ((stars->height * 10) - 1)) % stars->height;
-	map_vector = stars->map[y * stars->width + x];
-	color.r = (map_vector.x + 1) / 2;
-	color.g = (map_vector.y + 1) / 2;
-	color.b = (map_vector.z + 1) / 2;
-	return (color);
-}
-
-t_rgb	display_stars(t_normal_map *stars, t_vec *ray_dir)
-{
-	t_vec2	local_point;
-
-	local_point.x = atan2f(ray_dir->z, ray_dir->x) / M_PI + 1;
-	local_point.y = acosf(ray_dir->y) / M_PI;
-	return (stars_mapping(stars, local_point));
+	sum = roundf(dir.x * 449) * roundf(dir.y * 756) + roundf(dir.z * 633);
+	if (sum % 2000 == 0)
+		return (1);
+	return (0);
 }
 
 t_rgb	cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth)
@@ -128,10 +81,8 @@ t_rgb	cast_ray(t_world *world, t_ray *ray, int is_specular_ray, int depth)
 		hit.is_specular = is_specular_ray;
 		return (shade_hitpoint(world, &hit, ray, depth));
 	}
-
-	t_rgb stars_color = display_stars(&(world->stars), &(ray->dir));
-	if (stars_color.r >= 1 || stars_color.g >= 1 || stars_color.b >= 1)
-		return (stars_color);
+	if (deterministic_stars(ray->dir))
+		return ((t_rgb){1.f, 1.f, 1.f});
 	if (world->ambient)
 		return (ambient_light(&(world->ambient_light), ray, world->ambient));
 	return ((t_rgb){0.f, 0.f, 0.f});
