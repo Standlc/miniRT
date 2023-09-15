@@ -15,6 +15,29 @@
 
 # include "minirt.h"
 
+enum e_events {
+	LEFT_CLICK = 1,
+	CONTROL = 65513,
+	ESC = XK_Escape,
+	PRINT = 112,
+};
+
+enum e_event_hooks {
+	KEY_PRESS = KeyPress,
+	KEY_UP = KeyRelease,
+	MOUSE_DOWN = ButtonPress,
+	MOUSE_UP = ButtonRelease,
+	MOUSE_MOVE = MotionNotify
+};
+
+enum e_event_mask {
+	KEY_PRESS_MASK = KeyPressMask,
+	KEY_UP_MASK = KeyReleaseMask,
+	MOUSE_DOWN_MASK = ButtonPressMask,
+	MOUSE_UP_MASK = ButtonReleaseMask,
+	MOUSE_MOVE_MASK = PointerMotionMask
+};
+
 typedef struct s_dls {
 	double	light_distance;
 	float	light_intensity;
