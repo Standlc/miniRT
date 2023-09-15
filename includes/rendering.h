@@ -15,14 +15,7 @@
 
 # include "minirt.h"
 
-# define WIDTH		1000
-# define HEIGHT		550
-# define RPP		1024
-# define CAM_FUZZ	1.0f
-# define MAX_DEPTH	5
-# define ON_DESTROY	17
-# define NB_MAP		5
-# define LIGHT_BOOSTER 9
+# define	LIGHT_BOOSTER 9
 
 void		set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
 int			intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
