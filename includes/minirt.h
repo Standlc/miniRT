@@ -23,9 +23,9 @@
 # include "libft.h"
 # include "get_next_line.h"
 
-# define WIDTH		1000
-# define HEIGHT		550
-# define RPP			500
+# define WIDTH		1280
+# define HEIGHT		720
+# define RPP		1024
 # define CAM_FUZZ	1.0f
 # define MAX_DEPTH	5
 # define ON_DESTROY	17

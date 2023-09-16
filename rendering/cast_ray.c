@@ -62,7 +62,7 @@ int	deterministic_stars(t_vec dir)
 	int	sum;
 
 	sum = roundf(dir.x * 449) * roundf(dir.y * 756) + roundf(dir.z * 633);
-	if (sum % 2000 == 0)
+	if (sum % 1500 == 0)
 		return (1);
 	return (0);
 }
