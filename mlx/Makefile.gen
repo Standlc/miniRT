@@ -11,6 +11,7 @@ INC=/usr/include
 
 ## Please use configure script
 
+MAKEFLAGS += -s
 
 
 UNAME = $(shell uname)
@@ -45,7 +46,7 @@ $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
 $(NAME)	: $(OBJ)
-	ar -r $(NAME) $(OBJ)
+	ar -r $(NAME) $(OBJ) 2> /dev/null
 	ranlib $(NAME)
 	cp $(NAME) $(NAME_UNAME)
 

@@ -47,7 +47,7 @@ LIBFT		=	Libft
 
 CC			=	cc
 
-CFLAGS		=	-Wall -Wextra #Werror
+CFLAGS		=	-Wall -Wextra -Werror
 
 INC_LIB		=	-ILibft/includes/libc -ILibft/includes/gnl -Iincludes
 
@@ -67,28 +67,37 @@ RM			=	rm -f
 
 MAKEFLAGS	+=	--no-print-directory
 
-all : libs $(NAME)
+all : $(NAME) | libs
 
-linux : libs-l ${NAME_L}
+linux : ${NAME_L} | libs-l
 
 binaries/%.o : %.c Makefile includes/minirt.h | binaries
 		@mkdir -p $(@D)
-		$(CC) $(CFLAGS) $(INCLUDES) $(INCLUDES_L) -I./includes/ -c $< -o $@
+		@$(CC) $(CFLAGS) $(INCLUDES) $(INCLUDES_L) -I./includes/ -c $< -o $@
 
-${NAME_L} : ${OBJS}
-	${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
+${NAME_L} : ${OBJS} | libs-l
+	@${CC} ${OBJS} -LLibft -lft -Lmlx -lmlx -lX11 -lXext -lm -o ${NAME_L}
+	@echo "\033[32mminiRT compiled"
 
-$(NAME) : $(OBJS)
-		$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
+$(NAME) : $(OBJS) | libs
+	@$(CC) $(OBJS) -LLibft -lft -L$(MINILIBX) $(XFLAGS) $(MATH_LIB) -o $(NAME)
+	@echo "\033[32mminiRT compiled"
 
 
-libs:
-		@$(MAKE) -C $(MINILIBX)
-		@$(MAKE) -C Libft
+libs: minilibx_macos/libmlx.a Libft/libft.a
 
-libs-l:
-		@$(MAKE) -C $(MINILIBX_L)
-		@$(MAKE) -C Libft
+libs-l: mlx/libmlx.a Libft/libft.a
+
+minilibx_macos/libmlx.a:
+	@$(MAKE) -C $(MINILIBX)
+	@echo "\033[32mmililibx compiled"
+
+mlx/libmlx.a:
+	@$(MAKE) -C $(MINILIBX_L)
+	@echo "\033[32mmililibx compiled"
+
+Libft/libft.a:
+	@$(MAKE) -C Libft
 
 binaries:
 		@mkdir -p binaries
@@ -99,12 +108,16 @@ clean:
 		@$(RM) -r binaries/
 		@$(MAKE) clean -C $(MINILIBX)
 		@$(MAKE) clean -C $(MINILIBX_L)
+		@echo "\033[36mminilibx is clean"
 		@$(MAKE) clean -C Libft
+		@echo "\033[36mLibft is clean"
+		@echo "\033[36mminiRT is clean"
 
 fclean:	clean
 		@$(RM) $(NAME)
 		@$(RM) $(NAME_L)
 		@$(MAKE) fclean -C Libft
+		@echo "\033[36mminiRT file is delete"
 
 re:		fclean all
 

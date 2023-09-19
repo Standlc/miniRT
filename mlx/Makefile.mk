@@ -10,6 +10,7 @@
 
 ## Please use configure script
 
+MAKEFLAGS += -s
 
 INC	=%%%%
 
@@ -45,7 +46,7 @@ $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
 $(NAME)	: $(OBJ)
-	ar -r $(NAME) $(OBJ)
+	ar -r $(NAME) $(OBJ) 2> /dev/null
 	ranlib $(NAME)
 	cp $(NAME) $(NAME_UNAME)
 

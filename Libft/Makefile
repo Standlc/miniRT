@@ -44,16 +44,17 @@ RM 	= rm -f
 CFLAGS = -Wall -Wextra -Werror
 
 binaries/libc/%.o: srcs/libc/%.c ${HEADERS_LIBC} | binaries/libc
-	${CC} ${CFLAGS} -I./includes/libc/ -c $< -o $@
+	@${CC} ${CFLAGS} -I./includes/libc/ -c $< -o $@
 
 binaries/gnl/%.o: srcs/gnl/%.c ${HEADERS_GNL} | binaries/gnl
-	${CC} ${CFLAGS} -I./includes/gnl/ -c $< -o $@
+	@${CC} ${CFLAGS} -I./includes/gnl/ -c $< -o $@
 
 binaries/ptf/%.o: srcs/ptf/%.c ${HEADERS_PTF} | binaries/ptf
-	${CC} ${CFLAGS} -I./includes/ptf/ -c $< -o $@
+	@${CC} ${CFLAGS} -I./includes/ptf/ -c $< -o $@
 
 ${NAME}: ${OBJS}
-	${LIB} ${NAME} ${OBJS}
+	@${LIB} ${NAME} ${OBJS}
+	@echo "\033[32mLibft compiled"
 
 all: ${NAME}
 
@@ -67,10 +68,11 @@ binaries/libc :
 	@mkdir -p binaries/libc
 
 clean:
-	${RM} -r binaries
+	@${RM} -r binaries
 
 fclean: clean
-	 ${RM} ${NAME}
+	@${RM} ${NAME}
+	@echo "\033[36mLibft library is delete"
 
 re: fclean all
 
