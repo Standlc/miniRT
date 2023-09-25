@@ -89,7 +89,7 @@ libs: minilibx_macos/libmlx.a Libft/libft.a
 libs-l: mlx/libmlx.a Libft/libft.a
 
 minilibx_macos/libmlx.a:
-	@$(MAKE) -C $(MINILIBX)
+	@$(MAKE) -C $(MINILIBX) 2> /dev/null
 	@echo "\033[32mmililibx compiled"
 
 mlx/libmlx.a:
