@@ -1,5 +1,5 @@
 # miniRT
-Ray tracing project for school 42.
+Single thread ray/path tracer in C.
 # Compilation
 ### For Macos:
 ### `make`
