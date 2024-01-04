@@ -17,6 +17,8 @@
 
 # define	LIGHT_BOOSTER 9
 
+t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame);
+
 void		set_cam_ray(t_world *world, t_ray *cam_ray, int x, int y);
 int			intersect_objects(t_world *world, t_ray *ray, t_hit_info *hit);
 void		print_vector(t_vec v);

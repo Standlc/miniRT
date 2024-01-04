@@ -60,25 +60,41 @@ t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame)
 int	render(t_rt *rt)
 {
 	int	curr_frame;
-	int	y;
-	int	x;
 
-	curr_frame = (rt->rendering_frame - 1) / INTERVAL + 1;
-	if (curr_frame > RPP)
-		return (0);
-	y = 0;
-	while (y < HEIGHT)
+	pthread_mutex_lock(&(rt->exit_mutex));
+	int exit = rt->exit;
+	pthread_mutex_unlock(&(rt->exit_mutex));
+	if (exit)
 	{
-		x = (rt->rendering_frame - 1) % INTERVAL;
-		while (x < WIDTH)
-		{
-			put_pixel(rt, x, y, get_pixel_color(rt, x, y, curr_frame));
-			x += INTERVAL;
-		}
-		y += 1;
+		return (0);
 	}
-	loading_bar(RPP, curr_frame);
+
+	pthread_mutex_lock(&(rt->start_mutex));
+
+	int i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_mutex_lock(&(rt->threads[i].thread_mutex));
+		pthread_mutex_unlock(&(rt->threads[i].thread_mutex));
+		i++;
+	}
+
+	pthread_mutex_lock(&(rt->rendering_frame_mutex));
+	curr_frame = rt->rendering_frame;
 	rt->rendering_frame += 1;
+	pthread_mutex_unlock(&(rt->rendering_frame_mutex));
+
+	pthread_mutex_unlock(&(rt->start_mutex));
+
+	loading_bar(RPP, curr_frame);
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img.p, 0, 0);
+
+	i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_mutex_lock(&(rt->threads[i].end_mutex));
+		pthread_mutex_unlock(&(rt->threads[i].end_mutex));
+		i++;
+	}
 	return (0);
 }

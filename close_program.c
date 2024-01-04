@@ -53,6 +53,16 @@ void	free_elements(t_rt *rt)
 
 int	close_program(t_rt *rt)
 {
+	pthread_mutex_lock(&(rt->exit_mutex));
+	rt->exit = 1;
+	pthread_mutex_unlock(&(rt->exit_mutex));
+	int	i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_join(rt->threads[i].thread, NULL);
+		i++;
+	}
+
 	free_elements(rt);
 	printf("\n");
 	exit(0);

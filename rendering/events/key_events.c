@@ -33,9 +33,9 @@ int	handle_key_up(int key, t_rt *rt)
 
 int	handle_key_down(int key, t_rt *rt)
 {
-	if (key == CONTROL && !rt->mouse.is_down)
-		rt->is_zoom_key_down = 1;
-	else if (key == ESC)
+	// if (key == CONTROL && !rt->mouse.is_down)
+	// 	rt->is_zoom_key_down = 1;
+	if (key == ESC)
 		close_program(rt);
 	else if (key == PRINT)
 		print_cam_setup(&(rt->world.cam));

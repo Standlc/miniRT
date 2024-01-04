@@ -16,9 +16,9 @@ int	set_hooks(t_rt *rt)
 {
 	mlx_hook(rt->win, ON_DESTROY, 0, close_program, rt);
 	mlx_hook(rt->win, KEY_PRESS, KEY_PRESS_MASK, handle_key_down, rt);
-	mlx_hook(rt->win, KEY_UP, KEY_UP_MASK, handle_key_up, rt);
-	mlx_hook(rt->win, MOUSE_DOWN, MOUSE_DOWN_MASK, handle_mouse_down, rt);
-	mlx_hook(rt->win, MOUSE_UP, MOUSE_UP_MASK, handle_mouse_up, rt);
-	mlx_hook(rt->win, MOUSE_MOVE, MOUSE_MOVE_MASK, handle_mouse_move, rt);
+	// mlx_hook(rt->win, KEY_UP, KEY_UP_MASK, handle_key_up, rt);
+	// mlx_hook(rt->win, MOUSE_DOWN, MOUSE_DOWN_MASK, handle_mouse_down, rt);
+	// mlx_hook(rt->win, MOUSE_UP, MOUSE_UP_MASK, handle_mouse_up, rt);
+	// mlx_hook(rt->win, MOUSE_MOVE, MOUSE_MOVE_MASK, handle_mouse_move, rt);
 	return (0);
 }

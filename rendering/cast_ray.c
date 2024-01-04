@@ -14,9 +14,23 @@
 
 void	reset_rendering(t_rt *rt)
 {
+	pthread_mutex_lock(&(rt->start_mutex));
+	int i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_mutex_lock(&(rt->threads[i].thread_mutex));
+		pthread_mutex_unlock(&(rt->threads[i].thread_mutex));
+		i++;
+	}
+
+	pthread_mutex_lock(&(rt->rendering_frame_mutex));
 	rt->rendering_frame = 1;
+	pthread_mutex_unlock(&(rt->rendering_frame_mutex));
+
 	ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
+
+	pthread_mutex_unlock(&(rt->start_mutex));
 }
 
 double	get_closest_intersection(double t1, double t2)

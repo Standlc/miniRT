@@ -22,12 +22,14 @@
 # include "mlx.h"
 # include "libft.h"
 # include "get_next_line.h"
+# include <pthread.h>
 
+# define N_THREADS	8
 # define WIDTH		1280
 # define HEIGHT		720
 # define RPP		1024
 # define CAM_FUZZ	1.0f
-# define MAX_DEPTH	5
+# define MAX_DEPTH	10
 # define ON_DESTROY	17
 # define NB_MAP		5
 
@@ -91,7 +93,6 @@ enum e_event_mask {
 # include "parsing.h"
 
 int		close_program(t_rt *data);
-void	free_object(t_material *object);
 void	free_elements(t_rt *rt);
 
 #endif

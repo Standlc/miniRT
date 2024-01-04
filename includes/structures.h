@@ -193,17 +193,37 @@ typedef struct s_world
 	int			display_stars;
 }				t_world;
 
+typedef struct s_rt	t_rt;
+
+typedef struct s_thread_data
+{
+	int				id;
+	pthread_t		thread;
+	pthread_mutex_t	thread_mutex;
+	pthread_mutex_t	end_mutex;
+	t_rt			*rt;
+	int				is_frame_rendered;
+}				t_thread_data;
+
 typedef struct s_rt {
 	void			*mlx;
 	void			*win;
 	t_img			img;
 	t_world			world;
 	t_rgb			*pixel_buff;
+
 	int				rendering_frame;
+	pthread_mutex_t	rendering_frame_mutex;
+	pthread_mutex_t	start_mutex;
+
 	t_mouse			mouse;
 	int				is_zoom_key_down;
 	t_texture_map	*normal_maps;
 	int				nb_normal_maps;
+
+	t_thread_data	threads[N_THREADS];
+	int				exit;
+	pthread_mutex_t	exit_mutex;
 }				t_rt;
 
 typedef struct s_info
