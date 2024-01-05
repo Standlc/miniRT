@@ -23,7 +23,7 @@ Run miniRT with the desired scene file:
 
 ## Mouse & keyboard
 ### Move
-Click and hold to move in the scene. The further away you click from the center of the screen, the farther the pivot point of the camera will be.
+Click and drag to move in the scene. The further away you click from the center of the screen, the farther the pivot point of the camera will be.
 ### Zoom
 Hold the ```command ⌘``` key then click and drag to zoom in or out.
 
