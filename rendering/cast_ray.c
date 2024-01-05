@@ -15,6 +15,7 @@
 void	reset_rendering(t_rt *rt)
 {
 	rt->rendering_frame = 1;
+	// rt->rendering_step_size = 36;
 	ft_memset(rt->pixel_buff, 0, HEIGHT * WIDTH * sizeof(t_rgb));
 	ft_memset(rt->img.img_addr, 0, HEIGHT * WIDTH * (rt->img.bpp / 8));
 }

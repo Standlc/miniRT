@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-#define INTERVAL 5
+#define INTERVAL 18
 
 void	put_pixel(t_rt *rt, int x, int y, t_rgb color)
 {
@@ -57,6 +57,16 @@ t_rgb	get_pixel_color(t_rt *rt, int x, int y, int curr_frame)
 	return (color_fade(rt->pixel_buff[y * WIDTH + x], 1.f / curr_frame));
 }
 
+void fill_unrendered_screen_pixels(t_rt *rt, int x, int y, t_rgb *pixel_color)
+{
+	int i = 1;
+	while (i < INTERVAL - (rt->rendering_frame - 1) % INTERVAL && x + i < WIDTH)
+	{
+		put_pixel(rt, x + i, y, *pixel_color);
+		i++;
+	}
+}
+
 int	render(t_rt *rt)
 {
 	int	curr_frame;
@@ -72,7 +82,10 @@ int	render(t_rt *rt)
 		x = (rt->rendering_frame - 1) % INTERVAL;
 		while (x < WIDTH)
 		{
-			put_pixel(rt, x, y, get_pixel_color(rt, x, y, curr_frame));
+			t_rgb pixel_color = get_pixel_color(rt, x, y, curr_frame);
+			put_pixel(rt, x, y, pixel_color);
+			if (curr_frame == 1)
+				fill_unrendered_screen_pixels(rt, x, y, &pixel_color);
 			x += INTERVAL;
 		}
 		y += 1;

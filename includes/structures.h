@@ -204,6 +204,7 @@ typedef struct s_rt {
 	int				is_zoom_key_down;
 	t_texture_map	*normal_maps;
 	int				nb_normal_maps;
+	// int				rendering_step_size;
 }				t_rt;
 
 typedef struct s_info
